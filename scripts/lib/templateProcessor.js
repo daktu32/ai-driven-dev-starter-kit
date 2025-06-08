@@ -10,8 +10,13 @@ const mustache_1 = __importDefault(require("mustache"));
 const glob_1 = require("glob");
 class TemplateProcessor {
     constructor(rootDir = process.cwd()) {
-        this.rootDir = rootDir;
-        this.templatesDir = path_1.default.join(rootDir, 'scripts', 'templates');
+        if (path_1.default.basename(rootDir) === 'scripts') {
+            this.rootDir = path_1.default.dirname(rootDir);
+        }
+        else {
+            this.rootDir = rootDir;
+        }
+        this.templatesDir = path_1.default.join(this.rootDir, 'scripts', 'templates');
     }
     async processAllTemplates(config, dryRun = false) {
         const templateFiles = await this.findTemplateFiles();

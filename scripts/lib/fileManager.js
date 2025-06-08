@@ -9,7 +9,12 @@ const path_1 = __importDefault(require("path"));
 const glob_1 = require("glob");
 class FileManager {
     constructor(rootDir = process.cwd()) {
-        this.rootDir = rootDir;
+        if (path_1.default.basename(rootDir) === 'scripts') {
+            this.rootDir = path_1.default.dirname(rootDir);
+        }
+        else {
+            this.rootDir = rootDir;
+        }
     }
     async createBackup(filePath) {
         const fullPath = path_1.default.resolve(this.rootDir, filePath);

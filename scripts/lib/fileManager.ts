@@ -6,7 +6,12 @@ export class FileManager {
   private readonly rootDir: string;
 
   constructor(rootDir: string = process.cwd()) {
-    this.rootDir = rootDir;
+    // If running from scripts directory, use parent directory as root
+    if (path.basename(rootDir) === 'scripts') {
+      this.rootDir = path.dirname(rootDir);
+    } else {
+      this.rootDir = rootDir;
+    }
   }
 
   async createBackup(filePath: string): Promise<string> {

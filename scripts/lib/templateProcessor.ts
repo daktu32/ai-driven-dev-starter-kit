@@ -9,8 +9,13 @@ export class TemplateProcessor {
   private readonly templatesDir: string;
 
   constructor(rootDir: string = process.cwd()) {
-    this.rootDir = rootDir;
-    this.templatesDir = path.join(rootDir, 'scripts', 'templates');
+    // If running from scripts directory, use parent directory as root
+    if (path.basename(rootDir) === 'scripts') {
+      this.rootDir = path.dirname(rootDir);
+    } else {
+      this.rootDir = rootDir;
+    }
+    this.templatesDir = path.join(this.rootDir, 'scripts', 'templates');
   }
 
   async processAllTemplates(config: ProjectConfig, dryRun: boolean = false): Promise<string[]> {
