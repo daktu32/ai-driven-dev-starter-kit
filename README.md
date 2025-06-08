@@ -21,16 +21,32 @@ This starter kit provides a foundation for projects developed with Claude Code (
 
 ### Setup
 
+#### Option 1: Interactive Setup Assistant (Recommended)
+
 ```bash
 # Clone the repository
-git clone [your-repo-url]
+git clone https://github.com/daktu32/claude-code-dev-starter-kit.git
 cd claude-code-dev-starter-kit
 
-# Install dependencies
-npm install
+# Run the interactive setup assistant
+npm run setup
+```
 
-# Initialize your project
-npm run init
+The setup assistant will guide you through:
+- Project configuration (name, description, repository)
+- Development prompt selection based on your team and requirements
+- Technology stack choices
+- Automatic placeholder replacement and file customization
+
+#### Option 2: Manual Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/daktu32/claude-code-dev-starter-kit.git
+cd claude-code-dev-starter-kit
+
+# Follow the customization guide
+# See CUSTOMIZATION_GUIDE.md for detailed instructions
 ```
 
 ### Project Structure
