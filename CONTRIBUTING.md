@@ -1,119 +1,112 @@
-# Contributing to Career.fm
+# Contributing to Claude Code Development Projects
 
-Career.fm は音声名刺サービスです。このプロジェクトへの貢献を歓迎します。
+This guide helps contributors work effectively with Claude Code development projects. This starter kit provides templates and guidelines for multi-agent autonomous development systems.
 
 ## 🤖 For AI Agents
 
-このセクションは AI エージェント（Cursor、Claude など）が効率的に開発を進行するためのガイドです。
+This section provides guidelines for AI agents (Claude, Cursor, etc.) to efficiently progress development in any project using this starter kit.
 
 ### 📋 Development Process Flow
 
 ```mermaid
 graph TD
-    A[Issue/Feature Request] --> B[仕様書作成]
-    B --> C[TDD テスト作成]
-    C --> D[インフラ更新]
-    D --> E[Lambda実装]
-    E --> F[フロントエンド実装]
-    F --> G[テスト実行]
-    G --> H[品質チェック]
+    A[Issue/Feature Request] --> B[Requirements Analysis]
+    B --> C[TDD Test Creation]
+    C --> D[Infrastructure Updates]
+    D --> E[Backend Implementation]
+    E --> F[Frontend Implementation]
+    F --> G[Test Execution]
+    G --> H[Quality Checks]
     H --> I[Complete]
 ```
 
 ### 🎯 Step-by-Step Implementation Guide
 
-#### 1. 仕様書作成 (`docs/specs/`)
+#### 1. Requirements Analysis (`docs/specs/`)
 ```bash
-# ファイル名: F-XX-feature-name.md
-# 例: F-05-audio-upload-optimization.md
+# File naming: F-XX-feature-name.md
+# Example: F-05-user-authentication.md
 ```
 
-**必須セクション:**
-- Summary: 機能の概要
-- User Stories: ユーザーストーリー
-- AWS Services: 利用するAWSサービス
-- API Specification: Lambda + API Gateway仕様
-- CDK Changes: インフラ変更点
-- Acceptance Criteria: 受け入れ基準
+**Required Sections:**
+- Summary: Feature overview
+- User Stories: User story format
+- Technical Requirements: Services and dependencies
+- API Specification: Backend API design
+- Infrastructure Changes: Required infrastructure updates
+- Acceptance Criteria: Testable acceptance criteria
 
-#### 2. TDD テスト作成 (`tests/`)
+#### 2. TDD Test Creation (`tests/`)
 ```typescript
-// Lambda function testing
-describe('Audio Upload Handler', () => {
-  const ddbMock = mockClient(DynamoDBClient);
-  const s3Mock = mockClient(S3Client);
+// Example: Backend function testing
+describe('User Authentication Handler', () => {
+  const mockClient = mockClient(DatabaseClient);
 
   beforeEach(() => {
-    ddbMock.reset();
-    s3Mock.reset();
+    mockClient.reset();
   });
 
-  test('should generate presigned URL', async () => {
+  test('should authenticate valid user', async () => {
     // Arrange
-    const event = createAPIGatewayEvent({
-      body: JSON.stringify({ fileName: 'test.mp3' })
+    const event = createAPIEvent({
+      body: JSON.stringify({ email: 'test@example.com', password: 'password' })
     });
     
-    s3Mock.on(PutObjectCommand).resolves({});
+    mockClient.on(QueryCommand).resolves({ Items: [validUser] });
     
     // Act
     const result = await handler(event);
     
     // Assert
     expect(result.statusCode).toBe(200);
-    expect(JSON.parse(result.body)).toHaveProperty('presignedUrl');
+    expect(JSON.parse(result.body)).toHaveProperty('token');
   });
 });
 ```
 
-#### 3. インフラ更新 (`infrastructure/lib/stacks/`)
+#### 3. Infrastructure Updates (`infrastructure/lib/stacks/`)
 ```typescript
-// AWS CDK Stack updates
+// Example: Infrastructure as Code updates
 export class ApiStack extends Stack {
-  constructor(scope: Construct, id: string, props: ApiStackProps) {
+  constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
 
-    // New Lambda function
-    const newFeatureFunction = new lambda.Function(this, 'NewFeatureFunction', {
-      runtime: lambda.Runtime.NODEJS_18_X,
-      handler: 'newFeature.handler',
-      code: lambda.Code.fromAsset('../packages/backend/dist'),
-      environment: {
-        TABLE_NAME: props.audioCardTable.tableName,
-        BUCKET_NAME: props.audioBucket.bucketName,
-      },
+    // New service resource
+    const newService = new Service(this, 'NewService', {
+      // Service configuration based on project tech stack
+      // Reference docs/tech-stack.md for technology choices
     });
 
-    // API Gateway integration
-    const newResource = this.api.root.addResource('new-feature');
-    newResource.addMethod('POST', new apigateway.LambdaIntegration(newFeatureFunction));
+    // API integration
+    const apiResource = this.api.root.addResource('new-endpoint');
+    apiResource.addMethod('POST', new Integration(newService));
   }
 }
 ```
 
-#### 4. Lambda実装 (`packages/backend/`)
+#### 4. Backend Implementation
 ```typescript
-// Lambda function implementation
+// Example: Generic backend service implementation
 import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { S3Client } from '@aws-sdk/client-s3';
-
-const dynamoClient = new DynamoDBClient({ region: process.env.AWS_REGION });
-const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
 export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   try {
-    // Implementation logic
+    // Validate input
+    const body = JSON.parse(event.body || '{}');
+    
+    // Business logic implementation
+    const result = await processRequest(body);
+    
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-      body: JSON.stringify({ success: true })
+      body: JSON.stringify(result)
     };
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Handler error:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Internal server error' })
@@ -122,21 +115,21 @@ export const handler = async (event: APIGatewayEvent): Promise<APIGatewayProxyRe
 };
 ```
 
-#### 5. フロントエンド実装 (`packages/frontend/`)
+#### 5. Frontend Implementation
 ```typescript
-// Next.js API route or React component
+// Example: Frontend component implementation
 import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 
-export const NewFeatureComponent: FC = () => {
-  const { user, getIdToken } = useAuth();
+export const FeatureComponent: FC = () => {
+  const { user, getToken } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const handleFeatureAction = async () => {
+  const handleAction = async () => {
     setLoading(true);
     try {
-      const token = await getIdToken();
-      const response = await fetch('/api/new-feature', {
+      const token = await getToken();
+      const response = await fetch('/api/feature', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -148,15 +141,15 @@ export const NewFeatureComponent: FC = () => {
       const result = await response.json();
       // Handle success
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Feature error:', error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <button onClick={handleFeatureAction} disabled={loading}>
-      {loading ? 'Processing...' : 'Execute Feature'}
+    <button onClick={handleAction} disabled={loading}>
+      {loading ? 'Processing...' : 'Execute Action'}
     </button>
   );
 };
@@ -164,164 +157,142 @@ export const NewFeatureComponent: FC = () => {
 
 ### 🛠️ Code Quality Checklist
 
-実装完了前に以下を確認：
+Before completing implementation, verify:
 
-- [ ] TypeScript コンパイルエラーなし (`npm run build`)
-- [ ] Jest テストが通る (`npm test`)
-- [ ] CDK テストが通る (`npm run test:cdk`)
-- [ ] ESLint エラーなし (`npm run lint`)
-- [ ] CDK diff チェック (`npm run cdk:diff`)
-- [ ] AWS 認証情報の設定確認
-- [ ] Lambda function のメモリ・タイムアウト設定
-- [ ] DynamoDB アクセスパターンの最適化確認
+- [ ] TypeScript compilation succeeds (`npm run build`)
+- [ ] All tests pass (`npm test`)
+- [ ] Infrastructure tests pass (`npm run test:infrastructure`)
+- [ ] Linting passes (`npm run lint`)
+- [ ] Infrastructure changes reviewed (`npm run infra:diff`)
+- [ ] Security configurations validated
+- [ ] Performance requirements met
+- [ ] Documentation updated
 
 ### 📁 File Path Templates
 
-新機能追加時の標準的なファイルパス：
+Standard file paths for new features:
 
 ```
-docs/specs/F-XX-feature-name.md                    # 仕様書
-infrastructure/lib/stacks/feature-stack.ts         # CDK Stack (必要時)
-packages/backend/src/functions/feature/            # Lambda Functions
+docs/specs/F-XX-feature-name.md                    # Specification
+infrastructure/lib/stacks/feature-stack.ts         # Infrastructure (if needed)
+packages/backend/src/functions/feature/            # Backend Functions
 packages/backend/src/shared/feature/               # Shared utilities
-packages/frontend/src/components/feature/          # React Components
-packages/frontend/src/pages/api/feature/           # Next.js API Routes
+packages/frontend/src/components/feature/          # Frontend Components
+packages/frontend/src/pages/api/feature/           # API Routes
 tests/backend/feature/                              # Backend tests
 tests/frontend/feature/                             # Frontend tests
-tests/infrastructure/feature-stack.test.ts         # CDK tests
+tests/infrastructure/feature-stack.test.ts         # Infrastructure tests
 ```
 
-詳細なモジュール構成は [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) を参照してください。
+Refer to [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed module organization.
 
 ### 🚨 Common Pitfalls for AI Agents
 
-**避けるべき実装パターン:**
+**Avoid these implementation patterns:**
 
-1. **AWS認証情報のハードコード**
+1. **Hardcoded Configuration**
    ```typescript
-   // ❌ 悪い例
+   // ❌ Bad - Hardcoded values
    const config = {
-     accessKeyId: 'AKIA...',
-     secretAccessKey: 'secret...',
+     apiUrl: 'https://api.example.com',
+     secretKey: 'hardcoded-secret',
    };
    
-   // ✅ 良い例 - IAM ロールを使用
-   const dynamoClient = new DynamoDBClient({
-     region: process.env.AWS_REGION
-   });
+   // ✅ Good - Environment variables
+   const config = {
+     apiUrl: process.env.API_URL,
+     secretKey: process.env.SECRET_KEY,
+   };
    ```
 
-2. **Lambda Cold Start対策なし**
+2. **Inefficient Resource Usage**
    ```typescript
-   // ❌ 悪い例 - 毎回新しい接続
+   // ❌ Bad - Creating new connections
    export const handler = async (event) => {
-     const client = new DynamoDBClient({});
+     const client = new DatabaseClient({});
      // ...
    };
    
-   // ✅ 良い例 - 接続を再利用
-   const client = new DynamoDBClient({});
+   // ✅ Good - Reuse connections
+   const client = new DatabaseClient({});
    export const handler = async (event) => {
      // Use shared client
    };
    ```
 
-3. **DynamoDBの非効率なクエリ**
+3. **Missing Error Handling**
    ```typescript
-   // ❌ 悪い例 - Scan操作
-   const result = await client.send(new ScanCommand({
-     TableName: TABLE_NAME,
-     FilterExpression: 'userId = :userId'
-   }));
+   // ❌ Bad - No error handling
+   const result = await externalService.call(data);
    
-   // ✅ 良い例 - Query操作
-   const result = await client.send(new QueryCommand({
-     TableName: TABLE_NAME,
-     KeyConditionExpression: 'PK = :pk',
-     ExpressionAttributeValues: {
-       ':pk': `USER#${userId}`
-     }
-   }));
+   // ✅ Good - Proper error handling
+   try {
+     const result = await externalService.call(data);
+     return result;
+   } catch (error) {
+     console.error('Service call failed:', error);
+     throw new ServiceError('External service unavailable');
+   }
    ```
 
-4. **S3アクセスの非最適化**
+4. **Security Vulnerabilities**
    ```typescript
-   // ❌ 悪い例 - 直接アップロード
-   const upload = await s3Client.send(new PutObjectCommand({
-     Bucket: BUCKET_NAME,
-     Key: fileName,
-     Body: fileBuffer
-   }));
+   // ❌ Bad - SQL injection risk
+   const query = `SELECT * FROM users WHERE id = ${userId}`;
    
-   // ✅ 良い例 - Presigned URL
-   const presignedUrl = await getSignedUrl(s3Client, new PutObjectCommand({
-     Bucket: BUCKET_NAME,
-     Key: fileName,
-     ContentType: 'audio/mp3'
-   }), { expiresIn: 3600 });
+   // ✅ Good - Parameterized queries
+   const query = 'SELECT * FROM users WHERE id = ?';
+   const result = await db.query(query, [userId]);
    ```
 
 ### 🔄 Testing Strategy
 
-#### Unit Testing (Lambda)
+#### Unit Testing
 ```bash
-npm run test:backend          # Jest backend tests
-npm run test:backend:watch    # Watch mode
-npm run test:backend:coverage # Coverage report
+npm run test:unit              # Unit tests
+npm run test:unit:watch        # Watch mode
+npm run test:unit:coverage     # Coverage report
 ```
 
-#### Infrastructure Testing (CDK)
+#### Infrastructure Testing
 ```bash
-npm run test:cdk             # CDK infrastructure tests
-npm run cdk:diff             # Show infrastructure changes
-npm run cdk:synth            # Synthesize CloudFormation
+npm run test:infrastructure    # Infrastructure tests
+npm run infra:diff             # Show infrastructure changes
+npm run infra:validate         # Validate infrastructure code
 ```
 
 #### Integration Testing
 ```bash
-npm run test:integration     # API integration tests
-npm run test:e2e            # End-to-end tests
+npm run test:integration       # API integration tests
+npm run test:e2e              # End-to-end tests
 ```
 
-#### AWS Local Testing
+#### Local Testing
 ```bash
-npm run sam:local           # SAM local testing
-npm run dynamodb:local      # Local DynamoDB
-npm run s3:local            # Local S3 (LocalStack)
+npm run dev:local              # Local development environment
+npm run test:local             # Local testing
 ```
 
 ### 📚 Reference Documentation
 
-- [プロダクト要件定義](docs/prd.md)
-- [システムアーキテクチャ](docs/ARCHITECTURE.md)
-- [システム要件](docs/requirements.md)
-- [実装計画](docs/implementation-plan.md)
-- [AWS アーキテクチャ決定](decisions/0001-aws-serverless-architecture.md)
+- [Product Requirements](docs/prd.md)
+- [System Architecture](docs/ARCHITECTURE.md)
+- [Technology Stack](docs/tech-stack.md)
+- [Implementation Plan](docs/implementation-plan.md)
+- [Architecture Decision Records](decisions/)
 
 ## 👥 For Human Contributors
 
 ### Prerequisites
 - Node.js 18+
-- npm
-- AWS CLI
-- AWS CDK CLI (`npm install -g aws-cdk`)
+- npm/yarn/pnpm
 - Git
-
-### AWS Setup
-```bash
-# AWS CLI configuration
-aws configure
-# または
-aws configure sso
-
-# CDK Bootstrap (初回のみ)
-npx cdk bootstrap
-```
+- Project-specific tools (see [docs/setup-guide.md](docs/setup-guide.md))
 
 ### Project Setup
 ```bash
-git clone https://github.com/your-username/careerfm.git
-cd careerfm
+git clone https://github.com/your-username/your-project.git
+cd your-project
 npm install
 
 # Install dependencies for all packages
@@ -336,16 +307,16 @@ npm run build
 #### 1. Infrastructure Development
 ```bash
 cd infrastructure
-npm run build                # TypeScript compile
-npm run test                 # Run CDK tests
-npm run cdk:diff             # Preview changes
-npm run cdk:deploy           # Deploy to AWS
+npm run build                # Compile
+npm run test                 # Run tests
+npm run diff                 # Preview changes
+npm run deploy               # Deploy
 ```
 
 #### 2. Backend Development
 ```bash
 cd packages/backend
-npm run build                # Compile TypeScript
+npm run build                # Compile
 npm run test                 # Run unit tests
 npm run test:integration     # Integration tests
 ```
@@ -358,12 +329,12 @@ npm run build                # Production build
 npm run test                 # Run tests
 ```
 
-### AWS Deployment
+### Environment Management
 
 #### Development Environment
 ```bash
-npm run deploy:dev           # Deploy to dev environment
-npm run test:dev             # Test against dev APIs
+npm run deploy:dev           # Deploy to development
+npm run test:dev             # Test against dev environment
 ```
 
 #### Staging Environment
@@ -379,89 +350,46 @@ npm run test:prod            # Production smoke tests
 ```
 
 ### Git Workflow
-1. Feature ブランチを作成
-2. 仕様書 → テスト → インフラ → 実装の順で開発
-3. CDK diff で変更を確認
-4. テストが通ることを確認
-5. Pull Request 作成
+1. Create feature branch from main
+2. Follow specification → test → infrastructure → implementation flow
+3. Verify all tests pass
+4. Create Pull Request with proper documentation
 
 ## 📝 Documentation Standards
 
-### コミットメッセージ
+### Commit Messages
 ```
-feat(api): F-XX 新しいLambda関数を追加
-fix(frontend): F-XX 音声アップロードのバグ修正
-infra(cdk): F-XX DynamoDB インデックスを追加
-test: F-XX テストケースの追加
-docs: アーキテクチャドキュメントの更新
+feat(api): Add user authentication endpoint
+fix(frontend): Resolve login form validation
+infra(stack): Add database connection pooling
+test: Add integration tests for user service
+docs: Update architecture documentation
 ```
 
-### Pull Request
-- 関連する Issue 番号を記載
-- CDK diff の結果を添付
-- インフラ変更時はコスト影響を記載
-- テストが通ることを確認
-- レビュワーを指定
-
-## 🎵 Audio Development Guidelines
-
-### S3 Audio Storage Best Practices
-- **ファイル構造**: `audio/{userId}/{cardId}/`
-- **命名規則**: `original.mp3`, `optimized.mp3`
-- **暗号化**: S3 Server-Side Encryption (SSE-S3)
-- **アクセス**: Presigned URL for uploads, CloudFront for downloads
-
-### Lambda Audio Processing
-```typescript
-// S3 trigger for audio processing
-export const processAudioHandler = async (event: S3Event) => {
-  for (const record of event.Records) {
-    const bucket = record.s3.bucket.name;
-    const key = record.s3.object.key;
-    
-    // Process only audio files
-    if (!isAudioFile(key)) continue;
-    
-    try {
-      // Generate optimized version
-      await optimizeAudio(bucket, key);
-      
-      // Extract metadata
-      const metadata = await extractAudioMetadata(bucket, key);
-      
-      // Update DynamoDB
-      await updateAudioCard(getCardIdFromKey(key), metadata);
-      
-    } catch (error) {
-      console.error(`Failed to process ${key}:`, error);
-      // Send to DLQ for retry
-    }
-  }
-};
-```
+### Pull Request Guidelines
+- Reference related issue numbers
+- Include implementation summary
+- Document infrastructure changes and cost impact
+- Ensure all tests pass
+- Request appropriate reviewers
 
 ## 🔐 Security Guidelines
 
-### Cognito Authentication
-- JWT token validation in Lambda authorizers
-- Proper scope management
-- Refresh token rotation
+### Authentication & Authorization
+- Implement proper token validation
+- Use least privilege principle
+- Secure API endpoints appropriately
 
-### S3 Security
-- Bucket public access blocked
-- Presigned URLs with expiration
-- Object-level permissions
+### Data Protection
+- Encrypt sensitive data at rest and in transit
+- Implement proper input validation
+- Use parameterized queries to prevent injection
 
-### DynamoDB Security
-- Least privilege IAM policies
-- Attribute-based access control
-- Encryption at rest
-
-### Lambda Security
+### Infrastructure Security
 ```typescript
 // Environment variable validation
 const validateEnvironment = () => {
-  const required = ['TABLE_NAME', 'BUCKET_NAME', 'USER_POOL_ID'];
+  const required = ['DATABASE_URL', 'API_KEY', 'SECRET_KEY'];
   for (const env of required) {
     if (!process.env[env]) {
       throw new Error(`Missing required environment variable: ${env}`);
@@ -470,79 +398,90 @@ const validateEnvironment = () => {
 };
 
 // Input validation
-const validateInput = (event: APIGatewayEvent) => {
+const validateInput = (input: unknown) => {
   const schema = Joi.object({
-    fileName: Joi.string().required(),
-    contentType: Joi.string().valid('audio/mp3', 'audio/wav', 'audio/m4a')
+    email: Joi.string().email().required(),
+    name: Joi.string().min(1).max(100).required()
   });
   
-  return schema.validate(JSON.parse(event.body || '{}'));
+  return schema.validate(input);
 };
 ```
 
 ## 🚀 Performance Guidelines
 
-### Lambda Optimization
-- Connection pooling for DynamoDB/S3
-- Appropriate memory allocation
-- Cold start mitigation strategies
+### Backend Optimization
+- Implement connection pooling
+- Use appropriate caching strategies
+- Optimize database queries
+- Implement proper monitoring
 
-### DynamoDB Optimization
-- Single table design
-- Efficient access patterns
-- Proper indexing strategy
+### Frontend Optimization
+- Implement code splitting
+- Optimize bundle sizes
+- Use appropriate caching headers
+- Implement progressive loading
 
-### Audio Delivery Optimization
-- CloudFront for global distribution
-- Appropriate caching headers
-- Progressive loading implementation
+### Infrastructure Optimization
+- Right-size compute resources
+- Implement auto-scaling
+- Use content delivery networks
+- Monitor and optimize costs
 
 ## 📊 Monitoring & Debugging
 
-### CloudWatch Logs
-```bash
-# View Lambda logs
-aws logs tail /aws/lambda/careerfm-api-dev-CardFunction --follow
+### Logging Best Practices
+```typescript
+// Structured logging
+import { logger } from '../utils/logger';
 
-# Search logs
-aws logs filter-log-events \
-  --log-group-name /aws/lambda/careerfm-api-dev-CardFunction \
-  --filter-pattern "ERROR"
+export const handler = async (event) => {
+  logger.info('Processing request', { 
+    requestId: event.requestContext.requestId,
+    path: event.path 
+  });
+  
+  try {
+    const result = await processRequest(event);
+    logger.info('Request completed', { 
+      requestId: event.requestContext.requestId,
+      duration: Date.now() - startTime 
+    });
+    return result;
+  } catch (error) {
+    logger.error('Request failed', { 
+      requestId: event.requestContext.requestId,
+      error: error.message,
+      stack: error.stack 
+    });
+    throw error;
+  }
+};
 ```
 
-### X-Ray Tracing
-- Lambda functions have X-Ray tracing enabled
-- Trace API Gateway → Lambda → DynamoDB flows
-- Monitor performance bottlenecks
-
-### Custom Metrics
+### Metrics and Monitoring
 ```typescript
-// Custom CloudWatch metrics
-import { CloudWatch } from '@aws-sdk/client-cloudwatch';
+// Custom metrics
+import { metrics } from '../utils/metrics';
 
-const cloudwatch = new CloudWatch({});
-
-export const putMetric = async (metricName: string, value: number) => {
-  await cloudwatch.putMetricData({
-    Namespace: 'CareerFM/API',
-    MetricData: [{
-      MetricName: metricName,
-      Value: value,
-      Unit: 'Count',
-      Timestamp: new Date()
-    }]
+export const recordBusinessMetric = async (metricName: string, value: number) => {
+  await metrics.putMetric({
+    name: metricName,
+    value: value,
+    unit: 'Count',
+    timestamp: new Date()
   });
 };
 ```
 
 ## 🆘 Getting Help
 
-- [GitHub Issues](https://github.com/your-username/careerfm/issues)
-- [Discussions](https://github.com/your-username/careerfm/discussions)
-- [AWS Documentation](https://docs.aws.amazon.com/)
-- [AWS CDK Documentation](https://docs.aws.amazon.com/cdk/)
-- [AWS Lambda Best Practices](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)
+- Create GitHub Issues for bugs and feature requests
+- Use GitHub Discussions for questions
+- Refer to project-specific documentation
+- Check [docs/setup-guide.md](docs/setup-guide.md) for environment setup
 
 ## 📄 License
 
-MIT License - 詳細は [LICENSE](LICENSE) を参照
+This starter kit is provided under MIT License. See [LICENSE](LICENSE) for details.
+Individual projects using this starter kit may have different licensing terms.
