@@ -1,0 +1,112 @@
+# Deployment Environment Configuration Template
+# Copy to deployment-env.yaml and customize for your project
+
+project:
+  name: "[project-name]"
+  description: "[project-description]"
+  owner: "[team-or-organization]"
+
+environments:
+  development:
+    name: "development"
+    auto_deploy: true
+    branch: "develop"
+    url: "https://dev.[your-domain].com"
+    resources:
+      cpu: "0.5"
+      memory: "1Gi"
+      replicas: 1
+    environment_variables:
+      NODE_ENV: "development"
+      LOG_LEVEL: "debug"
+      DATABASE_URL: "[dev-database-url]"
+      
+  staging:
+    name: "staging"
+    auto_deploy: true
+    branch: "main"
+    url: "https://staging.[your-domain].com"
+    resources:
+      cpu: "1"
+      memory: "2Gi"
+      replicas: 2
+    environment_variables:
+      NODE_ENV: "staging"
+      LOG_LEVEL: "info"
+      DATABASE_URL: "[staging-database-url]"
+      
+  production:
+    name: "production"
+    auto_deploy: false  # Manual approval required
+    branch: "main"
+    url: "https://[your-domain].com"
+    resources:
+      cpu: "2"
+      memory: "4Gi"
+      replicas: 3
+    environment_variables:
+      NODE_ENV: "production"
+      LOG_LEVEL: "warn"
+      DATABASE_URL: "[production-database-url]"
+
+infrastructure:
+  cloud_provider: "[aws|gcp|azure]"
+  region: "[primary-region]"
+  
+  services:
+    database:
+      type: "[postgresql|mysql|mongodb]"
+      version: "[version]"
+      backup_retention_days: 30
+      
+    cache:
+      type: "[redis|memcached]"
+      version: "[version]"
+      
+    storage:
+      type: "[s3|gcs|azure-blob]"
+      bucket_name: "[bucket-name]"
+      
+    monitoring:
+      error_tracking: "[sentry|bugsnag|rollbar]"
+      application_monitoring: "[datadog|newrelic|prometheus]"
+      log_aggregation: "[cloudwatch|datadog|elk]"
+
+security:
+  ssl_certificate: "managed"  # managed|custom
+  firewall_rules:
+    - name: "allow-https"
+      protocol: "tcp"
+      port: 443
+      source: "0.0.0.0/0"
+    - name: "allow-http"
+      protocol: "tcp" 
+      port: 80
+      source: "0.0.0.0/0"
+      
+  secrets_management:
+    provider: "[aws-secrets-manager|azure-key-vault|gcp-secret-manager]"
+    
+  backup_strategy:
+    frequency: "daily"
+    retention_period: "30 days"
+    cross_region_backup: true
+
+scaling:
+  auto_scaling:
+    enabled: true
+    min_replicas: 2
+    max_replicas: 10
+    cpu_threshold: 70
+    memory_threshold: 80
+    
+  load_balancer:
+    type: "[application|network]"
+    health_check_path: "/health"
+    
+costs:
+  budget_alert_threshold: "$100"  # Monthly budget alert
+  cost_optimization:
+    - "Spot instances for development"
+    - "Reserved instances for production"
+    - "Auto-scaling to optimize usage"
