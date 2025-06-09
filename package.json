@@ -2,7 +2,6 @@
   "name": "claude-code-dev-starter-kit",
   "version": "1.0.0",
   "description": "Claude Code Development Starter Kit - Templates and guides for multi-agent autonomous development systems",
-  "main": "index.js",
   "scripts": {
     "setup": "cd scripts && npm install && npm run setup",
     "setup:dry-run": "cd scripts && npm install && npm run setup:dry-run",

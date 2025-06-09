@@ -21,7 +21,7 @@ Comprehensive multi-agent development for enterprise projects with strict compli
 file_validation:
   required_files:
     - "./docs/prd.md"
-    - "./docs/architecture.md" 
+    - "./docs/ARCHITECTURE.md"
     - "./docs/tech-stack.md"
     - "./.github/workflows/ci.yml"
     - "./infrastructure/deployment-env.yaml"

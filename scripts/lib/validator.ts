@@ -52,7 +52,7 @@ export class Validator {
   static validateTechStack(techStack: Partial<TechStackConfig>): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
     
-    const requiredFields = ['frontend', 'backend', 'database', 'infrastructure', 'deployment'];
+    const requiredFields = ['frontend', 'backend', 'database', 'infrastructure', 'deployment', 'monitoring'];
     
     for (const field of requiredFields) {
       if (!techStack[field as keyof TechStackConfig] || 
