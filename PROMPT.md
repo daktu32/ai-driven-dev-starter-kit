@@ -9,7 +9,7 @@
 #    ─────────────────────
 <file_paths>
 product_requirements = "./docs/prd.md"                               # Required
-architecture          = "./docs/architecture.md"                     # Optional
+architecture          = "./docs/ARCHITECTURE.md"                     # Optional
 tech_stack            = "./docs/tech-stack.md"                       # Required
 ci_pipeline           = "./.github/workflows/ci.yml"                 # Required
 deployment_env        = "./infrastructure/deployment-env.yaml"       # Required

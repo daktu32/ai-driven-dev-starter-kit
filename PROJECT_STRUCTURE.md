@@ -54,7 +54,8 @@ This document describes the file organization of the Claude Code Development Sta
 │   ├── architecture.md                    # System architecture template
 │   ├── implementation-plan.md             # Implementation plan template
 │   ├── prd.md                            # Product requirements template
-│   ├── requirements.md                    # Requirements documentation
+│   ├── templates/
+│   │   └── requirements.md.template       # Requirements specification template
 │   ├── setup-guide.md                    # Setup instructions
 │   │
 │   ├── adr/                              # Architecture Decision Records
@@ -64,8 +65,8 @@ This document describes the file organization of the Claude Code Development Sta
 │       └── phase1-requirements.md.template
 │
 ├── decisions/                             # Architecture Decision Records
-│   ├── 0001-aws-serverless-architecture.md
-│   └── 0002-nextjs-frontend-choice.md
+│   └── templates/
+│       └── aws-serverless-architecture.md.template
 │
 ├── infrastructure/                        # Infrastructure as Code
 │   ├── README.md                          # Infrastructure overview

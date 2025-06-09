@@ -195,20 +195,16 @@ npm run deploy:prod
 
 ```bash
 # Development
-npm run dev          # Start development server
+npm run setup:dev    # Start development server
 npm run build        # Production build
 npm run test         # Run tests
 npm run lint         # Lint code
 npm run type-check   # TypeScript validation
 
-# Infrastructure
-npm run cdk:diff     # Preview infrastructure changes
-npm run cdk:deploy   # Deploy infrastructure
-npm run cdk:destroy  # Tear down infrastructure
+# Infrastructure commands are project-specific. Add your own scripts when needed.
 
 # Utilities
 npm run clean        # Clean build artifacts
-npm run init         # Initialize new project
 ```
 
 ## CI/CD Workflows
