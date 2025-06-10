@@ -25,8 +25,8 @@ class SetupAssistant {
     return {
       dryRun: args.includes('--dry-run'),
       skipPromptSelection: args.includes('--skip-prompt'),
-      prompt: args.find(arg => arg.startsWith('--prompt='))?.split('=')[1] as any,
-      verbose: args.includes('--verbose') || args.includes('-v')
+      prompt: args.find((arg) => arg.startsWith('--prompt='))?.split('=')[1] as any,
+      verbose: args.includes('--verbose') || args.includes('-v'),
     };
   }
 
@@ -46,9 +46,18 @@ class SetupAssistant {
       const projectInfo = await this.collectProjectInfo();
 
       // Select or confirm prompt
-      const { prompt, team } = this.options.skipPromptSelection && this.options.prompt
-        ? { prompt: this.options.prompt, team: { size: 1, type: 'individual', industry: 'technology', complianceLevel: 'medium' } as any }
-        : await PromptSelector.selectPrompt();
+      const { prompt, team } =
+        this.options.skipPromptSelection && this.options.prompt
+          ? {
+              prompt: this.options.prompt,
+              team: {
+                size: 1,
+                type: 'individual',
+                industry: 'technology',
+                complianceLevel: 'medium',
+              } as any,
+            }
+          : await PromptSelector.selectPrompt();
 
       // Collect tech stack information
       const techStack = await this.collectTechStackInfo();
@@ -59,7 +68,7 @@ class SetupAssistant {
         prompt,
         team,
         techStack,
-        customizations: {}
+        customizations: {},
       };
 
       // Validate configuration
@@ -87,7 +96,6 @@ class SetupAssistant {
 
       // Show completion message
       this.showCompletionMessage(backupDir);
-
     } catch (error) {
       console.error(chalk.red('❌ Setup failed:'), error);
       process.exit(1);
@@ -96,20 +104,22 @@ class SetupAssistant {
 
   private async validateProjectStructure(): Promise<void> {
     const spinner = ora('Validating project structure...').start();
-    
+
     const validation = await this.fileManager.validateProjectStructure();
-    
+
     if (!validation.valid) {
       spinner.fail('Project structure validation failed');
       console.log(chalk.red('Issues found:'));
-      validation.issues.forEach(issue => console.log(chalk.red(`  - ${issue}`)));
+      validation.issues.forEach((issue) => console.log(chalk.red(`  - ${issue}`)));
       throw new Error('Invalid project structure');
     }
-    
+
     spinner.succeed('Project structure is valid');
   }
 
-  private async collectProjectInfo(): Promise<Omit<ProjectConfig, 'prompt' | 'team' | 'techStack' | 'customizations'>> {
+  private async collectProjectInfo(): Promise<
+    Omit<ProjectConfig, 'prompt' | 'team' | 'techStack' | 'customizations'>
+  > {
     console.log(chalk.blue('\n📝 Project Information\n'));
 
     const questions = [
@@ -118,22 +128,23 @@ class SetupAssistant {
         name: 'projectName',
         message: 'What is your project name?',
         validate: Validator.validateProjectName,
-        filter: (input: string) => Validator.sanitizeProjectName(input)
+        filter: (input: string) => Validator.sanitizeProjectName(input),
       },
       {
         type: 'input',
         name: 'description',
         message: 'Provide a brief description of your project:',
         validate: Validator.validateDescription,
-        filter: (input: string) => Validator.sanitizeDescription(input)
+        filter: (input: string) => Validator.sanitizeDescription(input),
       },
       {
         type: 'input',
         name: 'repositoryUrl',
         message: 'What is your GitHub repository URL?',
         validate: Validator.validateRepositoryUrl,
-        default: (answers: any) => `https://github.com/your-username/${Validator.generateSlugFromName(answers.projectName)}`
-      }
+        default: (answers: any) =>
+          `https://github.com/your-username/${Validator.generateSlugFromName(answers.projectName)}`,
+      },
     ];
 
     return await inquirer.prompt(questions);
@@ -153,8 +164,8 @@ class SetupAssistant {
           { name: 'Vue.js', value: 'Vue.js' },
           { name: 'Angular', value: 'Angular' },
           { name: 'Svelte', value: 'Svelte' },
-          { name: 'Other', value: 'Other' }
-        ]
+          { name: 'Other', value: 'Other' },
+        ],
       },
       {
         type: 'list',
@@ -166,8 +177,8 @@ class SetupAssistant {
           { name: 'AWS Lambda', value: 'AWS Lambda' },
           { name: 'Python + FastAPI', value: 'Python + FastAPI' },
           { name: 'Python + Django', value: 'Python + Django' },
-          { name: 'Other', value: 'Other' }
-        ]
+          { name: 'Other', value: 'Other' },
+        ],
       },
       {
         type: 'list',
@@ -179,8 +190,8 @@ class SetupAssistant {
           { name: 'MongoDB', value: 'MongoDB' },
           { name: 'DynamoDB', value: 'DynamoDB' },
           { name: 'SQLite', value: 'SQLite' },
-          { name: 'Other', value: 'Other' }
-        ]
+          { name: 'Other', value: 'Other' },
+        ],
       },
       {
         type: 'list',
@@ -193,8 +204,8 @@ class SetupAssistant {
           { name: 'Azure', value: 'Azure' },
           { name: 'Vercel', value: 'Vercel' },
           { name: 'Netlify', value: 'Netlify' },
-          { name: 'Other', value: 'Other' }
-        ]
+          { name: 'Other', value: 'Other' },
+        ],
       },
       {
         type: 'list',
@@ -205,8 +216,8 @@ class SetupAssistant {
           { name: 'AWS CodePipeline', value: 'AWS CodePipeline' },
           { name: 'GitLab CI', value: 'GitLab CI' },
           { name: 'Jenkins', value: 'Jenkins' },
-          { name: 'Other', value: 'Other' }
-        ]
+          { name: 'Other', value: 'Other' },
+        ],
       },
       {
         type: 'list',
@@ -218,9 +229,9 @@ class SetupAssistant {
           { name: 'New Relic', value: 'New Relic' },
           { name: 'Sentry', value: 'Sentry' },
           { name: 'Basic logging', value: 'Basic logging' },
-          { name: 'Other', value: 'Other' }
-        ]
-      }
+          { name: 'Other', value: 'Other' },
+        ],
+      },
     ];
 
     return await inquirer.prompt(questions);
@@ -230,11 +241,11 @@ class SetupAssistant {
     const spinner = ora('Validating configuration...').start();
 
     const validation = Validator.validateProjectConfig(config);
-    
+
     if (!validation.valid) {
       spinner.fail('Configuration validation failed');
       console.log(chalk.red('Validation errors:'));
-      validation.errors.forEach(error => console.log(chalk.red(`  - ${error}`)));
+      validation.errors.forEach((error) => console.log(chalk.red(`  - ${error}`)));
       throw new Error('Invalid configuration');
     }
 
@@ -243,17 +254,17 @@ class SetupAssistant {
 
   private async showSummaryAndConfirm(config: ProjectConfig): Promise<void> {
     console.log(chalk.blue('\n📋 Configuration Summary\n'));
-    
+
     console.log(chalk.white('Project:'));
     console.log(`  Name: ${chalk.green(config.projectName)}`);
     console.log(`  Description: ${chalk.green(config.description)}`);
     console.log(`  Repository: ${chalk.green(config.repositoryUrl)}`);
-    
+
     console.log(chalk.white('\nDevelopment Approach:'));
     console.log(`  Prompt: ${chalk.green(config.prompt)}`);
     console.log(`  Team Size: ${chalk.green(config.team.size)}`);
     console.log(`  Industry: ${chalk.green(config.team.industry)}`);
-    
+
     console.log(chalk.white('\nTechnology Stack:'));
     console.log(`  Frontend: ${chalk.green(config.techStack.frontend)}`);
     console.log(`  Backend: ${chalk.green(config.techStack.backend)}`);
@@ -265,8 +276,8 @@ class SetupAssistant {
         type: 'confirm',
         name: 'proceed',
         message: 'Proceed with the setup using this configuration?',
-        default: true
-      }
+        default: true,
+      },
     ]);
 
     if (!confirm.proceed) {
@@ -289,19 +300,22 @@ class SetupAssistant {
 
   private async processTemplates(config: ProjectConfig): Promise<void> {
     const spinner = ora('Processing template files...').start();
-    
+
     try {
-      const processedFiles = await this.templateProcessor.processAllTemplates(config, this.options.dryRun);
-      
+      const processedFiles = await this.templateProcessor.processAllTemplates(
+        config,
+        this.options.dryRun,
+      );
+
       if (this.options.dryRun) {
         spinner.succeed(`Would process ${processedFiles.length} files`);
       } else {
         spinner.succeed(`Processed ${processedFiles.length} template files`);
       }
-      
+
       if (this.options.verbose) {
         console.log(chalk.gray('Processed files:'));
-        processedFiles.forEach(file => console.log(chalk.gray(`  - ${file}`)));
+        processedFiles.forEach((file) => console.log(chalk.gray(`  - ${file}`)));
       }
     } catch (error) {
       spinner.fail('Failed to process templates');
@@ -311,10 +325,10 @@ class SetupAssistant {
 
   private async copyPromptFile(promptType: string): Promise<void> {
     const spinner = ora(`Setting up ${promptType} prompt...`).start();
-    
+
     try {
       await this.templateProcessor.copyPromptFile(promptType, this.options.dryRun);
-      
+
       if (this.options.dryRun) {
         spinner.succeed(`Would copy ${promptType} prompt to PROMPT.md`);
       } else {
@@ -328,7 +342,7 @@ class SetupAssistant {
 
   private async cleanupUnusedFiles(config: ProjectConfig): Promise<void> {
     const spinner = ora('Cleaning up unused files...').start();
-    
+
     try {
       if (!this.options.dryRun) {
         const removedFiles = await this.fileManager.removeUnusedInfrastructure(config.techStack);
@@ -353,7 +367,7 @@ class SetupAssistant {
     }
 
     const spinner = ora('Creating project configuration...').start();
-    
+
     try {
       await this.fileManager.createProjectConfigFile(config);
       await this.fileManager.updateGitignore(['.claude/project-config.json']);
@@ -366,7 +380,7 @@ class SetupAssistant {
 
   private showCompletionMessage(backupDir: string): void {
     console.log(chalk.green('\n✅ Setup completed successfully!\n'));
-    
+
     if (!this.options.dryRun) {
       console.log(chalk.white('What was done:'));
       console.log(chalk.gray('  ✓ Created backup of original files'));
@@ -374,20 +388,20 @@ class SetupAssistant {
       console.log(chalk.gray('  ✓ Copied selected development prompt'));
       console.log(chalk.gray('  ✓ Cleaned up unused infrastructure files'));
       console.log(chalk.gray('  ✓ Created project configuration file'));
-      
+
       console.log(chalk.white('\nNext steps:'));
       console.log(chalk.gray('  1. Review the updated files'));
       console.log(chalk.gray('  2. Install project dependencies'));
       console.log(chalk.gray('  3. Set up your development environment'));
       console.log(chalk.gray('  4. Start developing with Claude Code!'));
-      
+
       console.log(chalk.white(`\nBackup location: ${chalk.blue(backupDir)}`));
       console.log(chalk.gray('You can restore from backup if needed'));
     } else {
       console.log(chalk.yellow('This was a dry run - no files were actually modified.'));
       console.log(chalk.gray('Run without --dry-run to apply the changes.'));
     }
-    
+
     console.log(chalk.blue('\n🤖 Ready for Claude Code development!'));
   }
 }
@@ -395,7 +409,7 @@ class SetupAssistant {
 // Run the setup assistant
 if (require.main === module) {
   const assistant = new SetupAssistant();
-  assistant.run().catch(error => {
+  assistant.run().catch((error) => {
     console.error(chalk.red('Fatal error:'), error);
     process.exit(1);
   });

@@ -24,7 +24,11 @@ export interface TechStackConfig {
   monitoring: string;
 }
 
-export type PromptType = 'basic-development' | 'enterprise-development' | 'opensource-development' | 'startup-development';
+export type PromptType =
+  | 'basic-development'
+  | 'enterprise-development'
+  | 'opensource-development'
+  | 'startup-development';
 
 export interface SetupOptions {
   dryRun: boolean;

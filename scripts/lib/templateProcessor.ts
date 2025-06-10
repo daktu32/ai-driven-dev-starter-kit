@@ -44,15 +44,15 @@ export class TemplateProcessor {
       'prompts/**/*.md',
       '.claude/**/*.template',
       'infrastructure/**/*.template',
-      '.github/**/*.template'
+      '.github/**/*.template',
     ];
 
     const templates: FileTemplate[] = [];
 
     for (const pattern of templatePatterns) {
-      const files = await glob(pattern, { 
+      const files = await glob(pattern, {
         cwd: this.rootDir,
-        ignore: ['node_modules/**', 'scripts/**']
+        ignore: ['node_modules/**', 'scripts/**'],
       });
 
       for (const file of files) {
@@ -64,7 +64,7 @@ export class TemplateProcessor {
           templates.push({
             path: file,
             content,
-            placeholders
+            placeholders,
           });
         }
       }
@@ -87,12 +87,16 @@ export class TemplateProcessor {
     return placeholders;
   }
 
-  private async processTemplate(template: FileTemplate, config: ProjectConfig, dryRun: boolean): Promise<boolean> {
+  private async processTemplate(
+    template: FileTemplate,
+    config: ProjectConfig,
+    dryRun: boolean,
+  ): Promise<boolean> {
     const mapping = this.createTemplateMapping(config);
-    
+
     // Convert [placeholder] format to {{placeholder}} for Mustache
     let processedContent = template.content;
-    
+
     // Replace placeholders with Mustache syntax
     for (const placeholder of template.placeholders) {
       const regex = new RegExp(`\\[${placeholder}\\]`, 'g');
@@ -124,42 +128,42 @@ export class TemplateProcessor {
       'Your project name': config.projectName,
       'Your Project Name': config.projectName,
       'project-name': config.projectName.toLowerCase().replace(/\s+/g, '-'),
-      'PROJECT_NAME': config.projectName.toUpperCase().replace(/\s+/g, '_'),
+      PROJECT_NAME: config.projectName.toUpperCase().replace(/\s+/g, '_'),
       'Brief description of your project': config.description,
       'your-repo-url': config.repositoryUrl,
       'your-username': this.extractUsername(config.repositoryUrl),
       'your-project': this.extractProjectName(config.repositoryUrl),
-      
+
       // Tech stack
       'Frontend Framework': config.techStack.frontend,
       'Backend Framework': config.techStack.backend,
-      'Database': config.techStack.database,
-      'Infrastructure': config.techStack.infrastructure,
+      Database: config.techStack.database,
+      Infrastructure: config.techStack.infrastructure,
       'Deployment Platform': config.techStack.deployment,
       'Monitoring Solution': config.techStack.monitoring,
-      
+
       // Team info
       'Team Size': config.team.size.toString(),
       'Team Type': config.team.type,
-      'Industry': config.team.industry,
+      Industry: config.team.industry,
       'Compliance Level': config.team.complianceLevel,
-      
+
       // Dates
       'YYYY-MM-DD': new Date().toISOString().split('T')[0],
       'Current Date': new Date().toLocaleDateString(),
       'Current Year': new Date().getFullYear().toString(),
-      
+
       // Common placeholders
-      'placeholder': '',
+      placeholder: '',
       'Your value here': '',
-      'TODO': 'TODO',
-      'TBD': 'TBD'
+      TODO: 'TODO',
+      TBD: 'TBD',
     };
   }
 
   private extractUsername(url: string): string {
     try {
-      const match = url.match(/github\.com\/([^\/]+)/);
+      const match = url.match(/github\.com\/([^/]+)/);
       return match ? match[1] : 'your-username';
     } catch {
       return 'your-username';
@@ -168,7 +172,7 @@ export class TemplateProcessor {
 
   private extractProjectName(url: string): string {
     try {
-      const match = url.match(/github\.com\/[^\/]+\/([^\/]+)/);
+      const match = url.match(/github\.com\/[^/]+\/([^/]+)/);
       return match ? match[1].replace(/\.git$/, '') : 'your-project';
     } catch {
       return 'your-project';
@@ -178,7 +182,7 @@ export class TemplateProcessor {
   private async createBackup(filePath: string): Promise<void> {
     const fullPath = path.join(this.rootDir, filePath);
     const backupPath = `${fullPath}.backup.${Date.now()}`;
-    
+
     if (await fs.pathExists(fullPath)) {
       await fs.copy(fullPath, backupPath);
     }
@@ -188,7 +192,7 @@ export class TemplateProcessor {
     const sourceFile = path.join(this.rootDir, 'prompts', `${promptType}.md`);
     const targetFile = path.join(this.rootDir, 'PROMPT.md');
 
-    if (!await fs.pathExists(sourceFile)) {
+    if (!(await fs.pathExists(sourceFile))) {
       throw new Error(`Prompt file not found: ${sourceFile}`);
     }
 

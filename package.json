@@ -8,6 +8,11 @@
     "setup:dev": "cd scripts && npm install && npm run dev",
     "build": "cd scripts && npm run build",
     "test": "cd scripts && npm test",
+    "lint": "cd scripts && npm run lint",
+    "type-check": "cd scripts && npm run type-check",
+    "test:e2e": "echo 'No E2E tests configured'",
+    "test:integration": "echo 'No integration tests configured'",
+    "test:e2e:init": "echo 'No E2E initialization required'",
     "postinstall": "cd scripts && npm install"
   },
   "repository": {
