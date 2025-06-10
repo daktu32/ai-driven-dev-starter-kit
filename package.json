@@ -1,0 +1,40 @@
+{
+  "name": "claude-code-dev-starter-kit",
+  "version": "1.0.0",
+  "description": "Claude Code Development Starter Kit - Templates and guides for multi-agent autonomous development systems",
+  "scripts": {
+    "setup": "cd scripts && npm install && npm run setup",
+    "setup:dry-run": "cd scripts && npm install && npm run setup:dry-run",
+    "setup:dev": "cd scripts && npm install && npm run dev",
+    "build": "cd scripts && npm run build",
+    "test": "cd scripts && npm test",
+    "lint": "cd scripts && npm run lint",
+    "type-check": "cd scripts && npm run type-check",
+    "test:e2e": "echo 'No E2E tests configured'",
+    "test:integration": "echo 'No integration tests configured'",
+    "test:e2e:init": "echo 'No E2E initialization required'",
+    "postinstall": "cd scripts && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daktu32/claude-code-dev-starter-kit.git"
+  },
+  "keywords": [
+    "claude-code",
+    "development",
+    "starter-kit",
+    "template",
+    "automation",
+    "multi-agent",
+    "ai-development"
+  ],
+  "author": "daktu32",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daktu32/claude-code-dev-starter-kit/issues"
+  },
+  "homepage": "https://github.com/daktu32/claude-code-dev-starter-kit#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

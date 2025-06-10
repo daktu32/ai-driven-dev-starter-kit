@@ -21,16 +21,32 @@ This starter kit provides a foundation for projects developed with Claude Code (
 
 ### Setup
 
+#### Option 1: Interactive Setup Assistant (Recommended)
+
 ```bash
 # Clone the repository
-git clone [your-repo-url]
+git clone https://github.com/daktu32/claude-code-dev-starter-kit.git
 cd claude-code-dev-starter-kit
 
-# Install dependencies
-npm install
+# Run the interactive setup assistant
+npm run setup
+```
 
-# Initialize your project
-npm run init
+The setup assistant will guide you through:
+- Project configuration (name, description, repository)
+- Development prompt selection based on your team and requirements
+- Technology stack choices
+- Automatic placeholder replacement and file customization
+
+#### Option 2: Manual Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/daktu32/claude-code-dev-starter-kit.git
+cd claude-code-dev-starter-kit
+
+# Follow the customization guide
+# See CUSTOMIZATION_GUIDE.md for detailed instructions
 ```
 
 ### Project Structure
@@ -179,20 +195,16 @@ npm run deploy:prod
 
 ```bash
 # Development
-npm run dev          # Start development server
+npm run setup:dev    # Start development server
 npm run build        # Production build
 npm run test         # Run tests
 npm run lint         # Lint code
 npm run type-check   # TypeScript validation
 
-# Infrastructure
-npm run cdk:diff     # Preview infrastructure changes
-npm run cdk:deploy   # Deploy infrastructure
-npm run cdk:destroy  # Tear down infrastructure
+# Infrastructure commands are project-specific. Add your own scripts when needed.
 
 # Utilities
 npm run clean        # Clean build artifacts
-npm run init         # Initialize new project
 ```
 
 ## CI/CD Workflows

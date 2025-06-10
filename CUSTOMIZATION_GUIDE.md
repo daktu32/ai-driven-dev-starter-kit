@@ -85,7 +85,7 @@ rm infrastructure/lib/stacks/auth-stack.ts
 
 ### 技術ドキュメント
 
-#### `docs/architecture.md`
+#### `docs/ARCHITECTURE.md`
 - システム図をプロジェクトアーキテクチャに更新
 - データモデルを実際のエンティティに変更
 - セキュリティ要件をプロジェクトに合わせて調整
@@ -113,7 +113,7 @@ rm infrastructure/lib/stacks/auth-stack.ts
 ### 継続的更新
 - [ ] `PROGRESS.md` - 開発進捗の定期更新
 - [ ] `DEVELOPMENT_ROADMAP.md` - マイルストーン達成状況
-- [ ] `docs/architecture.md` - 設計変更の反映
+- [ ] `docs/ARCHITECTURE.md` - 設計変更の反映
 
 ## テンプレートファイルの識別
 
@@ -128,7 +128,7 @@ rm infrastructure/lib/stacks/auth-stack.ts
 ### 部分テンプレート（一部カスタマイゼーション）
 - `CLAUDE.md` - プロジェクト情報セクション
 - `README.md` - プロジェクト名と概要
-- `docs/architecture.md` - システム設計部分
+- `docs/ARCHITECTURE.md` - システム設計部分
 - `docs/tech-stack.md` - 技術選択部分
 
 ### 参考資料（そのまま使用可能）

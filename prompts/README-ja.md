@@ -117,7 +117,7 @@ human_approval_gate:
 ```yaml
 <file_paths>
 product_requirements = "./docs/prd.md"
-architecture          = "./docs/architecture.md"
+architecture          = "./docs/ARCHITECTURE.md"
 tech_stack            = "./docs/tech-stack.md"
 ci_pipeline           = "./.github/workflows/ci.yml"
 deployment_env        = "./infrastructure/deployment-env.yaml"
