@@ -40,7 +40,7 @@ class Validator {
     }
     static validateTechStack(techStack) {
         const errors = [];
-        const requiredFields = ['frontend', 'backend', 'database', 'infrastructure', 'deployment'];
+        const requiredFields = ['frontend', 'backend', 'database', 'infrastructure', 'deployment', 'monitoring'];
         for (const field of requiredFields) {
             if (!techStack[field] ||
                 techStack[field]?.trim().length === 0) {
