@@ -25,7 +25,9 @@ class SetupAssistant {
     return {
       dryRun: args.includes('--dry-run'),
       skipPromptSelection: args.includes('--skip-prompt'),
-      prompt: args.find((arg) => arg.startsWith('--prompt='))?.split('=')[1] as any,
+      prompt: args.find((arg) => arg.startsWith('--prompt='))?.split('=')[1] as
+        | PromptType
+        | undefined,
       verbose: args.includes('--verbose') || args.includes('-v'),
     };
   }
@@ -55,7 +57,7 @@ class SetupAssistant {
                 type: 'individual',
                 industry: 'technology',
                 complianceLevel: 'medium',
-              } as any,
+              } as TeamConfig,
             }
           : await PromptSelector.selectPrompt();
 
@@ -142,7 +144,7 @@ class SetupAssistant {
         name: 'repositoryUrl',
         message: 'What is your GitHub repository URL?',
         validate: Validator.validateRepositoryUrl,
-        default: (answers: any) =>
+        default: (answers: { projectName: string }) =>
           `https://github.com/your-username/${Validator.generateSlugFromName(answers.projectName)}`,
       },
     ];

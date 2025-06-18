@@ -9,7 +9,7 @@ class Validator {
         if (name.length > 50) {
             return 'Project name should be 50 characters or less';
         }
-        if (!/^[a-zA-Z0-9\s\-_\.]+$/.test(name)) {
+        if (!/^[a-zA-Z0-9\s\-_.]+$/.test(name)) {
             return 'Project name can only contain letters, numbers, spaces, hyphens, underscores, and dots';
         }
         return true;
@@ -40,7 +40,14 @@ class Validator {
     }
     static validateTechStack(techStack) {
         const errors = [];
-        const requiredFields = ['frontend', 'backend', 'database', 'infrastructure', 'deployment', 'monitoring'];
+        const requiredFields = [
+            'frontend',
+            'backend',
+            'database',
+            'infrastructure',
+            'deployment',
+            'monitoring',
+        ];
         for (const field of requiredFields) {
             if (!techStack[field] ||
                 techStack[field]?.trim().length === 0) {
@@ -49,7 +56,7 @@ class Validator {
         }
         return {
             valid: errors.length === 0,
-            errors
+            errors,
         };
     }
     static validateProjectConfig(config) {
@@ -72,24 +79,22 @@ class Validator {
         }
         return {
             valid: errors.length === 0,
-            errors
+            errors,
         };
     }
     static sanitizeProjectName(name) {
         return name
             .trim()
-            .replace(/[^a-zA-Z0-9\s\-_\.]/g, '')
+            .replace(/[^a-zA-Z0-9\s\-_.]/g, '')
             .substring(0, 50);
     }
     static sanitizeDescription(description) {
-        return description
-            .trim()
-            .substring(0, 200);
+        return description.trim().substring(0, 200);
     }
     static generateSlugFromName(name) {
         return name
             .toLowerCase()
-            .replace(/[^a-z0-9\s\-]/g, '')
+            .replace(/[^a-z0-9\s-]/g, '')
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '');
@@ -100,11 +105,11 @@ class Validator {
     }
     static extractRepoInfo(url) {
         try {
-            const match = url.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+            const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
             if (match) {
                 return {
                     owner: match[1],
-                    repo: match[2].replace(/\.git$/, '')
+                    repo: match[2].replace(/\.git$/, ''),
                 };
             }
         }
@@ -114,13 +119,13 @@ class Validator {
     }
     static validateEnvironmentVariables(envVars) {
         const required = ['NODE_ENV'];
-        const missing = required.filter(key => !envVars[key]);
+        const missing = required.filter((key) => !envVars[key]);
         return {
             valid: missing.length === 0,
-            missing
+            missing,
         };
     }
-    static validateFilePermissions(filePath) {
+    static validateFilePermissions(_filePath) {
         return Promise.resolve(true);
     }
 }

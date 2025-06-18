@@ -42,13 +42,13 @@ class TemplateProcessor {
             'prompts/**/*.md',
             '.claude/**/*.template',
             'infrastructure/**/*.template',
-            '.github/**/*.template'
+            '.github/**/*.template',
         ];
         const templates = [];
         for (const pattern of templatePatterns) {
             const files = await (0, glob_1.glob)(pattern, {
                 cwd: this.rootDir,
-                ignore: ['node_modules/**', 'scripts/**']
+                ignore: ['node_modules/**', 'scripts/**'],
             });
             for (const file of files) {
                 const fullPath = path_1.default.join(this.rootDir, file);
@@ -58,7 +58,7 @@ class TemplateProcessor {
                     templates.push({
                         path: file,
                         content,
-                        placeholders
+                        placeholders,
                     });
                 }
             }
@@ -99,33 +99,33 @@ class TemplateProcessor {
             'Your project name': config.projectName,
             'Your Project Name': config.projectName,
             'project-name': config.projectName.toLowerCase().replace(/\s+/g, '-'),
-            'PROJECT_NAME': config.projectName.toUpperCase().replace(/\s+/g, '_'),
+            PROJECT_NAME: config.projectName.toUpperCase().replace(/\s+/g, '_'),
             'Brief description of your project': config.description,
             'your-repo-url': config.repositoryUrl,
             'your-username': this.extractUsername(config.repositoryUrl),
             'your-project': this.extractProjectName(config.repositoryUrl),
             'Frontend Framework': config.techStack.frontend,
             'Backend Framework': config.techStack.backend,
-            'Database': config.techStack.database,
-            'Infrastructure': config.techStack.infrastructure,
+            Database: config.techStack.database,
+            Infrastructure: config.techStack.infrastructure,
             'Deployment Platform': config.techStack.deployment,
             'Monitoring Solution': config.techStack.monitoring,
             'Team Size': config.team.size.toString(),
             'Team Type': config.team.type,
-            'Industry': config.team.industry,
+            Industry: config.team.industry,
             'Compliance Level': config.team.complianceLevel,
             'YYYY-MM-DD': new Date().toISOString().split('T')[0],
             'Current Date': new Date().toLocaleDateString(),
             'Current Year': new Date().getFullYear().toString(),
-            'placeholder': '',
+            placeholder: '',
             'Your value here': '',
-            'TODO': 'TODO',
-            'TBD': 'TBD'
+            TODO: 'TODO',
+            TBD: 'TBD',
         };
     }
     extractUsername(url) {
         try {
-            const match = url.match(/github\.com\/([^\/]+)/);
+            const match = url.match(/github\.com\/([^/]+)/);
             return match ? match[1] : 'your-username';
         }
         catch {
@@ -134,7 +134,7 @@ class TemplateProcessor {
     }
     extractProjectName(url) {
         try {
-            const match = url.match(/github\.com\/[^\/]+\/([^\/]+)/);
+            const match = url.match(/github\.com\/[^/]+\/([^/]+)/);
             return match ? match[1].replace(/\.git$/, '') : 'your-project';
         }
         catch {
@@ -151,7 +151,7 @@ class TemplateProcessor {
     async copyPromptFile(promptType, dryRun = false) {
         const sourceFile = path_1.default.join(this.rootDir, 'prompts', `${promptType}.md`);
         const targetFile = path_1.default.join(this.rootDir, 'PROMPT.md');
-        if (!await fs_extra_1.default.pathExists(sourceFile)) {
+        if (!(await fs_extra_1.default.pathExists(sourceFile))) {
             throw new Error(`Prompt file not found: ${sourceFile}`);
         }
         if (dryRun) {

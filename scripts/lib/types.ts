@@ -5,7 +5,7 @@ export interface ProjectConfig {
   prompt: PromptType;
   techStack: TechStackConfig;
   team: TeamConfig;
-  customizations: Record<string, any>;
+  customizations: Record<string, string | number | boolean>;
 }
 
 export interface TeamConfig {
@@ -44,5 +44,5 @@ export interface FileTemplate {
 }
 
 export interface TemplateMapping {
-  [key: string]: any;
+  [key: string]: string | number | boolean;
 }

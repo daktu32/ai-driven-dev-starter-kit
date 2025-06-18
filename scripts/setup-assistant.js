@@ -22,8 +22,8 @@ class SetupAssistant {
         return {
             dryRun: args.includes('--dry-run'),
             skipPromptSelection: args.includes('--skip-prompt'),
-            prompt: args.find(arg => arg.startsWith('--prompt='))?.split('=')[1],
-            verbose: args.includes('--verbose') || args.includes('-v')
+            prompt: args.find((arg) => arg.startsWith('--prompt='))?.split('=')[1],
+            verbose: args.includes('--verbose') || args.includes('-v'),
         };
     }
     async run() {
@@ -36,7 +36,15 @@ class SetupAssistant {
             await this.validateProjectStructure();
             const projectInfo = await this.collectProjectInfo();
             const { prompt, team } = this.options.skipPromptSelection && this.options.prompt
-                ? { prompt: this.options.prompt, team: { size: 1, type: 'individual', industry: 'technology', complianceLevel: 'medium' } }
+                ? {
+                    prompt: this.options.prompt,
+                    team: {
+                        size: 1,
+                        type: 'individual',
+                        industry: 'technology',
+                        complianceLevel: 'medium',
+                    },
+                }
                 : await promptSelector_js_1.PromptSelector.selectPrompt();
             const techStack = await this.collectTechStackInfo();
             const config = {
@@ -44,7 +52,7 @@ class SetupAssistant {
                 prompt,
                 team,
                 techStack,
-                customizations: {}
+                customizations: {},
             };
             await this.validateConfiguration(config);
             if (!this.options.dryRun) {
@@ -68,7 +76,7 @@ class SetupAssistant {
         if (!validation.valid) {
             spinner.fail('Project structure validation failed');
             console.log(chalk_1.default.red('Issues found:'));
-            validation.issues.forEach(issue => console.log(chalk_1.default.red(`  - ${issue}`)));
+            validation.issues.forEach((issue) => console.log(chalk_1.default.red(`  - ${issue}`)));
             throw new Error('Invalid project structure');
         }
         spinner.succeed('Project structure is valid');
@@ -81,22 +89,22 @@ class SetupAssistant {
                 name: 'projectName',
                 message: 'What is your project name?',
                 validate: validator_js_1.Validator.validateProjectName,
-                filter: (input) => validator_js_1.Validator.sanitizeProjectName(input)
+                filter: (input) => validator_js_1.Validator.sanitizeProjectName(input),
             },
             {
                 type: 'input',
                 name: 'description',
                 message: 'Provide a brief description of your project:',
                 validate: validator_js_1.Validator.validateDescription,
-                filter: (input) => validator_js_1.Validator.sanitizeDescription(input)
+                filter: (input) => validator_js_1.Validator.sanitizeDescription(input),
             },
             {
                 type: 'input',
                 name: 'repositoryUrl',
                 message: 'What is your GitHub repository URL?',
                 validate: validator_js_1.Validator.validateRepositoryUrl,
-                default: (answers) => `https://github.com/your-username/${validator_js_1.Validator.generateSlugFromName(answers.projectName)}`
-            }
+                default: (answers) => `https://github.com/your-username/${validator_js_1.Validator.generateSlugFromName(answers.projectName)}`,
+            },
         ];
         return await inquirer_1.default.prompt(questions);
     }
@@ -113,8 +121,8 @@ class SetupAssistant {
                     { name: 'Vue.js', value: 'Vue.js' },
                     { name: 'Angular', value: 'Angular' },
                     { name: 'Svelte', value: 'Svelte' },
-                    { name: 'Other', value: 'Other' }
-                ]
+                    { name: 'Other', value: 'Other' },
+                ],
             },
             {
                 type: 'list',
@@ -126,8 +134,8 @@ class SetupAssistant {
                     { name: 'AWS Lambda', value: 'AWS Lambda' },
                     { name: 'Python + FastAPI', value: 'Python + FastAPI' },
                     { name: 'Python + Django', value: 'Python + Django' },
-                    { name: 'Other', value: 'Other' }
-                ]
+                    { name: 'Other', value: 'Other' },
+                ],
             },
             {
                 type: 'list',
@@ -139,8 +147,8 @@ class SetupAssistant {
                     { name: 'MongoDB', value: 'MongoDB' },
                     { name: 'DynamoDB', value: 'DynamoDB' },
                     { name: 'SQLite', value: 'SQLite' },
-                    { name: 'Other', value: 'Other' }
-                ]
+                    { name: 'Other', value: 'Other' },
+                ],
             },
             {
                 type: 'list',
@@ -153,8 +161,8 @@ class SetupAssistant {
                     { name: 'Azure', value: 'Azure' },
                     { name: 'Vercel', value: 'Vercel' },
                     { name: 'Netlify', value: 'Netlify' },
-                    { name: 'Other', value: 'Other' }
-                ]
+                    { name: 'Other', value: 'Other' },
+                ],
             },
             {
                 type: 'list',
@@ -165,8 +173,8 @@ class SetupAssistant {
                     { name: 'AWS CodePipeline', value: 'AWS CodePipeline' },
                     { name: 'GitLab CI', value: 'GitLab CI' },
                     { name: 'Jenkins', value: 'Jenkins' },
-                    { name: 'Other', value: 'Other' }
-                ]
+                    { name: 'Other', value: 'Other' },
+                ],
             },
             {
                 type: 'list',
@@ -178,9 +186,9 @@ class SetupAssistant {
                     { name: 'New Relic', value: 'New Relic' },
                     { name: 'Sentry', value: 'Sentry' },
                     { name: 'Basic logging', value: 'Basic logging' },
-                    { name: 'Other', value: 'Other' }
-                ]
-            }
+                    { name: 'Other', value: 'Other' },
+                ],
+            },
         ];
         return await inquirer_1.default.prompt(questions);
     }
@@ -190,7 +198,7 @@ class SetupAssistant {
         if (!validation.valid) {
             spinner.fail('Configuration validation failed');
             console.log(chalk_1.default.red('Validation errors:'));
-            validation.errors.forEach(error => console.log(chalk_1.default.red(`  - ${error}`)));
+            validation.errors.forEach((error) => console.log(chalk_1.default.red(`  - ${error}`)));
             throw new Error('Invalid configuration');
         }
         spinner.succeed('Configuration is valid');
@@ -215,8 +223,8 @@ class SetupAssistant {
                 type: 'confirm',
                 name: 'proceed',
                 message: 'Proceed with the setup using this configuration?',
-                default: true
-            }
+                default: true,
+            },
         ]);
         if (!confirm.proceed) {
             console.log(chalk_1.default.yellow('Setup cancelled by user'));
@@ -245,7 +253,7 @@ class SetupAssistant {
             }
             if (this.options.verbose) {
                 console.log(chalk_1.default.gray('Processed files:'));
-                processedFiles.forEach(file => console.log(chalk_1.default.gray(`  - ${file}`)));
+                processedFiles.forEach((file) => console.log(chalk_1.default.gray(`  - ${file}`)));
             }
         }
         catch (error) {
@@ -332,7 +340,7 @@ class SetupAssistant {
 }
 if (require.main === module) {
     const assistant = new SetupAssistant();
-    assistant.run().catch(error => {
+    assistant.run().catch((error) => {
         console.error(chalk_1.default.red('Fatal error:'), error);
         process.exit(1);
     });

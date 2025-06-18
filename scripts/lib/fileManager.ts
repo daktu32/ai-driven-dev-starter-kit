@@ -168,7 +168,7 @@ export class FileManager {
     await fs.writeFile(gitignorePath, lines.join('\n'));
   }
 
-  async createProjectConfigFile(config: any): Promise<void> {
+  async createProjectConfigFile(config: ProjectConfig): Promise<void> {
     const configDir = path.join(this.rootDir, '.claude');
     const configPath = path.join(configDir, 'project-config.json');
 

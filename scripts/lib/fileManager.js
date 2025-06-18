@@ -41,12 +41,12 @@ class FileManager {
             'docs/**/*.md',
             'prompts/**/*.md',
             '.claude/**/*',
-            'infrastructure/**/*'
+            'infrastructure/**/*',
         ];
         for (const pattern of templatePatterns) {
             const files = await (0, glob_1.glob)(pattern, {
                 cwd: this.rootDir,
-                ignore: ['node_modules/**', 'scripts/**', '.backups/**']
+                ignore: ['node_modules/**', 'scripts/**', '.backups/**'],
             });
             for (const file of files) {
                 const sourcePath = path_1.default.join(this.rootDir, file);
@@ -69,35 +69,30 @@ class FileManager {
             'prompts/basic-development.md',
             'prompts/enterprise-development.md',
             'prompts/opensource-development.md',
-            'prompts/startup-development.md'
+            'prompts/startup-development.md',
         ];
         for (const file of requiredFiles) {
             const filePath = path_1.default.join(this.rootDir, file);
-            if (!await fs_extra_1.default.pathExists(filePath)) {
+            if (!(await fs_extra_1.default.pathExists(filePath))) {
                 issues.push(`Missing required file: ${file}`);
             }
         }
-        const requiredDirs = [
-            'docs',
-            'prompts',
-            'infrastructure',
-            '.github/workflows'
-        ];
+        const requiredDirs = ['docs', 'prompts', 'infrastructure', '.github/workflows'];
         for (const dir of requiredDirs) {
             const dirPath = path_1.default.join(this.rootDir, dir);
-            if (!await fs_extra_1.default.pathExists(dirPath)) {
+            if (!(await fs_extra_1.default.pathExists(dirPath))) {
                 issues.push(`Missing required directory: ${dir}`);
             }
         }
         return {
             valid: issues.length === 0,
-            issues
+            issues,
         };
     }
     async removeUnusedInfrastructure(techStack) {
         const removedFiles = [];
         const infraDir = path_1.default.join(this.rootDir, 'infrastructure', 'lib', 'stacks');
-        if (!await fs_extra_1.default.pathExists(infraDir)) {
+        if (!(await fs_extra_1.default.pathExists(infraDir))) {
             return removedFiles;
         }
         const stackFiles = await fs_extra_1.default.readdir(infraDir);
@@ -122,7 +117,7 @@ class FileManager {
     }
     async updateGitignore(additionalPatterns = []) {
         const gitignorePath = path_1.default.join(this.rootDir, '.gitignore');
-        if (!await fs_extra_1.default.pathExists(gitignorePath)) {
+        if (!(await fs_extra_1.default.pathExists(gitignorePath))) {
             return;
         }
         const content = await fs_extra_1.default.readFile(gitignorePath, 'utf-8');
@@ -145,29 +140,24 @@ class FileManager {
         await fs_extra_1.default.writeFile(configPath, JSON.stringify(config, null, 2));
     }
     async getFilesToProcess() {
-        const patterns = [
-            'CLAUDE.md',
-            'README.md',
-            'docs/**/*.md',
-            '.claude/**/*.template'
-        ];
+        const patterns = ['CLAUDE.md', 'README.md', 'docs/**/*.md', '.claude/**/*.template'];
         const files = [];
         for (const pattern of patterns) {
             const matches = await (0, glob_1.glob)(pattern, {
                 cwd: this.rootDir,
-                ignore: ['node_modules/**', 'scripts/**', '.backups/**']
+                ignore: ['node_modules/**', 'scripts/**', '.backups/**'],
             });
             files.push(...matches);
         }
         return files;
     }
     async restoreFromBackup(backupDir) {
-        if (!await fs_extra_1.default.pathExists(backupDir)) {
+        if (!(await fs_extra_1.default.pathExists(backupDir))) {
             throw new Error(`Backup directory not found: ${backupDir}`);
         }
         const files = await (0, glob_1.glob)('**/*', {
             cwd: backupDir,
-            nodir: true
+            nodir: true,
         });
         for (const file of files) {
             const sourcePath = path_1.default.join(backupDir, file);
