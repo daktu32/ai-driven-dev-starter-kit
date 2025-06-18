@@ -4,7 +4,8 @@
   "description": "Interactive setup assistant for Claude Code development projects",
   "main": "setup-assistant.js",
   "bin": {
-    "setup": "./setup-assistant.js"
+    "setup": "./setup-assistant.js",
+    "skeleton": "./skeleton-generator.js"
   },
   "scripts": {
     "build": "tsc",

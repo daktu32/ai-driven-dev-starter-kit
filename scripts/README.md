@@ -2,6 +2,24 @@
 
 Interactive CLI tool to customize the Claude Code Development Starter Kit for your specific project.
 
+## NEW: スケルトン生成コマンド
+
+任意のパスに新しいプロジェクトのスケルトンを生成できます。
+
+```bash
+# scripts ディレクトリでビルド済みであることを確認
+npm run build
+
+# スケルトン生成コマンドを実行
+npx ./skeleton-generator.js
+
+# またはグローバルインストール後
+npx skeleton
+```
+
+- 対話形式で生成先パスやプロジェクト名、含めるファイルを選択できます
+- .cursorrules も自動生成されます
+
 ## Features
 
 - 🎯 **Smart Prompt Selection** - Automatically recommends the best development prompt based on team size, industry, and compliance needs
