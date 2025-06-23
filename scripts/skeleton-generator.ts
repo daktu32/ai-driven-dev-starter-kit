@@ -5,6 +5,7 @@ import * as path from 'path';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import ora from 'ora';
+import { getCursorRulesContent } from './lib/cursorRules.js';
 
 interface SkeletonOptions {
   targetPath: string;
@@ -191,54 +192,7 @@ class SkeletonGenerator {
   }
 
   private async generateCursorRules(targetPath: string): Promise<void> {
-    const cursorRulesContent = `# Cursor Rules - 日本語コミュニケーション設定
-
-## 会話ガイドライン
-- 常に日本語で会話する
-
-## 開発哲学
-
-### テスト駆動開発（TDD）
-- 原則としてテスト駆動開発（TDD）で進める
-- 期待される入出力に基づき、まずテストを作成する
-- 実装コードは書かず、テストのみを用意する
-- テストを実行し、失敗を確認する
-- テストが正しいことを確認できた段階でコミットする
-- その後、テストをパスさせる実装を進める
-- 実装中はテストを変更せず、コードを修正し続ける
-- すべてのテストが通過するまで繰り返す
-
-## 言語設定
-- 常に日本語でコミュニケーションを行ってください
-- コードコメントも日本語で記述してください
-- エラーメッセージやログの説明も日本語で行ってください
-
-## コーディングスタイル
-- 変数名や関数名は英語で記述（プログラミングの慣例に従う）
-- コメント、ドキュメント、READMEは日本語で記述
-- コミットメッセージは日本語で記述
-
-## コミュニケーション
-- 技術的な説明は分かりやすい日本語で行ってください
-- 専門用語を使用する場合は、必要に応じて説明を加えてください
-- 質問や確認は日本語で行ってください
-
-## プロジェクト固有の設定
-- このプロジェクトは ${this.options.projectName} です
-- 開発環境のセットアップや設定に関する質問は日本語で対応してください
-- ドキュメントの作成や更新も日本語で行ってください
-
-## ファイル命名規則
-- 設定ファイルやドキュメントファイルは日本語名も可
-- ソースコードファイルは英語名で統一
-- ディレクトリ名は英語で統一
-
-## エラーハンドリング
-- エラーメッセージの説明は日本語で行ってください
-- デバッグ情報も日本語で提供してください
-- トラブルシューティングの手順も日本語で説明してください
-`;
-
+    const cursorRulesContent = getCursorRulesContent(this.options.projectName);
     await fs.writeFile(path.join(targetPath, '.cursorrules'), cursorRulesContent);
   }
 

@@ -46,6 +46,7 @@ const promptSelector_js_1 = require("./lib/promptSelector.js");
 const templateProcessor_js_1 = require("./lib/templateProcessor.js");
 const fileManager_js_1 = require("./lib/fileManager.js");
 const validator_js_1 = require("./lib/validator.js");
+const cursorRules_js_1 = require("./lib/cursorRules.js");
 class SetupAssistant {
     constructor() {
         this.targetDir = '';
@@ -342,62 +343,7 @@ class SetupAssistant {
         }
     }
     async generateCursorRules(targetPath, config) {
-        const cursorRulesContent = `# Cursor Rules - 日本語コミュニケーション設定
-
-## 会話ガイドライン
-- 常に日本語で会話する
-
-## 開発哲学
-
-### テスト駆動開発（TDD）
-- 原則としてテスト駆動開発（TDD）で進める
-- 期待される入出力に基づき、まずテストを作成する
-- 実装コードは書かず、テストのみを用意する
-- テストを実行し、失敗を確認する
-- テストが正しいことを確認できた段階でコミットする
-- その後、テストをパスさせる実装を進める
-- 実装中はテストを変更せず、コードを修正し続ける
-- すべてのテストが通過するまで繰り返す
-
-### Git Worktree 管理
-- 新機能開発やバグ修正は原則としてworktreeでブランチを切ってから開始する
-- メインブランチ（main）での直接開発は避ける
-- worktree作成手順：
-  1. \`git worktree add ../feature/機能名 機能名\`
-  2. 開発作業を実施
-  3. 完了後、\`git worktree remove ../feature/機能名\` で削除
-- 複数の機能を並行開発する場合は、それぞれ別のworktreeを使用する
-
-## 言語設定
-- 常に日本語でコミュニケーションを行ってください
-- コードコメントも日本語で記述してください
-- エラーメッセージやログの説明も日本語で行ってください
-
-## コーディングスタイル
-- 変数名や関数名は英語で記述（プログラミングの慣例に従う）
-- コメント、ドキュメント、READMEは日本語で記述
-- コミットメッセージは日本語で記述
-
-## コミュニケーション
-- 技術的な説明は分かりやすい日本語で行ってください
-- 専門用語を使用する場合は、必要に応じて説明を加えてください
-- 質問や確認は日本語で行ってください
-
-## プロジェクト固有の設定
-- このプロジェクトは ${config.projectName} です
-- 開発環境のセットアップや設定に関する質問は日本語で対応してください
-- ドキュメントの作成や更新も日本語で行ってください
-
-## ファイル命名規則
-- 設定ファイルやドキュメントファイルは日本語名も可
-- ソースコードファイルは英語名で統一
-- ディレクトリ名は英語で統一
-
-## エラーハンドリング
-- エラーメッセージの説明は日本語で行ってください
-- デバッグ情報も日本語で提供してください
-- トラブルシューティングの手順も日本語で説明してください
-`;
+        const cursorRulesContent = (0, cursorRules_js_1.getCursorRulesContent)(config.projectName, true);
         await fs.writeFile(path.join(targetPath, '.cursorrules'), cursorRulesContent);
     }
     async updatePackageJson(targetPath, config) {

@@ -42,6 +42,7 @@ const path = __importStar(require("path"));
 const inquirer_1 = __importDefault(require("inquirer"));
 const chalk_1 = __importDefault(require("chalk"));
 const ora_1 = __importDefault(require("ora"));
+const cursorRules_js_1 = require("./lib/cursorRules.js");
 class SkeletonGenerator {
     constructor() {
         this.sourceDir = path.resolve(__dirname, '..');
@@ -74,7 +75,7 @@ class SkeletonGenerator {
                         return 'パスを入力してください';
                     }
                     return true;
-                }
+                },
             },
             {
                 type: 'input',
@@ -89,38 +90,38 @@ class SkeletonGenerator {
                         return 'プロジェクト名は英数字、ハイフン、アンダースコアのみ使用可能です';
                     }
                     return true;
-                }
+                },
             },
             {
                 type: 'confirm',
                 name: 'includeDocs',
                 message: 'ドキュメントファイルを含めますか？',
-                default: true
+                default: true,
             },
             {
                 type: 'confirm',
                 name: 'includeScripts',
                 message: 'スクリプトファイルを含めますか？',
-                default: true
+                default: true,
             },
             {
                 type: 'confirm',
                 name: 'includePrompts',
                 message: 'プロンプトファイルを含めますか？',
-                default: true
+                default: true,
             },
             {
                 type: 'confirm',
                 name: 'includeInfrastructure',
                 message: 'インフラストラクチャファイルを含めますか？',
-                default: false
+                default: false,
             },
             {
                 type: 'confirm',
                 name: 'customCursorRules',
                 message: 'プロジェクト固有の .cursorrules を生成しますか？',
-                default: true
-            }
+                default: true,
+            },
         ]);
         this.options = answers;
     }
@@ -132,8 +133,8 @@ class SkeletonGenerator {
                     type: 'confirm',
                     name: 'overwrite',
                     message: `ディレクトリ "${targetPath}" は既に存在します。上書きしますか？`,
-                    default: false
-                }
+                    default: false,
+                },
             ]);
             if (!overwrite) {
                 throw new Error('ユーザーによってキャンセルされました');
@@ -158,7 +159,7 @@ class SkeletonGenerator {
                 'FEATURE_SUMMARY.md',
                 'PROGRESS.md',
                 'PROJECT_STRUCTURE.md',
-                'PROMPT.md'
+                'PROMPT.md',
             ];
             if (this.options.includeDocs) {
                 copyItems.push('docs');
@@ -191,53 +192,7 @@ class SkeletonGenerator {
         }
     }
     async generateCursorRules(targetPath) {
-        const cursorRulesContent = `# Cursor Rules - 日本語コミュニケーション設定
-
-## 会話ガイドライン
-- 常に日本語で会話する
-
-## 開発哲学
-
-### テスト駆動開発（TDD）
-- 原則としてテスト駆動開発（TDD）で進める
-- 期待される入出力に基づき、まずテストを作成する
-- 実装コードは書かず、テストのみを用意する
-- テストを実行し、失敗を確認する
-- テストが正しいことを確認できた段階でコミットする
-- その後、テストをパスさせる実装を進める
-- 実装中はテストを変更せず、コードを修正し続ける
-- すべてのテストが通過するまで繰り返す
-
-## 言語設定
-- 常に日本語でコミュニケーションを行ってください
-- コードコメントも日本語で記述してください
-- エラーメッセージやログの説明も日本語で行ってください
-
-## コーディングスタイル
-- 変数名や関数名は英語で記述（プログラミングの慣例に従う）
-- コメント、ドキュメント、READMEは日本語で記述
-- コミットメッセージは日本語で記述
-
-## コミュニケーション
-- 技術的な説明は分かりやすい日本語で行ってください
-- 専門用語を使用する場合は、必要に応じて説明を加えてください
-- 質問や確認は日本語で行ってください
-
-## プロジェクト固有の設定
-- このプロジェクトは ${this.options.projectName} です
-- 開発環境のセットアップや設定に関する質問は日本語で対応してください
-- ドキュメントの作成や更新も日本語で行ってください
-
-## ファイル命名規則
-- 設定ファイルやドキュメントファイルは日本語名も可
-- ソースコードファイルは英語名で統一
-- ディレクトリ名は英語で統一
-
-## エラーハンドリング
-- エラーメッセージの説明は日本語で行ってください
-- デバッグ情報も日本語で提供してください
-- トラブルシューティングの手順も日本語で説明してください
-`;
+        const cursorRulesContent = (0, cursorRules_js_1.getCursorRulesContent)(this.options.projectName);
         await fs.writeFile(path.join(targetPath, '.cursorrules'), cursorRulesContent);
     }
     async updatePackageJson(targetPath) {
