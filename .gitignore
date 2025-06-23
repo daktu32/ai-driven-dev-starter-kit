@@ -126,6 +126,7 @@ docs/phase-reports/phase*.md
 # Build artifacts
 build/
 dist/
+scripts/dist/
 *.tgz
 *.tar.gz
 
