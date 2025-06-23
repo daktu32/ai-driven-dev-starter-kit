@@ -11,24 +11,24 @@ A simplified version for smaller projects or teams getting started with Claude C
 ## Development Flow
 
 ### Phase 1: Planning
--  Define user requirements
--  Create basic technical plan
--  Set up development environment
+- [ ] Define user requirements
+- [ ] Create basic technical plan
+- [ ] Set up development environment
 
 **Approval**: `/approve phase1`
 
 ### Phase 2: Implementation
--  Implement core features
--  Write tests (≥80% coverage)
--  Code review by peer
+- [ ] Implement core features
+- [ ] Write tests (≥80% coverage)
+- [ ] Code review by peer
 
 **Approval**: `/approve phase2`
 
 ### Phase 3: Testing & Deployment
--  All tests passing
--  Manual QA testing
--  Deploy to staging
--  Demo to stakeholders
+- [ ] All tests passing
+- [ ] Manual QA testing
+- [ ] Deploy to staging
+- [ ] Demo to stakeholders
 
 **Approval**: `/approve phase3`
 

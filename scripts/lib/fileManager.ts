@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { glob } from 'glob';
+import { ProjectConfig } from './types.js';
 
 export class FileManager {
   private readonly rootDir: string;

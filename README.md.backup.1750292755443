@@ -88,7 +88,7 @@ Choose from specialized prompts based on your project type:
 - **Open Source Development** - Community-driven projects
 - **Startup Development** - Fast iteration, market validation
 
-See (prompts/README.md) for detailed selection guide.
+See [prompts/README.md](prompts/README.md) for detailed selection guide.
 
 ### PROGRESS.md
 A living document that tracks:
@@ -144,7 +144,7 @@ npm run build
 
 ## Infrastructure
 
-This starter kit includes infrastructure templates for common architectures. See (docs/tech-stack.md) for detailed technology choices and (infrastructure/) for implementation.
+This starter kit includes infrastructure templates for common architectures. See [docs/tech-stack.md](docs/tech-stack.md) for detailed technology choices and [infrastructure/](infrastructure/) for implementation.
 
 ### Deployment
 
@@ -243,13 +243,13 @@ This starter kit includes GitHub Actions workflows:
 
 ## Contributing
 
-See (CONTRIBUTING.md) for guidelines on contributing to this starter kit.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to this starter kit.
 
 ## Resources
 
-- (https://docs.anthropic.com/en/docs/claude-code)
-- (https://docs.aws.amazon.com/cdk/)
-- (https://adr.github.io/)
+- [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
+- [AWS CDK Documentation](https://docs.aws.amazon.com/cdk/)
+- [Architecture Decision Records](https://adr.github.io/)
 
 ## License
 

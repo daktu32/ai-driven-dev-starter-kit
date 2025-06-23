@@ -2,26 +2,26 @@
 
 ## 🏗️ Overview
 
-wezterm-parallel is built using  architecture.
+[Your project name] is built using [describe your architecture pattern - e.g., serverless, microservices, monolithic] architecture.
 
 ```mermaid
 graph TB
     subgraph "Presentation Layer"
-        CLIENT
-        CDN
-        STATIC
+        CLIENT["Client Application"]
+        CDN["CDN"]
+        STATIC["Static Assets"]
     end
     
     subgraph "Application Layer"
-        API
-        SERVICES
-        AUTH
+        API["API Gateway"]
+        SERVICES["Application Services"]
+        AUTH["Authentication Service"]
     end
     
     subgraph "Data Layer"
-        DB
-        STORAGE
-        CACHE
+        DB["Database"]
+        STORAGE["File Storage"]
+        CACHE["Cache Layer"]
     end
     
     CLIENT --> CDN
@@ -40,31 +40,31 @@ graph TB
 
 | Principle | Description | Implementation Impact |
 |-----------|-------------|---------------------|
-| **** |  |  |
-| **** |  |  |
-| **** |  |  |
-| **** |  |  |
+| **[Principle 1]** | [Description] | [How it affects design] |
+| **[Principle 2]** | [Description] | [How it affects design] |
+| **[Principle 3]** | [Description] | [How it affects design] |
+| **[Principle 4]** | [Description] | [How it affects design] |
 
 ### Architectural Decisions
 
-#### 1. 
-**Decision**: 
+#### 1. [Major Decision Area]
+**Decision**: [What was decided]
 
 **Rationale**:
-- 
-- 
-- 
+- [Reason 1]
+- [Reason 2]
+- [Reason 3]
 
 **Trade-offs**:
-- : 
-- : 
+- [Pro]: [Benefit]
+- [Con]: [Drawback]
 
-#### 2. 
-**Decision**: 
+#### 2. [Major Decision Area]
+**Decision**: [What was decided]
 
 **Rationale**:
-- 
-- 
+- [Reason 1]
+- [Reason 2]
 
 ## 📁 Project Structure
 
@@ -88,16 +88,16 @@ project-root/
 
 ```mermaid
 graph TD
-    A --> B
-    A --> C
-    C --> D
-    C --> E
-    B --> F
+    A[Shared Module] --> B[Frontend Module]
+    A --> C[Backend Module]
+    C --> D[Database Module]
+    C --> E[External Services]
+    B --> F[UI Components]
 ```
 
 ## 🔄 Data Flow
 
-### 
+### [Flow Name 1]
 
 ```mermaid
 sequenceDiagram
@@ -107,27 +107,27 @@ sequenceDiagram
     participant Service
     participant Database
     
-    User->>Frontend: 
-    Frontend->>API: 
-    API->>Service: 
-    Service->>Database: 
-    Database->>Service: 
-    Service->>API: 
-    API->>Frontend: 
-    Frontend->>User: 
+    User->>Frontend: [Action]
+    Frontend->>API: [Request]
+    API->>Service: [Process]
+    Service->>Database: [Query]
+    Database->>Service: [Result]
+    Service->>API: [Response]
+    API->>Frontend: [Data]
+    Frontend->>User: [Display]
 ```
 
-### 
+### [Flow Name 2]
 
-
+[Describe another important data flow]
 
 ## 📊 Data Models
 
 ### Database Schema
 
-#### 
+#### [Entity 1]
 ```typescript
-interface  {
+interface [Entity1] {
   id: string;
   // Add fields
   createdAt: Date;
@@ -135,9 +135,9 @@ interface  {
 }
 ```
 
-#### 
+#### [Entity 2]
 ```typescript
-interface  {
+interface [Entity2] {
   id: string;
   // Add fields
   createdAt: Date;
@@ -149,11 +149,11 @@ interface  {
 
 ```typescript
 // Request/Response models
-interface  {
+interface [APIModel1] {
   // Define structure
 }
 
-interface  {
+interface [APIModel2] {
   // Define structure
 }
 ```
@@ -166,54 +166,54 @@ interface  {
 services/
 ├── auth/              # Authentication service
 ├── user/              # User management
-├── /        # 
-├── /        # 
+├── [service1]/        # [Description]
+├── [service2]/        # [Description]
 └── shared/            # Shared utilities
 ```
 
 ### Service Communication
 
-- **Protocol**: 
-- **Format**: 
-- **Authentication**: 
+- **Protocol**: [REST/GraphQL/gRPC]
+- **Format**: [JSON/Protocol Buffers]
+- **Authentication**: [JWT/OAuth/API Keys]
 
 ## 🚀 Performance Considerations
 
 ### Optimization Strategies
 
 1. **Caching**
-   - 
-   - 
+   - [Cache strategy 1]
+   - [Cache strategy 2]
 
 2. **Database Optimization**
-   - 
-   - 
+   - [Optimization 1]
+   - [Optimization 2]
 
 3. **Network Optimization**
-   - 
-   - 
+   - [Optimization 1]
+   - [Optimization 2]
 
 ### Scalability Patterns
 
-- **Horizontal Scaling**: 
-- **Load Balancing**: 
-- **Rate Limiting**: 
+- **Horizontal Scaling**: [How services scale]
+- **Load Balancing**: [Strategy]
+- **Rate Limiting**: [Implementation]
 
 ## 🔒 Security Architecture
 
 ### Security Layers
 
 1. **Network Security**
-   - 
-   - 
+   - [Measure 1]
+   - [Measure 2]
 
 2. **Application Security**
-   - 
-   - 
+   - [Measure 1]
+   - [Measure 2]
 
 3. **Data Security**
-   - 
-   - 
+   - [Measure 1]
+   - [Measure 2]
 
 ### Authentication & Authorization
 
@@ -230,9 +230,9 @@ interface AuthFlow {
 
 ### Metrics Collection
 
-- **Application Metrics**: 
-- **Infrastructure Metrics**: 
-- **Business Metrics**: 
+- **Application Metrics**: [What's measured]
+- **Infrastructure Metrics**: [What's measured]
+- **Business Metrics**: [What's measured]
 
 ### Logging Strategy
 
@@ -257,32 +257,32 @@ interface LogEntry {
 
 | Alert | Condition | Severity | Action |
 |-------|-----------|----------|--------|
-|  |  | High/Medium/Low |  |
-|  |  | High/Medium/Low |  |
+| [Alert 1] | [Condition] | High/Medium/Low | [Response] |
+| [Alert 2] | [Condition] | High/Medium/Low | [Response] |
 
 ## 🧪 Testing Strategy
 
 ### Testing Levels
 
 1. **Unit Tests**
-   - Coverage target: %
-   - Framework: 
+   - Coverage target: [X]%
+   - Framework: [Framework name]
 
 2. **Integration Tests**
-   - Scope: 
-   - Framework: 
+   - Scope: [What's tested]
+   - Framework: [Framework name]
 
 3. **End-to-End Tests**
-   - Scenarios: 
-   - Framework: 
+   - Scenarios: [Key scenarios]
+   - Framework: [Framework name]
 
 ### Test Structure
 
 ```typescript
 // Example test structure
-describe('', () => {
-  describe('', () => {
-    it('should ', () => {
+describe('[Component/Service]', () => {
+  describe('[Feature]', () => {
+    it('should [expected behavior]', () => {
       // Test implementation
     });
   });
@@ -293,31 +293,31 @@ describe('', () => {
 
 ### Environments
 
-- **Development**: 
-- **Staging**: 
-- **Production**: 
+- **Development**: [Description]
+- **Staging**: [Description]
+- **Production**: [Description]
 
 ### Deployment Pipeline
 
 ```mermaid
 graph LR
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
+    A[Code Push] --> B[Build]
+    B --> C[Test]
+    C --> D[Security Scan]
+    D --> E[Deploy to Staging]
+    E --> F[E2E Tests]
+    F --> G[Deploy to Production]
 ```
 
 ### Infrastructure as Code
 
-- **Tool**: 
-- **State Management**: 
-- **Secret Management**: 
+- **Tool**: [Terraform/CDK/Pulumi]
+- **State Management**: [Strategy]
+- **Secret Management**: [Strategy]
 
 ## 📚 Related Documentation
 
-- **Development Guide**: (../CONTRIBUTING.md)
-- **API Documentation**: 
-- **Deployment Guide**: 
-- **Security Guidelines**: 
+- **Development Guide**: [CONTRIBUTING.md](../CONTRIBUTING.md)
+- **API Documentation**: [Link to API docs]
+- **Deployment Guide**: [Link to deployment docs]
+- **Security Guidelines**: [Link to security docs]

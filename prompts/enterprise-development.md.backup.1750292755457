@@ -65,7 +65,7 @@ enterprise_requirements:
     - business_rule_documentation: "All business rules clearly documented"
 
 human_approval_gate:
-  approvers: 
+  approvers: ["Product Owner", "Solution Architect", "Compliance Officer"]
   approval_command: "/approve phase1"
   compliance_checklist:
     - "✅ All regulatory requirements identified and documented"
@@ -105,7 +105,7 @@ security_review_gate:
     - privacy_impact_assessment: "PIA completed for data privacy compliance"
 
 human_approval_gate:
-  approvers: 
+  approvers: ["Solution Architect", "Security Engineer", "Enterprise Architecture Board"]
   approval_command: "/approve phase2"
   architectural_checklist:
     - "✅ Solution aligns with enterprise architecture standards"
@@ -167,7 +167,7 @@ enterprise_implementation:
       - right_to_deletion: "GDPR deletion capabilities implemented"
 
 human_approval_gate:
-  approvers: 
+  approvers: ["Tech Lead", "Security Engineer", "Compliance Officer"]
   approval_command: "/approve phase3"
   implementation_checklist:
     - "✅ All code reviewed per enterprise standards"
@@ -215,7 +215,7 @@ enterprise_testing:
     - test_environment_parity: "Test environments match production configuration"
 
 human_approval_gate:
-  approvers: 
+  approvers: ["QA Lead", "Security Engineer", "Business Stakeholder"]
   approval_command: "/approve phase4"
   testing_checklist:
     - "✅ All test cases executed with documented results"
@@ -257,7 +257,7 @@ enterprise_deployment:
       - operations_readiness: "Operations team confirms support readiness"
 
 human_approval_gate:
-  approvers: 
+  approvers: ["Project Manager", "Product Owner", "Security Engineer", "Operations Manager"]
   approval_command: "/approve phase5"
   go_live_checklist:
     - "✅ Production environment secured and monitored"
@@ -275,17 +275,17 @@ severity_levels:
   CRITICAL:
     response_time: "15 minutes"
     escalation_path: "Project Manager → Program Manager → CTO"
-    notification: 
+    notification: ["All team members", "Management", "Stakeholders"]
     
   HIGH:
     response_time: "1 hour"
     escalation_path: "Tech Lead → Project Manager → Program Manager"
-    notification: 
+    notification: ["Development team", "Project stakeholders"]
     
   MEDIUM:
     response_time: "4 hours"
     escalation_path: "Developer → Tech Lead → Project Manager"
-    notification: 
+    notification: ["Development team"]
 ```
 
 ### Compliance Requirements
