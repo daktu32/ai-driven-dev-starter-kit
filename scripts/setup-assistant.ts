@@ -3,21 +3,26 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import ora from 'ora';
+import * as fs from 'fs-extra';
+import * as path from 'path';
 import { PromptSelector } from './lib/promptSelector.js';
 import { TemplateProcessor } from './lib/templateProcessor.js';
 import { FileManager } from './lib/fileManager.js';
 import { Validator } from './lib/validator.js';
-import { ProjectConfig, SetupOptions, TechStackConfig } from './lib/types.js';
+import { ProjectConfig, SetupOptions, TechStackConfig, PromptType, TeamConfig } from './lib/types.js';
 
 class SetupAssistant {
   private options: SetupOptions;
   private fileManager: FileManager;
   private templateProcessor: TemplateProcessor;
+  private sourceDir: string;
+  private targetDir: string = '';
 
   constructor() {
     this.options = this.parseCliOptions();
-    this.fileManager = new FileManager();
-    this.templateProcessor = new TemplateProcessor();
+    this.sourceDir = process.cwd();
+    this.fileManager = new FileManager(this.sourceDir);
+    this.templateProcessor = new TemplateProcessor(this.sourceDir);
   }
 
   private parseCliOptions(): SetupOptions {
@@ -34,20 +39,17 @@ class SetupAssistant {
 
   async run(): Promise<void> {
     try {
-      console.log(chalk.blue('🚀 Claude Code Development Starter Kit Setup Assistant'));
-      console.log(chalk.gray('This will help you customize the starter kit for your project\n'));
+      console.log(chalk.blue('🚀 Claude Code Development Starter Kit - 新規プロジェクト作成'));
+      console.log(chalk.gray('新しいプロジェクトディレクトリを作成します\n'));
 
       if (this.options.dryRun) {
-        console.log(chalk.yellow('🔍 Running in DRY RUN mode - no files will be modified\n'));
+        console.log(chalk.yellow('🔍 DRY RUN モード - ファイルは変更されません\n'));
       }
 
-      // Validate project structure
-      await this.validateProjectStructure();
-
-      // Collect project information
+      // プロジェクト情報を収集
       const projectInfo = await this.collectProjectInfo();
 
-      // Select or confirm prompt
+      // プロンプトを選択または確認
       const { prompt, team } =
         this.options.skipPromptSelection && this.options.prompt
           ? {
@@ -61,10 +63,10 @@ class SetupAssistant {
             }
           : await PromptSelector.selectPrompt();
 
-      // Collect tech stack information
+      // 技術スタック情報を収集
       const techStack = await this.collectTechStackInfo();
 
-      // Create project configuration
+      // プロジェクト設定を作成
       const config: ProjectConfig = {
         ...projectInfo,
         prompt,
@@ -73,79 +75,64 @@ class SetupAssistant {
         customizations: {},
       };
 
-      // Validate configuration
+      // 設定を検証
       await this.validateConfiguration(config);
 
-      // Show summary and confirm
+      // サマリーを表示して確認
       if (!this.options.dryRun) {
         await this.showSummaryAndConfirm(config);
       }
 
-      // Create backup
-      const backupDir = await this.createBackup();
+      // 新しいプロジェクトディレクトリを作成
+      await this.createNewProject(config);
 
-      // Process templates
-      await this.processTemplates(config);
-
-      // Copy selected prompt file
-      await this.copyPromptFile(config.prompt);
-
-      // Clean up unused files
-      await this.cleanupUnusedFiles(config);
-
-      // Create project configuration file
-      await this.createProjectConfig(config);
-
-      // Show completion message
-      this.showCompletionMessage(backupDir);
+      // 完了メッセージを表示
+      this.showCompletionMessage();
     } catch (error) {
-      console.error(chalk.red('❌ Setup failed:'), error);
+      console.error(chalk.red('❌ プロジェクト作成に失敗しました:'), error);
       process.exit(1);
     }
-  }
-
-  private async validateProjectStructure(): Promise<void> {
-    const spinner = ora('Validating project structure...').start();
-
-    const validation = await this.fileManager.validateProjectStructure();
-
-    if (!validation.valid) {
-      spinner.fail('Project structure validation failed');
-      console.log(chalk.red('Issues found:'));
-      validation.issues.forEach((issue) => console.log(chalk.red(`  - ${issue}`)));
-      throw new Error('Invalid project structure');
-    }
-
-    spinner.succeed('Project structure is valid');
   }
 
   private async collectProjectInfo(): Promise<
     Omit<ProjectConfig, 'prompt' | 'team' | 'techStack' | 'customizations'>
   > {
-    console.log(chalk.blue('\n📝 Project Information\n'));
+    console.log(chalk.blue('\n📝 プロジェクト情報\n'));
 
     const questions = [
       {
         type: 'input',
         name: 'projectName',
-        message: 'What is your project name?',
+        message: 'プロジェクト名を入力してください:',
         validate: Validator.validateProjectName,
         filter: (input: string) => Validator.sanitizeProjectName(input),
       },
       {
         type: 'input',
         name: 'description',
-        message: 'Provide a brief description of your project:',
+        message: 'プロジェクトの説明を入力してください:',
         validate: Validator.validateDescription,
         filter: (input: string) => Validator.sanitizeDescription(input),
       },
       {
         type: 'input',
         name: 'repositoryUrl',
-        message: 'What is your GitHub repository URL?',
+        message: 'GitHubリポジトリのURLを入力してください:',
         validate: Validator.validateRepositoryUrl,
         default: (answers: { projectName: string }) =>
           `https://github.com/your-username/${Validator.generateSlugFromName(answers.projectName)}`,
+      },
+      {
+        type: 'input',
+        name: 'targetPath',
+        message: 'プロジェクトを作成するパスを入力してください:',
+        default: (answers: { projectName: string }) => `../${answers.projectName}`,
+        validate: (input: string) => {
+          if (!input.trim()) {
+            return 'パスを入力してください';
+          }
+          return true;
+        },
       },
     ];
 
@@ -153,85 +140,83 @@ class SetupAssistant {
   }
 
   private async collectTechStackInfo(): Promise<TechStackConfig> {
-    console.log(chalk.blue('\n🛠️  Technology Stack\n'));
+    console.log(chalk.blue('\n🛠️  技術スタック\n'));
 
     const questions = [
       {
         type: 'list',
         name: 'frontend',
-        message: 'Choose your frontend framework:',
+        message: 'フロントエンドフレームワークを選択してください:',
         choices: [
           { name: 'Next.js (React)', value: 'Next.js' },
           { name: 'React', value: 'React' },
           { name: 'Vue.js', value: 'Vue.js' },
           { name: 'Angular', value: 'Angular' },
           { name: 'Svelte', value: 'Svelte' },
-          { name: 'Other', value: 'Other' },
+          { name: 'その他', value: 'Other' },
         ],
       },
       {
         type: 'list',
         name: 'backend',
-        message: 'Choose your backend framework:',
+        message: 'バックエンドフレームワークを選択してください:',
         choices: [
           { name: 'Node.js + Express', value: 'Node.js + Express' },
           { name: 'Node.js + Fastify', value: 'Node.js + Fastify' },
           { name: 'AWS Lambda', value: 'AWS Lambda' },
           { name: 'Python + FastAPI', value: 'Python + FastAPI' },
           { name: 'Python + Django', value: 'Python + Django' },
-          { name: 'Other', value: 'Other' },
+          { name: 'その他', value: 'Other' },
         ],
       },
       {
         type: 'list',
         name: 'database',
-        message: 'Choose your database:',
+        message: 'データベースを選択してください:',
         choices: [
           { name: 'PostgreSQL', value: 'PostgreSQL' },
           { name: 'MySQL', value: 'MySQL' },
           { name: 'MongoDB', value: 'MongoDB' },
           { name: 'DynamoDB', value: 'DynamoDB' },
           { name: 'SQLite', value: 'SQLite' },
-          { name: 'Other', value: 'Other' },
+          { name: 'その他', value: 'Other' },
         ],
       },
       {
         type: 'list',
         name: 'infrastructure',
-        message: 'Choose your infrastructure platform:',
+        message: 'インフラストラクチャプラットフォームを選択してください:',
         choices: [
-          { name: 'AWS (CDK)', value: 'AWS CDK' },
-          { name: 'AWS (Terraform)', value: 'AWS Terraform' },
-          { name: 'Google Cloud', value: 'Google Cloud' },
-          { name: 'Azure', value: 'Azure' },
+          { name: 'AWS', value: 'AWS' },
+          { name: 'Google Cloud Platform', value: 'GCP' },
+          { name: 'Microsoft Azure', value: 'Azure' },
           { name: 'Vercel', value: 'Vercel' },
           { name: 'Netlify', value: 'Netlify' },
-          { name: 'Other', value: 'Other' },
+          { name: 'その他', value: 'Other' },
         ],
       },
       {
         type: 'list',
         name: 'deployment',
-        message: 'Choose your deployment method:',
+        message: 'デプロイ方法を選択してください:',
         choices: [
           { name: 'GitHub Actions', value: 'GitHub Actions' },
-          { name: 'AWS CodePipeline', value: 'AWS CodePipeline' },
           { name: 'GitLab CI', value: 'GitLab CI' },
           { name: 'Jenkins', value: 'Jenkins' },
-          { name: 'Other', value: 'Other' },
+          { name: 'Docker', value: 'Docker' },
+          { name: 'その他', value: 'Other' },
         ],
       },
       {
         type: 'list',
         name: 'monitoring',
-        message: 'Choose your monitoring solution:',
+        message: '監視ソリューションを選択してください:',
         choices: [
-          { name: 'CloudWatch (AWS)', value: 'CloudWatch' },
+          { name: 'Sentry', value: 'Sentry' },
           { name: 'DataDog', value: 'DataDog' },
           { name: 'New Relic', value: 'New Relic' },
-          { name: 'Sentry', value: 'Sentry' },
-          { name: 'Basic logging', value: 'Basic logging' },
-          { name: 'Other', value: 'Other' },
+          { name: 'CloudWatch', value: 'CloudWatch' },
+          { name: 'その他', value: 'Other' },
         ],
       },
     ];
@@ -240,181 +225,280 @@ class SetupAssistant {
   }
 
   private async validateConfiguration(config: ProjectConfig): Promise<void> {
-    const spinner = ora('Validating configuration...').start();
+    const spinner = ora('設定を検証中...').start();
 
-    const validation = Validator.validateProjectConfig(config);
+    try {
+      // 基本的な検証
+      if (!config.projectName || !config.description || !config.repositoryUrl) {
+        throw new Error('必須項目が不足しています');
+      }
 
-    if (!validation.valid) {
-      spinner.fail('Configuration validation failed');
-      console.log(chalk.red('Validation errors:'));
-      validation.errors.forEach((error) => console.log(chalk.red(`  - ${error}`)));
-      throw new Error('Invalid configuration');
+      // ターゲットパスの検証
+      const targetPath = path.resolve(config.targetPath || `../${config.projectName}`);
+      if (await fs.pathExists(targetPath)) {
+        const { overwrite } = await inquirer.prompt([
+          {
+            type: 'confirm',
+            name: 'overwrite',
+            message: `ディレクトリ "${targetPath}" は既に存在します。上書きしますか？`,
+            default: false,
+          },
+        ]);
+
+        if (!overwrite) {
+          throw new Error('ユーザーによってキャンセルされました');
+        }
+
+        await fs.remove(targetPath);
+      }
+
+      spinner.succeed('設定は有効です');
+    } catch (error) {
+      spinner.fail('設定の検証に失敗しました');
+      throw error;
     }
-
-    spinner.succeed('Configuration is valid');
   }
 
   private async showSummaryAndConfirm(config: ProjectConfig): Promise<void> {
-    console.log(chalk.blue('\n📋 Configuration Summary\n'));
+    console.log(chalk.blue('\n📋 設定サマリー\n'));
 
-    console.log(chalk.white('Project:'));
-    console.log(`  Name: ${chalk.green(config.projectName)}`);
-    console.log(`  Description: ${chalk.green(config.description)}`);
-    console.log(`  Repository: ${chalk.green(config.repositoryUrl)}`);
+    console.log(chalk.white('プロジェクト:'));
+    console.log(chalk.gray(`  名前: ${config.projectName}`));
+    console.log(chalk.gray(`  説明: ${config.description}`));
+    console.log(chalk.gray(`  リポジトリ: ${config.repositoryUrl}`));
+    console.log(chalk.gray(`  作成先: ${config.targetPath || `../${config.projectName}`}`));
 
-    console.log(chalk.white('\nDevelopment Approach:'));
-    console.log(`  Prompt: ${chalk.green(config.prompt)}`);
-    console.log(`  Team Size: ${chalk.green(config.team.size)}`);
-    console.log(`  Industry: ${chalk.green(config.team.industry)}`);
+    console.log(chalk.white('\n開発アプローチ:'));
+    console.log(chalk.gray(`  プロンプト: ${config.prompt}`));
+    console.log(chalk.gray(`  チームサイズ: ${config.team.size}`));
+    console.log(chalk.gray(`  業界: ${config.team.industry}`));
 
-    console.log(chalk.white('\nTechnology Stack:'));
-    console.log(`  Frontend: ${chalk.green(config.techStack.frontend)}`);
-    console.log(`  Backend: ${chalk.green(config.techStack.backend)}`);
-    console.log(`  Database: ${chalk.green(config.techStack.database)}`);
-    console.log(`  Infrastructure: ${chalk.green(config.techStack.infrastructure)}`);
+    console.log(chalk.white('\n技術スタック:'));
+    console.log(chalk.gray(`  フロントエンド: ${config.techStack.frontend}`));
+    console.log(chalk.gray(`  バックエンド: ${config.techStack.backend}`));
+    console.log(chalk.gray(`  データベース: ${config.techStack.database}`));
+    console.log(chalk.gray(`  インフラ: ${config.techStack.infrastructure}`));
 
-    const confirm = await inquirer.prompt([
+    const { confirm } = await inquirer.prompt([
       {
         type: 'confirm',
-        name: 'proceed',
-        message: 'Proceed with the setup using this configuration?',
+        name: 'confirm',
+        message: 'この設定でプロジェクトを作成しますか？',
         default: true,
       },
     ]);
 
-    if (!confirm.proceed) {
-      console.log(chalk.yellow('Setup cancelled by user'));
-      process.exit(0);
+    if (!confirm) {
+      throw new Error('ユーザーによってキャンセルされました');
     }
   }
 
-  private async createBackup(): Promise<string> {
-    if (this.options.dryRun) {
-      console.log(chalk.yellow('Would create backup directory'));
-      return 'dry-run-backup';
-    }
-
-    const spinner = ora('Creating backup of existing files...').start();
-    const backupDir = await this.fileManager.backupAllTemplates();
-    spinner.succeed(`Backup created: ${backupDir}`);
-    return backupDir;
-  }
-
-  private async processTemplates(config: ProjectConfig): Promise<void> {
-    const spinner = ora('Processing template files...').start();
+  private async createNewProject(config: ProjectConfig): Promise<void> {
+    const spinner = ora('新しいプロジェクトを作成中...').start();
+    const targetPath = path.resolve(config.targetPath || `../${config.projectName}`);
+    this.targetDir = targetPath;
 
     try {
-      const processedFiles = await this.templateProcessor.processAllTemplates(
-        config,
-        this.options.dryRun,
-      );
+      // ターゲットディレクトリを作成
+      await fs.ensureDir(targetPath);
 
-      if (this.options.dryRun) {
-        spinner.succeed(`Would process ${processedFiles.length} files`);
-      } else {
-        spinner.succeed(`Processed ${processedFiles.length} template files`);
-      }
+      // コピーするファイルとディレクトリのリスト
+      const copyItems = [
+        'README.md',
+        'package.json',
+        'package-lock.json',
+        '.gitignore',
+        'CLAUDE.md',
+        'CONTRIBUTING.md',
+        'CUSTOMIZATION_GUIDE.md',
+        'DEVELOPMENT_ROADMAP.md',
+        'FEATURE_SUMMARY.md',
+        'PROGRESS.md',
+        'PROJECT_STRUCTURE.md',
+        'docs',
+        'prompts',
+        'scripts',
+        'infrastructure',
+        '.github',
+        'decisions',
+      ];
 
-      if (this.options.verbose) {
-        console.log(chalk.gray('Processed files:'));
-        processedFiles.forEach((file) => console.log(chalk.gray(`  - ${file}`)));
-      }
-    } catch (error) {
-      spinner.fail('Failed to process templates');
-      throw error;
-    }
-  }
+      // ファイルとディレクトリをコピー
+      for (const item of copyItems) {
+        const sourcePath = path.join(this.sourceDir, item);
+        const targetItemPath = path.join(targetPath, item);
 
-  private async copyPromptFile(promptType: string): Promise<void> {
-    const spinner = ora(`Setting up ${promptType} prompt...`).start();
-
-    try {
-      await this.templateProcessor.copyPromptFile(promptType, this.options.dryRun);
-
-      if (this.options.dryRun) {
-        spinner.succeed(`Would copy ${promptType} prompt to PROMPT.md`);
-      } else {
-        spinner.succeed(`Copied ${promptType} prompt to PROMPT.md`);
-      }
-    } catch (error) {
-      spinner.fail('Failed to copy prompt file');
-      throw error;
-    }
-  }
-
-  private async cleanupUnusedFiles(config: ProjectConfig): Promise<void> {
-    const spinner = ora('Cleaning up unused files...').start();
-
-    try {
-      if (!this.options.dryRun) {
-        const removedFiles = await this.fileManager.removeUnusedInfrastructure(config.techStack);
-        if (removedFiles.length > 0) {
-          spinner.succeed(`Removed ${removedFiles.length} unused infrastructure files`);
-        } else {
-          spinner.succeed('No unused files to remove');
+        if (await fs.pathExists(sourcePath)) {
+          await fs.copy(sourcePath, targetItemPath);
         }
-      } else {
-        spinner.succeed('Would clean up unused files');
       }
+
+      // プロジェクト設定ファイルを作成
+      await this.createProjectConfig(targetPath, config);
+
+      // テンプレートファイルを処理
+      await this.processTemplates(targetPath, config);
+
+      // 選択されたプロンプトファイルをコピー
+      await this.copyPromptFile(targetPath, config.prompt);
+
+      // .cursorrules を生成
+      await this.generateCursorRules(targetPath, config);
+
+      // package.json を更新
+      await this.updatePackageJson(targetPath, config);
+
+      // 不要なファイルを削除
+      await this.cleanupFiles(targetPath);
+
+      spinner.succeed('新しいプロジェクトの作成が完了しました');
     } catch (error) {
-      spinner.fail('Failed to clean up files');
+      spinner.fail('プロジェクトの作成に失敗しました');
       throw error;
     }
   }
 
-  private async createProjectConfig(config: ProjectConfig): Promise<void> {
-    if (this.options.dryRun) {
-      console.log(chalk.yellow('Would create .claude/project-config.json'));
-      return;
-    }
+  private async createProjectConfig(targetPath: string, config: ProjectConfig): Promise<void> {
+    const configDir = path.join(targetPath, '.claude');
+    const configPath = path.join(configDir, 'project-config.json');
 
-    const spinner = ora('Creating project configuration...').start();
+    await fs.ensureDir(configDir);
+    await fs.writeFile(configPath, JSON.stringify(config, null, 2));
+  }
 
-    try {
-      await this.fileManager.createProjectConfigFile(config);
-      await this.fileManager.updateGitignore(['.claude/project-config.json']);
-      spinner.succeed('Created project configuration file');
-    } catch (error) {
-      spinner.fail('Failed to create project configuration');
-      throw error;
+  private async processTemplates(targetPath: string, config: ProjectConfig): Promise<void> {
+    const templateProcessor = new TemplateProcessor(targetPath);
+    await templateProcessor.processAllTemplates(config);
+  }
+
+  private async copyPromptFile(targetPath: string, promptType: string): Promise<void> {
+    const sourceFile = path.join(this.sourceDir, 'prompts', `${promptType}.md`);
+    const targetFile = path.join(targetPath, 'PROMPT.md');
+
+    if (await fs.pathExists(sourceFile)) {
+      await fs.copy(sourceFile, targetFile);
     }
   }
 
-  private showCompletionMessage(backupDir: string): void {
-    console.log(chalk.green('\n✅ Setup completed successfully!\n'));
+  private async generateCursorRules(targetPath: string, config: ProjectConfig): Promise<void> {
+    const cursorRulesContent = `# Cursor Rules - 日本語コミュニケーション設定
 
-    if (!this.options.dryRun) {
-      console.log(chalk.white('What was done:'));
-      console.log(chalk.gray('  ✓ Created backup of original files'));
-      console.log(chalk.gray('  ✓ Processed all template files with your configuration'));
-      console.log(chalk.gray('  ✓ Copied selected development prompt'));
-      console.log(chalk.gray('  ✓ Cleaned up unused infrastructure files'));
-      console.log(chalk.gray('  ✓ Created project configuration file'));
+## 会話ガイドライン
+- 常に日本語で会話する
 
-      console.log(chalk.white('\nNext steps:'));
-      console.log(chalk.gray('  1. Review the updated files'));
-      console.log(chalk.gray('  2. Install project dependencies'));
-      console.log(chalk.gray('  3. Set up your development environment'));
-      console.log(chalk.gray('  4. Start developing with Claude Code!'));
+## 開発哲学
 
-      console.log(chalk.white(`\nBackup location: ${chalk.blue(backupDir)}`));
-      console.log(chalk.gray('You can restore from backup if needed'));
-    } else {
-      console.log(chalk.yellow('This was a dry run - no files were actually modified.'));
-      console.log(chalk.gray('Run without --dry-run to apply the changes.'));
+### テスト駆動開発（TDD）
+- 原則としてテスト駆動開発（TDD）で進める
+- 期待される入出力に基づき、まずテストを作成する
+- 実装コードは書かず、テストのみを用意する
+- テストを実行し、失敗を確認する
+- テストが正しいことを確認できた段階でコミットする
+- その後、テストをパスさせる実装を進める
+- 実装中はテストを変更せず、コードを修正し続ける
+- すべてのテストが通過するまで繰り返す
+
+### Git Worktree 管理
+- 新機能開発やバグ修正は原則としてworktreeでブランチを切ってから開始する
+- メインブランチ（main）での直接開発は避ける
+- worktree作成手順：
+  1. \`git worktree add ../feature/機能名 機能名\`
+  2. 開発作業を実施
+  3. 完了後、\`git worktree remove ../feature/機能名\` で削除
+- 複数の機能を並行開発する場合は、それぞれ別のworktreeを使用する
+
+## 言語設定
+- 常に日本語でコミュニケーションを行ってください
+- コードコメントも日本語で記述してください
+- エラーメッセージやログの説明も日本語で行ってください
+
+## コーディングスタイル
+- 変数名や関数名は英語で記述（プログラミングの慣例に従う）
+- コメント、ドキュメント、READMEは日本語で記述
+- コミットメッセージは日本語で記述
+
+## コミュニケーション
+- 技術的な説明は分かりやすい日本語で行ってください
+- 専門用語を使用する場合は、必要に応じて説明を加えてください
+- 質問や確認は日本語で行ってください
+
+## プロジェクト固有の設定
+- このプロジェクトは ${config.projectName} です
+- 開発環境のセットアップや設定に関する質問は日本語で対応してください
+- ドキュメントの作成や更新も日本語で行ってください
+
+## ファイル命名規則
+- 設定ファイルやドキュメントファイルは日本語名も可
+- ソースコードファイルは英語名で統一
+- ディレクトリ名は英語で統一
+
+## エラーハンドリング
+- エラーメッセージの説明は日本語で行ってください
+- デバッグ情報も日本語で提供してください
+- トラブルシューティングの手順も日本語で説明してください
+`;
+
+    await fs.writeFile(path.join(targetPath, '.cursorrules'), cursorRulesContent);
+  }
+
+  private async updatePackageJson(targetPath: string, config: ProjectConfig): Promise<void> {
+    const packageJsonPath = path.join(targetPath, 'package.json');
+    const packageJson = await fs.readJson(packageJsonPath);
+
+    // プロジェクト名を更新
+    packageJson.name = config.projectName.toLowerCase().replace(/\s+/g, '-');
+    packageJson.description = `${config.projectName} - ${config.description}`;
+
+    // リポジトリ情報をクリア
+    delete packageJson.repository;
+    delete packageJson.bugs;
+    delete packageJson.homepage;
+
+    await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
+  }
+
+  private async cleanupFiles(targetPath: string): Promise<void> {
+    // .git ディレクトリを削除（新しいリポジトリとして初期化するため）
+    const gitPath = path.join(targetPath, '.git');
+    if (await fs.pathExists(gitPath)) {
+      await fs.remove(gitPath);
     }
 
-    console.log(chalk.blue('\n🤖 Ready for Claude Code development!'));
+    // node_modules を削除（新しくインストールするため）
+    const nodeModulesPath = path.join(targetPath, 'node_modules');
+    if (await fs.pathExists(nodeModulesPath)) {
+      await fs.remove(nodeModulesPath);
+    }
+
+    // バックアップディレクトリを削除
+    const backupPath = path.join(targetPath, '.backups');
+    if (await fs.pathExists(backupPath)) {
+      await fs.remove(backupPath);
+    }
+  }
+
+  private showCompletionMessage(): void {
+    console.log(chalk.green.bold('\n✅ 新しいプロジェクトの作成が完了しました！'));
+    
+    console.log(chalk.cyan.bold('\n📋 次のステップ:'));
+    console.log(chalk.white(`1. プロジェクトディレクトリに移動:`));
+    console.log(chalk.gray(`   cd ${this.targetDir || '新しいプロジェクトディレクトリ'}`));
+    console.log(chalk.white(`2. 依存関係をインストール:`));
+    console.log(chalk.gray(`   npm install`));
+    console.log(chalk.white(`3. Git リポジトリを初期化:`));
+    console.log(chalk.gray(`   git init`));
+    console.log(chalk.gray(`   git add .`));
+    console.log(chalk.gray(`   git commit -m "Initial commit"`));
+    console.log(chalk.white(`4. 開発を開始:`));
+    console.log(chalk.gray(`   npm run setup`));
+    console.log(chalk.cyan.bold('\n🎉 新しいプロジェクトの準備が完了しました！'));
   }
 }
 
-// Run the setup assistant
+// メイン実行
 if (require.main === module) {
   const assistant = new SetupAssistant();
-  assistant.run().catch((error) => {
-    console.error(chalk.red('Fatal error:'), error);
-    process.exit(1);
-  });
+  assistant.run().catch(console.error);
 }
 
 export default SetupAssistant;

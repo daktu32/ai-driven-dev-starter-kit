@@ -152,3 +152,7 @@ e2e-results/
 # package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
+
+# Setup assistant backups
+.backups/
+.claude/project-config.json

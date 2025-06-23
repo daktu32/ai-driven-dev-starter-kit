@@ -52,9 +52,9 @@ docker --version
 ### Step 2: AWSアカウント・認証設定
 
 #### 2.1 AWS アカウント
--  AWSアカウント作成（未作成の場合）
--  管理者ユーザー作成（IAMユーザー）
--  アクセスキー生成
+- [ ] AWSアカウント作成（未作成の場合）
+- [ ] 管理者ユーザー作成（IAMユーザー）
+- [ ] アクセスキー生成
 
 #### 2.2 AWS CLI 設定
 ```bash
@@ -62,8 +62,8 @@ docker --version
 aws configure
 
 # 以下を入力
-AWS Access Key ID: 
-AWS Secret Access Key: 
+AWS Access Key ID: [アクセスキー]
+AWS Secret Access Key: [シークレットキー]
 Default region name: ap-northeast-1
 Default output format: json
 
@@ -74,7 +74,7 @@ aws sts get-caller-identity
 #### 2.3 CDK Bootstrap
 ```bash
 # CDKリソース初期化（初回のみ）
-cdk bootstrap aws:///ap-northeast-1
+cdk bootstrap aws://[ACCOUNT-ID]/ap-northeast-1
 ```
 
 ---
@@ -84,7 +84,7 @@ cdk bootstrap aws:///ap-northeast-1
 #### 3.1 プロジェクトディレクトリ作成
 ```bash
 # GitHubリポジトリをクローン
-git clone  careerfm
+git clone [YOUR-REPO-URL] careerfm
 cd careerfm
 
 # プロジェクト構造作成
@@ -141,7 +141,13 @@ cd ..
 ```json
 // .vscode/extensions.json
 {
-  "recommendations": 
+  "recommendations": [
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-json",
+    "amazonwebservices.aws-toolkit-vscode"
+  ]
 }
 ```
 
@@ -267,8 +273,8 @@ npx husky add .husky/pre-commit "npx lint-staged"
 # lint-staged設定（package.json）
 {
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": ,
-    "*.{json,md}": 
+    "*.{ts,tsx,js,jsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,md}": ["prettier --write"]
   }
 }
 ```
@@ -300,18 +306,18 @@ npm run build
 
 ## ✅ セットアップ完了チェック
 
--  Node.js 18+ インストール済み
--  AWS CLI v2 設定済み
--  CDK CLI インストール・Bootstrap完了
--  GitHubリポジトリクローン済み
--  CDKプロジェクト初期化完了
--  Next.jsプロジェクト初期化完了
--  バックエンドプロジェクト初期化完了
--  環境変数ファイル作成済み
--  LocalStack起動確認済み
--  ESLint/Prettier設定済み
--  CDK synth成功
--  Next.js開発サーバー起動成功
+- [ ] Node.js 18+ インストール済み
+- [ ] AWS CLI v2 設定済み
+- [ ] CDK CLI インストール・Bootstrap完了
+- [ ] GitHubリポジトリクローン済み
+- [ ] CDKプロジェクト初期化完了
+- [ ] Next.jsプロジェクト初期化完了
+- [ ] バックエンドプロジェクト初期化完了
+- [ ] 環境変数ファイル作成済み
+- [ ] LocalStack起動確認済み
+- [ ] ESLint/Prettier設定済み
+- [ ] CDK synth成功
+- [ ] Next.js開発サーバー起動成功
 
 ---
 

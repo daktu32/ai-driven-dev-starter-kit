@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: 
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
         env:
           NODE_ENV: production
           # Add your environment-specific variables here
-          # API_URL: $
+          # API_URL: ${{ secrets.STAGING_API_URL }}
       
       - name: Deploy to staging
         run: |
@@ -35,7 +35,7 @@ jobs:
           # Example for AWS:
           # npm run deploy:staging
           # Example for Vercel:
-          # npx vercel --prod --token=$
+          # npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
           echo "Deploy to staging environment"
 
   deploy-production:
@@ -61,7 +61,7 @@ jobs:
         env:
           NODE_ENV: production
           # Add your environment-specific variables here
-          # API_URL: $
+          # API_URL: ${{ secrets.PRODUCTION_API_URL }}
       
       - name: Deploy to production
         run: |

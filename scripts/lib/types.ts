@@ -2,6 +2,7 @@ export interface ProjectConfig {
   projectName: string;
   description: string;
   repositoryUrl: string;
+  targetPath?: string;
   prompt: PromptType;
   techStack: TechStackConfig;
   team: TeamConfig;
