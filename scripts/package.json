@@ -2,16 +2,16 @@
   "name": "claude-code-setup-assistant",
   "version": "1.0.0",
   "description": "Interactive setup assistant for Claude Code development projects",
-  "main": "setup-assistant.js",
+  "main": "dist/setup-assistant.js",
   "bin": {
-    "setup": "./setup-assistant.js",
-    "skeleton": "./skeleton-generator.js"
+    "setup": "./dist/setup-assistant.js",
+    "skeleton": "./dist/skeleton-generator.js"
   },
   "scripts": {
     "build": "tsc",
     "dev": "ts-node setup-assistant.ts",
-    "setup": "npm run build && node setup-assistant.js",
-    "setup:dry-run": "npm run build && node setup-assistant.js --dry-run",
+    "setup": "npm run build && node dist/setup-assistant.js",
+    "setup:dry-run": "npm run build && node dist/setup-assistant.js --dry-run",
     "test": "jest --passWithNoTests",
     "lint": "eslint . --ext .ts,.js --fix",
     "type-check": "tsc --noEmit"
