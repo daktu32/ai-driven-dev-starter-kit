@@ -5,7 +5,6 @@ import * as path from 'path';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import ora from 'ora';
-import { glob } from 'glob';
 
 interface SkeletonOptions {
   targetPath: string;
@@ -34,7 +33,7 @@ class SkeletonGenerator {
       await this.validateTargetPath();
       await this.generateSkeleton();
       await this.postProcess();
-      
+
       console.log(chalk.green.bold('\n✅ スケルトンの生成が完了しました！'));
       this.printNextSteps();
     } catch (error) {
@@ -55,7 +54,7 @@ class SkeletonGenerator {
             return 'パスを入力してください';
           }
           return true;
-        }
+        },
       },
       {
         type: 'input',
@@ -70,38 +69,38 @@ class SkeletonGenerator {
             return 'プロジェクト名は英数字、ハイフン、アンダースコアのみ使用可能です';
           }
           return true;
-        }
+        },
       },
       {
         type: 'confirm',
         name: 'includeDocs',
         message: 'ドキュメントファイルを含めますか？',
-        default: true
+        default: true,
       },
       {
         type: 'confirm',
         name: 'includeScripts',
         message: 'スクリプトファイルを含めますか？',
-        default: true
+        default: true,
       },
       {
         type: 'confirm',
         name: 'includePrompts',
         message: 'プロンプトファイルを含めますか？',
-        default: true
+        default: true,
       },
       {
         type: 'confirm',
         name: 'includeInfrastructure',
         message: 'インフラストラクチャファイルを含めますか？',
-        default: false
+        default: false,
       },
       {
         type: 'confirm',
         name: 'customCursorRules',
         message: 'プロジェクト固有の .cursorrules を生成しますか？',
-        default: true
-      }
+        default: true,
+      },
     ]);
 
     this.options = answers as SkeletonOptions;
@@ -109,15 +108,15 @@ class SkeletonGenerator {
 
   private async validateTargetPath(): Promise<void> {
     const targetPath = path.resolve(this.options.targetPath);
-    
+
     if (await fs.pathExists(targetPath)) {
       const { overwrite } = await inquirer.prompt([
         {
           type: 'confirm',
           name: 'overwrite',
           message: `ディレクトリ "${targetPath}" は既に存在します。上書きしますか？`,
-          default: false
-        }
+          default: false,
+        },
       ]);
 
       if (!overwrite) {
@@ -149,7 +148,7 @@ class SkeletonGenerator {
         'FEATURE_SUMMARY.md',
         'PROGRESS.md',
         'PROJECT_STRUCTURE.md',
-        'PROMPT.md'
+        'PROMPT.md',
       ];
 
       // オプションに基づいてディレクトリを追加
@@ -261,7 +260,7 @@ class SkeletonGenerator {
 
   private async postProcess(): Promise<void> {
     const targetPath = path.resolve(this.options.targetPath);
-    
+
     // .git ディレクトリを削除（新しいリポジトリとして初期化するため）
     const gitPath = path.join(targetPath, '.git');
     if (await fs.pathExists(gitPath)) {
@@ -277,7 +276,7 @@ class SkeletonGenerator {
 
   private printNextSteps(): void {
     const targetPath = path.resolve(this.options.targetPath);
-    
+
     console.log(chalk.cyan.bold('\n📋 次のステップ:'));
     console.log(chalk.white(`1. プロジェクトディレクトリに移動:`));
     console.log(chalk.gray(`   cd ${targetPath}`));
@@ -299,4 +298,4 @@ if (require.main === module) {
   generator.run().catch(console.error);
 }
 
-export default SkeletonGenerator; 
+export default SkeletonGenerator;
