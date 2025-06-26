@@ -1,0 +1,39 @@
+{
+  "name": "ai-driven-dev-starter-kit",
+  "version": "1.0.0",
+  "description": "このスターターキットは、AI駆動開発やAIエージェントを活用した開発のための包括的なテンプレート集です。setup-assistantを使用することで、プロジェクトの規模や用途に応じた最適な開発環境をscaffoldできます。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "cucumber-js",
+    "test:dry-run": "cucumber-js --dry-run",
+    "test:features": "cucumber-js features/",
+    "test:reports": "npm run test && echo 'Test reports generated in test/reports/'",
+    "clean:test": "rimraf test/temp test/reports"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daktu32/ai-driven-dev-starter-kit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/daktu32/ai-driven-dev-starter-kit/issues"
+  },
+  "homepage": "https://github.com/daktu32/ai-driven-dev-starter-kit#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^11.3.0",
+    "@types/chai": "^5.2.2",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^24.0.4",
+    "chai": "^5.2.0",
+    "fs-extra": "^11.3.0",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}

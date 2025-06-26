@@ -1,0 +1,3857 @@
+
+> ai-driven-dev-starter-kit@1.0.0 test
+> cucumber-js --format json
+
+This Node.js version (v24.2.0) has not been tested with this version of Cucumber; it should work normally, but please raise an issue if you see anything unexpected.
+E2E テストセットアップ開始...
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191932-ppwsw5dsj
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191932-ppwsw5dsj/debug-info.json
+最後のコマンド: 
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191945-x9mk3r1l9
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191945-x9mk3r1l9/debug-info.json
+最後のコマンド: 
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191952-mqy9hc91c
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191952-mqy9hc91c/debug-info.json
+最後のコマンド: 
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191955-we54x1343
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191955-we54x1343/debug-info.json
+最後のコマンド: 
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191960-8xq0rjnww
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191960-8xq0rjnww/debug-info.json
+最後のコマンド: add-custom-prompts
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191964-6br9plmah
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191964-6br9plmah/debug-info.json
+最後のコマンド: 
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191966-jb62o236v
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191966-jb62o236v/debug-info.json
+最後のコマンド: cd /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191966-jb62o236v/test-project
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191969-yfimwgrzn
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191969-yfimwgrzn/debug-info.json
+最後のコマンド: cd /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191969-yfimwgrzn/test-project
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191972-pj61xhy0m
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191972-pj61xhy0m/debug-info.json
+最後のコマンド: require-additional-libraries
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191975-be55qb5li
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191975-be55qb5li/debug-info.json
+最後のコマンド: cd /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191975-be55qb5li/test-project
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191977-4b1smwm30
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191977-4b1smwm30/debug-info.json
+最後のコマンド: add-readme-to-directories
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191981-29z1wbqba
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191981-29z1wbqba/debug-info.json
+最後のコマンド: cd /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191981-29z1wbqba/test-project
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191984-edk3t7zn7
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191984-edk3t7zn7/debug-info.json
+最後のコマンド: npm --version
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191986-5cajcfhnt
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191986-5cajcfhnt/debug-info.json
+最後のコマンド: npm --version
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191988-m0019jjgo
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191988-m0019jjgo/debug-info.json
+最後のコマンド: npm --version
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191989-tssk7rhjl
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191989-tssk7rhjl/debug-info.json
+最後のコマンド: npm --version
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191991-glh66zk8l
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191993-gico56pgo
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191994-flne9jpil
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191995-y8n2yv9z0
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191996-mmppc6qyg
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191996-mmppc6qyg/debug-info.json
+最後のコマンド: show-architecture-template-selection
+エラー: undefined
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191998-aahwl5a8x
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925192000-irsligkc2
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925192001-8zyoqj8fm
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925192002-ak9ju014w
+テストシナリオ開始: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925192003-lbzsz6aik
+テスト失敗 - デバッグ情報: /Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925192003-lbzsz6aik/debug-info.json
+最後のコマンド: show-development-prompt-selection
+エラー: undefined
+E2E テスト完了
+[
+  {
+    "description": "  AI駆動開発を実践する開発者として\n  AIコーディングアシスタントを設定したい\n  効率的にAIと協働できるようにするため",
+    "elements": [
+      {
+        "description": "",
+        "id": "ai開発ツールの設定;claude-codeの設定",
+        "keyword": "シナリオ",
+        "line": 12,
+        "name": "Claude Codeの設定",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 533875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6302249
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "AI開発ツールの設定を選択している",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 339707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 13,
+            "name": "\"Claude Code\"の設定を選択する",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1371082
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 14,
+            "name": ".claude/ディレクトリが作成される",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:23"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 830750,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/missing-steps.ts:25:54)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 15,
+            "name": ".claude/CLAUDE.mdが生成される",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:28"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "セクション",
+                      "内容"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "プロジェクト概要",
+                      "プロジェクトの目的と技術スタック"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "アーキテクチャ",
+                      "システム構成とコンポーネント"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "開発ガイドライン",
+                      "コーディング規約とベストプラクティス"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "禁止事項",
+                      "避けるべき実装パターン"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 16,
+            "name": "CLAUDE.mdには以下の内容が含まれる:",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:62"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 22,
+            "name": ".claude/prompts/にプロンプトテンプレートが配置される",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:33"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 369500
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "ai開発ツールの設定;github-copilotの設定",
+        "keyword": "シナリオ",
+        "line": 24,
+        "name": "GitHub Copilotの設定",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 237708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4530040
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "AI開発ツールの設定を選択している",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 70541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 25,
+            "name": "\"GitHub Copilot\"の設定を選択する",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 147749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 26,
+            "name": ".github/copilot-instructions.mdが作成される",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:122"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 605625,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/missing-steps.ts:124:56)"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "content": "{\n  \"github.copilot.enable\": {\n    \"*\": true,\n    \"yaml\": true,\n    \"plaintext\": true,\n    \"markdown\": true\n  }\n}",
+                "line": 28
+              }
+            ],
+            "keyword": "かつ",
+            "line": 27,
+            "name": ".vscode/settings.jsonに以下が追加される:",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:127"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 38,
+            "name": "copilot-instructions.mdにプロジェクト固有の指示が含まれる",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:101"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 356291
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "ai開発ツールの設定;cursorの設定",
+        "keyword": "シナリオ",
+        "line": 40,
+        "name": "Cursorの設定",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 249874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1237707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "AI開発ツールの設定を選択している",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 31833
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 41,
+            "name": "\"Cursor\"の設定を選択する",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 27583
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 42,
+            "name": ".cursorrules ファイルが作成される",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:137"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 449291,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/missing-steps.ts:139:49)"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "ルールタイプ",
+                      "内容"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "コード生成ルール",
+                      "プロジェクトのコーディング規約"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "インポート規則",
+                      "依存関係の管理方法"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "テスト作成ルール",
+                      "テストの書き方とカバレッジ要件"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "ドキュメント生成",
+                      "コメントとドキュメントのスタイル"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 43,
+            "name": "カーソルルールには以下が含まれる:",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:111"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 401374
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "ai開発ツールの設定;複数aiツールの統合設定",
+        "keyword": "シナリオ",
+        "line": 50,
+        "name": "複数AIツールの統合設定",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 238333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1066042
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "AI開発ツールの設定を選択している",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 51,
+            "name": "\"Claude Code\"と\"GitHub Copilot\"と\"Cursor\"を選択する",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:142"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 1920249,
+              "error_message": "Error: ENOENT: no such file or directory, open '/Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191955-we54x1343/Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191955-we54x1343/test-project/.gitignore'"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 52,
+            "name": "各ツールの設定ファイルが作成される",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:124"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 53,
+            "name": ".ai-tools/ディレクトリに統合設定が作成される",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:164"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 54,
+            "name": "各ツール間で一貫性のある設定が保たれる",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:146"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 55,
+            "name": "README.mdにAIツールの使い分けガイドが追加される",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:155"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 224166
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "ai開発ツールの設定;カスタムaiプロンプトの作成",
+        "keyword": "シナリオ",
+        "line": 57,
+        "name": "カスタムAIプロンプトの作成",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 218166
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1069250
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "AI開発ツールの設定を選択している",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 58,
+            "name": "AIツール設定後にカスタムプロンプトを追加する",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:17"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 212792
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "ファイル名",
+                      "用途"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "refactoring.md",
+                      "リファクタリング支援"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "bug-fix.md",
+                      "バグ修正支援"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "feature-implementation.md",
+                      "新機能実装支援"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "code-review.md",
+                      "コードレビュー支援"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 59,
+            "name": ".claude/prompts/custom/にファイルを作成する:",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:151"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 851417
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 65,
+            "name": "各プロンプトがプロジェクトコンテキストを含む",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:163"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 285583
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 66,
+            "name": "AIツールがこれらのプロンプトを活用できる",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:176"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 271874,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/ai-tools.steps.ts:180:55)"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 183041
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "ai開発ツールの設定;aiツール用の.gitignore設定",
+        "keyword": "シナリオ",
+        "line": 68,
+        "name": "AIツール用の.gitignore設定",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 244040
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1046333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "AI開発ツールの設定を選択している",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 14458
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 69,
+            "name": "AIツール設定が完了する",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:34"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 149916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 70,
+            "name": ".gitignoreファイルを確認する",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:47"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 236958,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/ai-tools.steps.ts:49:53)"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "content": "# AI Tools\n.ai-cache/\n.cursor-tutor/\n.copilot/\n*.ai-generated\n.ai-tools/cache/",
+                "line": 72
+              }
+            ],
+            "keyword": "ならば",
+            "line": 71,
+            "name": "以下のエントリが含まれている:",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:184"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 80,
+            "name": "AI生成の一時ファイルがリポジトリに含まれない",
+            "match": {
+              "location": "test/step-definitions/ai-tools.steps.ts:196"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 177500
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "ai開発ツールの設定",
+    "line": 3,
+    "keyword": "機能",
+    "name": "AI開発ツールの設定",
+    "tags": [],
+    "uri": "features/ai-tools/ai-development-tools-setup.feature"
+  },
+  {
+    "description": "  プロジェクトオーナーとして\n  生成されたプロジェクトをカスタマイズしたい\n  プロジェクト固有の要件に合わせるため",
+    "elements": [
+      {
+        "description": "",
+        "id": "プロジェクトのカスタマイズ;プロジェクト情報の更新",
+        "keyword": "シナリオ",
+        "line": 12,
+        "name": "プロジェクト情報の更新",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 249291
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1056459
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 164250
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 13,
+            "name": "README.mdを開く",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:19"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 224083,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/customization.steps.ts:21:50)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 14,
+            "name": "プロジェクト名を\"AI-Powered Task Manager\"に変更する",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:24"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "content": "AIを活用したタスク管理ツール。\n自然言語でタスクを作成し、優先順位を自動判定します。",
+                "line": 16
+              }
+            ],
+            "keyword": "かつ",
+            "line": 15,
+            "name": "プロジェクトの説明を追加する:",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:35"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 20,
+            "name": "package.jsonのnameフィールドを\"ai-task-manager\"に更新する",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:45"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 21,
+            "name": "プロジェクト情報が正しく更新される",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:195"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 22,
+            "name": "全ての設定ファイルで一貫性が保たれる",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:203"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 336583
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "プロジェクトのカスタマイズ;環境変数の設定",
+        "keyword": "シナリオ",
+        "line": 24,
+        "name": "環境変数の設定",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 236332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1035499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11542
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 25,
+            "name": ".env.exampleファイルが存在する",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:56"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 620458,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/customization.steps.ts:65:54)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 26,
+            "name": ".envファイルを作成する",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:68"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "変数名",
+                      "値"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "DATABASE_URL",
+                      "postgresql://localhost/db"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "API_KEY",
+                      "your-api-key-here"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "NODE_ENV",
+                      "development"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 27,
+            "name": "以下の環境変数を設定する:",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:76"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 32,
+            "name": "アプリケーションが環境変数を正しく読み込める",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:211"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 33,
+            "name": ".envファイルは.gitignoreに含まれている",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:220"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 199250
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "プロジェクトのカスタマイズ;依存関係の追加",
+        "keyword": "シナリオ",
+        "line": 35,
+        "name": "依存関係の追加",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 261332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 997125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16540
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 36,
+            "name": "プロジェクトがNext.jsベースである",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:88"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 238875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 37,
+            "name": "追加のライブラリが必要である",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:92"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 110457
+            }
+          },
+          {
+            "arguments": [
+              {
+                "content": "npm install @tanstack/react-query axios zod\nnpm install -D @types/node",
+                "line": 39
+              }
+            ],
+            "keyword": "かつ",
+            "line": 38,
+            "name": "以下のコマンドを実行する:",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:97"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 303499,
+              "error_message": "Error: ENOENT: no such file or directory, open '/Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191972-pj61xhy0m/Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191972-pj61xhy0m/test-project/package.json'"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 43,
+            "name": "package.jsonに依存関係が追加される",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:227"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 44,
+            "name": "node_modulesがインストールされる",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:237"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 45,
+            "name": "TypeScriptの型定義が利用可能になる",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:242"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 284957
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "プロジェクトのカスタマイズ;カスタムスクリプトの追加",
+        "keyword": "シナリオ",
+        "line": 47,
+        "name": "カスタムスクリプトの追加",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 254082
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1059040
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13083
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 48,
+            "name": "package.jsonを編集する",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:104"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 277415,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/customization.steps.ts:106:55)"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "スクリプト名",
+                      "コマンド"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "db:migrate",
+                      "prisma migrate dev"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "db:seed",
+                      "tsx scripts/seed.ts"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "analyze",
+                      "next-bundle-analyzer"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "check-types",
+                      "tsc --noEmit"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 49,
+            "name": "scriptsセクションに以下を追加する:",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:109"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 55,
+            "name": "\"npm run db:migrate\"でマイグレーションが実行できる",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:250"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 56,
+            "name": "カスタムスクリプトが開発ワークフローに統合される",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:258"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 193457
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "プロジェクトのカスタマイズ;ディレクトリ構造のカスタマイズ",
+        "keyword": "シナリオ",
+        "line": 58,
+        "name": "ディレクトリ構造のカスタマイズ",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 368375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1080167
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 59,
+            "name": "追加のディレクトリが必要である",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:127"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 177665
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "ディレクトリ",
+                      "用途"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "src/features/",
+                      "機能別モジュール"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "src/shared/",
+                      "共有コンポーネント"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "src/utils/",
+                      "ユーティリティ関数"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "scripts/",
+                      "開発用スクリプト"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 60,
+            "name": "以下のディレクトリを作成する:",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:131"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 757957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 66,
+            "name": "各ディレクトリにREADME.mdを追加する",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:144"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 158624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 67,
+            "name": "プロジェクト構造が組織のニーズに合致する",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:268"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 240833,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/customization.steps.ts:273:54)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 68,
+            "name": "開発者が適切な場所にコードを配置できる",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:277"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 180583
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "プロジェクトのカスタマイズ;ci/cd設定のカスタマイズ",
+        "keyword": "シナリオ",
+        "line": 70,
+        "name": "CI/CD設定のカスタマイズ",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 280167
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトが生成済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1079582
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17207
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 71,
+            "name": ".github/workflows/ci.ymlが存在する",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:84"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 463040
+            }
+          },
+          {
+            "arguments": [
+              {
+                "content": "- name: Check test coverage\n  run: npm run test:coverage\n  env:\n    COVERAGE_THRESHOLD: 80",
+                "line": 73
+              }
+            ],
+            "keyword": "かつ",
+            "line": 72,
+            "name": "テストカバレッジの閾値を設定する:",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:173"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 254791,
+              "error_message": "Error: ENOENT: no such file or directory, open '/Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191981-29z1wbqba/Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925191981-29z1wbqba/test-project/.github/workflows/ci.yml'"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "環境",
+                      "ブランチ",
+                      "URL"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "staging",
+                      "develop",
+                      "https://staging.example.com"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "production",
+                      "main",
+                      "https://app.example.com"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 79,
+            "name": "デプロイ環境を追加する:",
+            "match": {
+              "location": "test/step-definitions/customization.steps.ts:183"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 83,
+            "name": "CI/CDパイプラインがプロジェクト要件に適合する",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:108"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 252250
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "プロジェクトのカスタマイズ",
+    "line": 3,
+    "keyword": "機能",
+    "name": "プロジェクトのカスタマイズ",
+    "tags": [],
+    "uri": "features/customization/project-customization.feature"
+  },
+  {
+    "description": "  AI駆動開発を始めたい開発者として\n  新しいプロジェクトをセットアップしたい\n  効率的に開発環境を構築できるようにするため",
+    "elements": [
+      {
+        "description": "",
+        "id": "プロジェクトの初期化;cliプロジェクトの新規作成",
+        "keyword": "シナリオ",
+        "line": 13,
+        "name": "CLIプロジェクトの新規作成",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 270625
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "開発者がAI Driven Dev Starter Kitをクローン済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 207167
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "Node.jsとnpmがインストール済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:11"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 276207
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "scriptsディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:20"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 683874,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:32:56)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 14,
+            "name": "\"npm run scaffold\"を実行する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:35"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 15,
+            "name": "プロジェクトタイプとして\"CLI (Rust)\"を選択する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:66"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 16,
+            "name": "プロジェクト名として\"my-cli-tool\"を入力する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:70"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 17,
+            "name": "開発プロンプトとして\"Basic Development\"を選択する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:74"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 18,
+            "name": "\"my-cli-tool\"ディレクトリが作成される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:78"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 19,
+            "name": "Rustプロジェクトの基本構造が生成される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:83"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 20,
+            "name": "Cargo.tomlにプロジェクト名\"my-cli-tool\"が設定される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:142"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 21,
+            "name": ".claude/prompts/basic-development.mdが含まれる",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 207124
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "プロジェクトの初期化;webアプリケーションの新規作成",
+        "keyword": "シナリオ",
+        "line": 23,
+        "name": "Webアプリケーションの新規作成",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 264083
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "開発者がAI Driven Dev Starter Kitをクローン済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 23167
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "Node.jsとnpmがインストール済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:11"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 88375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "scriptsディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:20"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 281707,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:32:56)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 24,
+            "name": "\"npm run scaffold\"を実行する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:35"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 25,
+            "name": "プロジェクトタイプとして\"Web (Next.js)\"を選択する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:66"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 26,
+            "name": "プロジェクト名として\"my-web-app\"を入力する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:70"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 27,
+            "name": "開発プロンプトとして\"Startup Development\"を選択する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:74"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 28,
+            "name": "\"my-web-app\"ディレクトリが作成される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:78"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 29,
+            "name": "Next.jsプロジェクトの基本構造が生成される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:100"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 30,
+            "name": "package.jsonにプロジェクト名\"my-web-app\"が設定される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:148"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 31,
+            "name": ".claude/prompts/startup-development.mdが含まれる",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 206249
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "プロジェクトの初期化;apiサーバーの新規作成",
+        "keyword": "シナリオ",
+        "line": 33,
+        "name": "APIサーバーの新規作成",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 286749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "開発者がAI Driven Dev Starter Kitをクローン済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 26124
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "Node.jsとnpmがインストール済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:11"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "scriptsディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:20"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 345582,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:32:56)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 34,
+            "name": "\"npm run scaffold\"を実行する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:35"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 35,
+            "name": "プロジェクトタイプとして\"API (FastAPI)\"を選択する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:66"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 36,
+            "name": "プロジェクト名として\"my-api-service\"を入力する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:70"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 37,
+            "name": "開発プロンプトとして\"Enterprise Development\"を選択する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:74"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 38,
+            "name": "\"my-api-service\"ディレクトリが作成される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:78"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 39,
+            "name": "FastAPIプロジェクトの基本構造が生成される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:121"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 40,
+            "name": "pyproject.tomlにプロジェクト名\"my-api-service\"が設定される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:155"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 41,
+            "name": ".claude/prompts/enterprise-development.mdが含まれる",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 255583
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "プロジェクトの初期化;既存プロジェクトのセットアップ",
+        "keyword": "シナリオ",
+        "line": 43,
+        "name": "既存プロジェクトのセットアップ",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 346792
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "開発者がAI Driven Dev Starter Kitをクローン済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 25916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "Node.jsとnpmがインストール済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:11"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49792
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "scriptsディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:20"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 301459,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:32:56)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 44,
+            "name": "既存のプロジェクトディレクトリが存在する",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:7"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 45,
+            "name": "\"npm run setup\"を実行する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:35"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 46,
+            "name": "開発プロンプトとして\"Open Source Development\"を選択する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:74"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 47,
+            "name": "Claude Code設定の追加を選択する",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:19"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 48,
+            "name": ".claude/ディレクトリが作成される",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:23"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 49,
+            "name": ".claude/prompts/open-source-development.mdが追加される",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 50,
+            "name": ".claude/CLAUDE.mdが生成される",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:28"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 51,
+            "name": "既存のファイルは上書きされない",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:51"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 208458
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "プロジェクトの初期化",
+    "line": 3,
+    "keyword": "機能",
+    "name": "プロジェクトの初期化",
+    "tags": [],
+    "uri": "features/project-setup/project-initialization.feature"
+  },
+  {
+    "description": "  システムアーキテクトとして\n  プロジェクトに適したアーキテクチャテンプレートを選択したい\n  効率的にシステム設計を開始できるようにするため",
+    "elements": [
+      {
+        "description": "",
+        "id": "アーキテクチャテンプレートの選択;モノリシックアーキテクチャの選択",
+        "keyword": "シナリオ",
+        "line": 13,
+        "name": "モノリシックアーキテクチャの選択",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 373041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 189332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプと開発プロンプトが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 124792
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "アーキテクチャテンプレートの追加を選択している",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 120667
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 14,
+            "name": "アーキテクチャテンプレートの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 124542
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 15,
+            "name": "\"Monolithic\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 366208
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 16,
+            "name": "monolithic-architectureテンプレートが適用される",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "ディレクトリ",
+                      "説明"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "src/controllers",
+                      "コントローラー層"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "src/services",
+                      "ビジネスロジック層"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "src/repositories",
+                      "データアクセス層"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "src/models",
+                      "ドメインモデル"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "docs/architecture",
+                      "アーキテクチャドキュメント"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 17,
+            "name": "以下の構造が生成される:",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:55"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 283083
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "アーキテクチャテンプレートの選択;マイクロサービスアーキテクチャの選択",
+        "keyword": "シナリオ",
+        "line": 25,
+        "name": "マイクロサービスアーキテクチャの選択",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 407625
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプと開発プロンプトが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8332
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "アーキテクチャテンプレートの追加を選択している",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7084
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 26,
+            "name": "アーキテクチャテンプレートの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6791
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 27,
+            "name": "\"Microservices\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 109457
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 28,
+            "name": "microservices-architectureテンプレートが適用される",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "ディレクトリ",
+                      "説明"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "services/",
+                      "個別サービスディレクトリ"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "api-gateway/",
+                      "APIゲートウェイ"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "shared/",
+                      "共通ライブラリ"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "docker-compose.yml",
+                      "ローカル開発環境"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "k8s/",
+                      "Kubernetesマニフェスト"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 29,
+            "name": "以下の構造が生成される:",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:55"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 115667
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "アーキテクチャテンプレートの選択;サーバーレスアーキテクチャの選択",
+        "keyword": "シナリオ",
+        "line": 37,
+        "name": "サーバーレスアーキテクチャの選択",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 490457
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 24791
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプと開発プロンプトが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "アーキテクチャテンプレートの追加を選択している",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 38,
+            "name": "アーキテクチャテンプレートの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 39,
+            "name": "\"AWS Serverless\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 18916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 40,
+            "name": "aws-serverless-architectureテンプレートが適用される",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "ファイル/ディレクトリ",
+                      "説明"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "functions/",
+                      "Lambda関数"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "layers/",
+                      "Lambda Layers"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "infrastructure/",
+                      "CDK/Terraformコード"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "serverless.yml",
+                      "Serverless Framework設定"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      ".aws/",
+                      "AWS設定テンプレート"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 41,
+            "name": "以下の構造が生成される:",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:55"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 102500
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "アーキテクチャテンプレートの選択;イベント駆動アーキテクチャの選択",
+        "keyword": "シナリオ",
+        "line": 49,
+        "name": "イベント駆動アーキテクチャの選択",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 303832
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11666
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプと開発プロンプトが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "アーキテクチャテンプレートの追加を選択している",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6624
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 50,
+            "name": "アーキテクチャテンプレートの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 51,
+            "name": "\"Event-Driven\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16792
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 52,
+            "name": "event-driven-architectureテンプレートが適用される",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "ディレクトリ",
+                      "説明"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "events/",
+                      "イベント定義"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "producers/",
+                      "イベントプロデューサー"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "consumers/",
+                      "イベントコンシューマー"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "message-bus/",
+                      "メッセージバス設定"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "docs/event-catalog",
+                      "イベントカタログ"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 53,
+            "name": "以下の構造が生成される:",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:55"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 103749
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "アーキテクチャテンプレートの選択;複数アーキテクチャの組み合わせ",
+        "keyword": "シナリオ",
+        "line": 61,
+        "name": "複数アーキテクチャの組み合わせ",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 259708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプと開発プロンプトが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6415
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "アーキテクチャテンプレートの追加を選択している",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6124
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 62,
+            "name": "アーキテクチャテンプレートの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6082
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 63,
+            "name": "\"Microservices\"と\"Event-Driven\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:40"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 612999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 64,
+            "name": "両方のテンプレートが統合される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:59"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 374625
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 65,
+            "name": "マイクロサービス間のイベント通信構造が生成される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:63"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 486959,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.world_1.CustomWorld.validateIntegratedArchitecture (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/template-selection.steps.ts:163:55)\n    at async CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/template-selection.steps.ts:64:3)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 66,
+            "name": "統合されたアーキテクチャドキュメントが作成される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:67"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 272999
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "アーキテクチャテンプレートの選択",
+    "line": 3,
+    "keyword": "機能",
+    "name": "アーキテクチャテンプレートの選択",
+    "tags": [],
+    "uri": "features/template-selection/architecture-template-selection.feature"
+  },
+  {
+    "description": "  様々な規模のプロジェクトを扱う開発者として\n  プロジェクトに適した開発プロンプトを選択したい\n  最適なAI開発支援を受けられるようにするため",
+    "elements": [
+      {
+        "description": "",
+        "id": "開発プロンプトテンプレートの選択;個人・小規模プロジェクト向けプロンプトの選択",
+        "keyword": "シナリオ",
+        "line": 12,
+        "name": "個人・小規模プロジェクト向けプロンプトの選択",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 474165
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 28499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 189792
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 13,
+            "name": "開発プロンプトの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 119042
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 14,
+            "name": "\"Basic Development\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 32874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 15,
+            "name": "basic-development.mdテンプレートが選択される",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "特徴",
+                      "内容"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "開発規模",
+                      "個人・小規模チーム向け"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "フォーカス",
+                      "シンプルで直接的な実装"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "ドキュメント要求",
+                      "最小限"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "テスト戦略",
+                      "基本的なユニットテスト"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 16,
+            "name": "プロンプトには以下の特徴が含まれる:",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:50"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 223957
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "開発プロンプトテンプレートの選択;スタートアップ向けプロンプトの選択",
+        "keyword": "シナリオ",
+        "line": 23,
+        "name": "スタートアップ向けプロンプトの選択",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 569375
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40040
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 13457
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 24,
+            "name": "開発プロンプトの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 25,
+            "name": "\"Startup Development\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49250
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 26,
+            "name": "startup-development.mdテンプレートが選択される",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "特徴",
+                      "内容"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "開発規模",
+                      "スタートアップ・中規模チーム向け"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "フォーカス",
+                      "スピード重視とスケーラビリティ"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "ドキュメント要求",
+                      "実用的なドキュメント"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "テスト戦略",
+                      "重要機能の統合テスト"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 27,
+            "name": "プロンプトには以下の特徴が含まれる:",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:50"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 175541
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "開発プロンプトテンプレートの選択;エンタープライズ向けプロンプトの選択",
+        "keyword": "シナリオ",
+        "line": 34,
+        "name": "エンタープライズ向けプロンプトの選択",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 312166
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12959
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7416
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 35,
+            "name": "開発プロンプトの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 36,
+            "name": "\"Enterprise Development\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 37,
+            "name": "enterprise-development.mdテンプレートが選択される",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "特徴",
+                      "内容"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "開発規模",
+                      "大規模組織・エンタープライズ向け"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "フォーカス",
+                      "堅牢性とメンテナンス性"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "ドキュメント要求",
+                      "包括的なドキュメント"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "テスト戦略",
+                      "完全なテストカバレッジ"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 38,
+            "name": "プロンプトには以下の特徴が含まれる:",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:50"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 191124
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "開発プロンプトテンプレートの選択;オープンソース向けプロンプトの選択",
+        "keyword": "シナリオ",
+        "line": 45,
+        "name": "オープンソース向けプロンプトの選択",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 309915
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15207
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 46,
+            "name": "開発プロンプトの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 47,
+            "name": "\"Open Source Development\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 14458
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 48,
+            "name": "open-source-development.mdテンプレートが選択される",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "特徴",
+                      "内容"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "開発規模",
+                      "コミュニティ主導開発向け"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "フォーカス",
+                      "協調性と透明性"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "ドキュメント要求",
+                      "詳細なコントリビューション指針"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "テスト戦略",
+                      "CI/CD統合とカバレッジレポート"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "かつ",
+            "line": 49,
+            "name": "プロンプトには以下の特徴が含まれる:",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:50"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 110625
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "開発プロンプトテンプレートの選択;カスタムプロンプトの選択",
+        "keyword": "シナリオ",
+        "line": 56,
+        "name": "カスタムプロンプトの選択",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 283875
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "プロジェクトセットアップ中である",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "プロジェクトタイプが選択済み",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:10"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 57,
+            "name": "開発プロンプトの選択画面が表示される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 58,
+            "name": "\"Custom Prompt\"を選択する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 14709
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 59,
+            "name": "カスタムプロンプトファイルのパスを指定する",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:44"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 227291
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 60,
+            "name": "指定されたカスタムプロンプトが使用される",
+            "match": {
+              "location": "test/step-definitions/template-selection.steps.ts:72"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 168042
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 61,
+            "name": ".claude/prompts/にカスタムプロンプトがコピーされる",
+            "match": {
+              "location": "test/step-definitions/missing-steps.ts:71"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 647999,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/missing-steps.ts:80:56)"
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 195290
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "開発プロンプトテンプレートの選択",
+    "line": 3,
+    "keyword": "機能",
+    "name": "開発プロンプトテンプレートの選択",
+    "tags": [],
+    "uri": "features/template-selection/development-prompt-selection.feature"
+  }
+]
