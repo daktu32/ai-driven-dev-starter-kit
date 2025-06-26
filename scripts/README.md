@@ -1,11 +1,11 @@
-# Setup Assistant
+# Claude Code Development Scripts
 
-Claude Code Development Starter Kit のプロジェクトカスタマイズとスケルトン生成を行う対話形式のCLIツールです。
+Claude Code Development Starter Kit のスクリプトツールです。
 
 ## 概要
 
-- 🎯 **プロジェクトカスタマイズ** - プロジェクト情報とテックスタックに基づいて自動設定
-- 🔧 **スケルトン生成** - 新しいプロジェクトのスケルトンを任意のパスに生成
+- 🔧 **project-setup** - 既存プロジェクトのカスタマイズ
+- 🏗️ **scaffold-generator** - 新規プロジェクトのスケルトン生成
 - 💾 **安全なファイル操作** - 変更前にバックアップを作成
 - 🎨 **対話形式CLI** - ユーザーフレンドリーなインターフェース
 
@@ -15,30 +15,32 @@ Claude Code Development Starter Kit のプロジェクトカスタマイズと�
 # scripts ディレクトリでビルド
 npm run build
 
-# プロジェクトカスタマイズ
+# 既存プロジェクトのカスタマイズ
 npm run setup
 
-# スケルトン生成
-npx ./skeleton-generator.js
+# 新規プロジェクトのスケルトン生成
+npm run scaffold
 ```
 
 ## 機能
 
-### プロジェクトカスタマイズ
+### project-setup（既存プロジェクトのカスタマイズ）
 - プロジェクト情報の収集（名前、説明、リポジトリURL）
 - チーム規模と開発アプローチの選択
 - テックスタックの選択（フロントエンド、バックエンド、データベース、インフラ）
 - プレースホルダーの自動置換
 - 設定ファイルの生成
 
-### スケルトン生成
-- 対話形式で生成先パスやプロジェクト名を選択
-- 含めるファイルの選択
+### scaffold-generator（新規プロジェクトのスケルトン生成）
+- プロジェクトタイプの選択（CLI/Rust、Web/Next.js、API/FastAPI）
+- テンプレートベースの生成
+- プロジェクト管理ファイルの追加
+- 開発ツール設定の追加
 - .cursorrules の自動生成
 
 ## 使用方法
 
-### 対話形式セットアップ（推奨）
+### 既存プロジェクトのカスタマイズ
 
 ```bash
 npm run setup
@@ -50,6 +52,19 @@ npm run setup
 3. テックスタックの選択
 4. 設定の確認
 5. ファイルの自動処理
+
+### 新規プロジェクトのスケルトン生成
+
+```bash
+npm run scaffold
+```
+
+以下の手順でガイドします：
+1. 生成先パスの指定
+2. プロジェクト名の入力
+3. プロジェクトタイプの選択
+4. 追加ファイルの選択
+5. スケルトンの生成
 
 ### コマンドラインオプション
 
@@ -77,6 +92,26 @@ npm run setup -- --prompt=startup-development
 - **Open Source Development** - コミュニティ駆動プロジェクト、コントリビューター管理
 - **Startup Development** - 高速イテレーション、MVP重視、迅速なデプロイ
 
+## プロジェクトタイプ
+
+### CLI (Rust)
+- Cargo.toml で依存関係を管理
+- src/main.rs がエントリーポイント
+- tests/ ディレクトリにテストを配置
+- clap を使用してCLI引数を処理
+
+### Web (Next.js)
+- pages/ または app/ ディレクトリでルーティング
+- components/ ディレクトリにReactコンポーネントを配置
+- public/ ディレクトリに静的ファイルを配置
+- TypeScript を使用
+
+### API (FastAPI)
+- src/main.py がエントリーポイント
+- requirements.txt で依存関係を管理
+- tests/ ディレクトリにテストを配置
+- Pydantic を使用してデータバリデーション
+
 ## プレースホルダーシステム
 
 以下のプレースホルダーが自動的に置換されます：
@@ -100,8 +135,8 @@ npm run setup -- --prompt=startup-development
 ### プロジェクト構造
 ```
 scripts/
-├── setup-assistant.ts          # メインCLIアプリケーション
-├── skeleton-generator.ts       # スケルトン生成ツール
+├── project-setup.ts          # 既存プロジェクトのカスタマイズ
+├── scaffold-generator.ts     # 新規プロジェクトのスケルトン生成
 ├── lib/
 │   ├── types.ts               # TypeScriptインターフェース
 │   ├── promptSelector.ts      # プロンプト選択ロジック
@@ -135,7 +170,7 @@ npm test
 
 **"Missing required file" エラー**
 - 正しいディレクトリから実行していることを確認
-- すべてのスターターキットファイルが存在することを確認
+- 必要なファイルが存在することを確認
 
 **"Project structure validation failed"**
 - 必要なディレクトリとファイルがすべて存在することを確認
@@ -158,11 +193,11 @@ npm run setup -- --verbose
 最初からやり直す場合：
 1. `.backups/` の最新バックアップから復元
 2. `.claude/project-config.json` を削除
-3. セットアップアシスタントを再実行
+3. セットアップスクリプトを再実行
 
 ## Claude Codeとの統合
 
-このセットアップアシスタントは Claude Code とシームレスに連携します：
+このスクリプトツールは Claude Code とシームレスに連携します：
 
 - **構造化された出力** - Claudeが解析できる明確なフィードバック
 - **エラーハンドリング** - トラブルシューティング用の包括的なエラーメッセージ

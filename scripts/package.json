@@ -1,0 +1,37 @@
+{
+  "name": "claude-code-dev-scripts",
+  "version": "1.0.0",
+  "description": "Claude Code Development Starter Kit Scripts",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node --esm",
+    "setup": "node project-setup.js",
+    "scaffold": "node scaffold-generator.js",
+    "setup:dry-run": "node project-setup.js --dry-run",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "claude",
+    "code",
+    "development",
+    "starter-kit",
+    "scaffold"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.2.12",
+    "ora": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+} 
