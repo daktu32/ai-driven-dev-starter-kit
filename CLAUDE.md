@@ -1,12 +1,12 @@
 # CLAUDE.md
 
-このファイルは、Claude Code (claude.ai/code) がこのリポジトリのコードを扱う際のガイダンスを提供します。
+このファイルは、AI Driven Dev Starter Kit (AI駆動開発スターターキット) がこのリポジトリのコードを扱う際のガイダンスを提供します。
 
 ## プロジェクト概要
 
-**Claude Code Development Starter Kit** - Claude Code開発用のテンプレート管理とスケルトン生成ツール
+**AI Driven Dev Starter Kit** - AI駆動開発用のテンプレート管理とスケルトン生成ツール
 
-このプロジェクトは、Claude Code開発プロジェクトの効率的な開始と管理を支援するためのテンプレート集とツール群です。
+このプロジェクトは、AI駆動開発プロジェクトの効率的な開始と管理を支援するためのテンプレート集とツール群です。
 
 ## 技術スタック
 

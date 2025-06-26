@@ -1,6 +1,6 @@
-# Claude Code 開発スクリプト
+# AI Driven Dev Starter Kit 開発スクリプト
 
-Claude Code Development Starter Kit のスクリプトツールです。
+AI Driven Dev Starter Kit のスクリプトツールです。
 
 ## 概要
 

@@ -1,6 +1,6 @@
 # プロジェクト構造
 
-このドキュメントはClaude Code Development Starter Kitのファイル構成を説明します。
+このドキュメントはAI Driven Dev Starter Kit（AI駆動開発スターターキット）のファイル構成を説明します。
 
 ## ルートレベルのファイル
 

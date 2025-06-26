@@ -1,6 +1,6 @@
-# Claude Code 開発スターターキット
+# AI Driven Dev Starter Kit
 
-Claude Code（claude.ai/code）を活用した自律的な開発のための包括的なスターターキットです。AIエージェント協調パターンやTDD、進捗管理、アーキテクチャ設計、AWSインフラ雛形などを含みます。
+AI Driven Dev Starter Kit（AI駆動開発スターターキット）は、AIエージェントや自律的な開発のための包括的なスターターキットです。AIエージェント協調パターンやTDD、進捗管理、アーキテクチャ設計、AWSインフラ雛形などを含みます。
 
 ## 概要
 

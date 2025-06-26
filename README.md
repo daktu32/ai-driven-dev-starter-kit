@@ -1,6 +1,6 @@
-# Claude Code Development Starter Kit
+# AI Driven Dev Starter Kit
 
-このスターターキットは、Claude CodeやAIエージェントを活用した開発のための包括的なテンプレート集です。setup-assistantを使用することで、プロジェクトの規模や用途に応じた最適な開発環境をscaffoldできます。
+このスターターキットは、AI駆動開発やAIエージェントを活用した開発のための包括的なテンプレート集です。setup-assistantを使用することで、プロジェクトの規模や用途に応じた最適な開発環境をscaffoldできます。
 
 ## 🚀 主要機能
 
@@ -218,4 +218,4 @@ npm run deploy # または cargo install
 
 ---
 
-**Claude Code Development Starter Kit** - AIを活用した効率的な開発環境を構築しましょう！ 
+**AI Driven Dev Starter Kit** - AIを活用した効率的な開発環境を構築しましょう！ 
