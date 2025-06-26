@@ -24,12 +24,15 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "fs-extra": "^11.2.0",
+    "glob": "^10.3.10",
     "inquirer": "^9.2.12",
+    "mustache": "^4.2.0",
     "ora": "^7.0.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
     "@types/inquirer": "^9.0.7",
+    "@types/mustache": "^4.2.5",
     "@types/node": "^20.10.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"

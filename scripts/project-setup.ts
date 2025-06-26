@@ -266,10 +266,10 @@ class ProjectSetup {
 
     try {
       // バックアップを作成
-      await this.fileManager.createBackup();
+      await this.fileManager.backupAllTemplates();
 
       // テンプレートを処理
-      await this.templateProcessor.processTemplates(config);
+      await this.templateProcessor.processAllTemplates(config);
 
       // プロジェクト設定ファイルを作成
       await this.createProjectConfig(config);
