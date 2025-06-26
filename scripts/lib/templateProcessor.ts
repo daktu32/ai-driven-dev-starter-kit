@@ -9,7 +9,7 @@ export class TemplateProcessor {
   private readonly templatesDir: string;
 
   constructor(rootDir: string = process.cwd()) {
-    // If running from scripts directory, use parent directory as root
+    // scriptsディレクトリから実行された場合は親ディレクトリをルートとする
     if (path.basename(rootDir) === 'scripts') {
       this.rootDir = path.dirname(rootDir);
     } else {
@@ -112,7 +112,7 @@ export class TemplateProcessor {
       return true;
     }
 
-    // Create backup
+    // バックアップを作成
     await this.createBackup(template.path);
 
     // Write processed content

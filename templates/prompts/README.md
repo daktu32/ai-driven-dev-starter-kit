@@ -1,146 +1,142 @@
 # Claude Code 開発プロンプト
 
-Choose the appropriate prompt template based on your project type and team size.
+プロジェクトタイプやチーム規模に応じて適切なプロンプトテンプレートを選択してください。
 
-## Available Prompts
+## 利用可能なプロンプト
 
-### 1. Basic Development (`basic-development.md`)
-**Best for:**
-- Small projects (1-3 developers)
-- MVP development
-- Learning Claude Code
-- Rapid prototyping
-- Personal or side projects
+### 1. 基本開発（`basic-development.md`）
+**適用場面：**
+- 小規模プロジェクト（1-3名）
+- MVP開発
+- Claude Code学習
+- 高速プロトタイピング
+- 個人・サイドプロジェクト
 
-**Features:**
-- 3 simple phases
-- Basic quality gates (80% test coverage)
-- Minimal bureaucracy
-- Essential error handling
+**特徴：**
+- 3つのシンプルなフェーズ
+- 基本的な品質ゲート（80%テストカバレッジ）
+- 最小限の手続き
+- 必要最小限のエラーハンドリング
 
-### 2. Enterprise Development (`enterprise-development.md`)
-**Best for:**
-- Large enterprises (10+ developers)
-- Financial services, healthcare, government
-- Strict compliance requirements
-- Multi-environment deployments
-- Complex approval workflows
+### 2. エンタープライズ開発（`enterprise-development.md`）
+**適用場面：**
+- 大企業（10名以上）
+- 金融・医療・行政
+- 厳格なコンプライアンス要件
+- マルチ環境デプロイ
+- 複雑な承認ワークフロー
 
-**Features:**
-- 5 comprehensive phases
-- Strict quality gates (95%+ coverage for critical components)
-- Extensive compliance and security requirements
-- Multiple approval levels
-- Comprehensive audit trails
+**特徴：**
+- 5つの包括的なフェーズ
+- クリティカルコンポーネントで95%以上のカバレッジ
+- 広範なコンプライアンス・セキュリティ要件
+- 複数の承認レベル
+- 包括的な監査証跡
 
-### 3. Open Source Development (`opensource-development.md`)
-**Best for:**
-- Open source libraries and frameworks
-- Community-driven projects
-- Projects seeking widespread adoption
-- Educational or research projects
-- Distributed contributor teams
+### 3. オープンソース開発（`opensource-development.md`）
+**適用場面：**
+- OSSライブラリ・フレームワーク
+- コミュニティ主導プロジェクト
+- 広範な採用を目指すプロジェクト
+- 教育・研究
+- 分散型コントリビューターチーム
 
-**Features:**
-- Community-focused workflow
-- RFC process for major changes
-- Public design discussions
-- Automated community management
-- Contribution guidelines and CoC
+**特徴：**
+- コミュニティ重視のワークフロー
+- 主要変更に対するRFCプロセス
+- パブリックな設計議論
+- 自動化されたコミュニティ管理
+- コントリビューションガイドライン・行動規範
 
-### 4. Startup Development (`startup-development.md`)
-**Best for:**
-- Early-stage startups (2-5 developers)
-- MVP to market validation
-- Aggressive timelines
-- Resource-constrained environments
-- Rapid iteration and pivoting
+### 4. スタートアップ開発（`startup-development.md`）
+**適用場面：**
+- 初期スタートアップ（2-5名）
+- MVPから市場検証まで
+- アグレッシブなタイムライン
+- 限られたリソース
+- 高速な反復・ピボット
 
-**Features:**
-- Lean development process
-- Market validation focus
-- Pragmatic quality standards
-- Growth metrics tracking
-- Rapid deployment and iteration
+**特徴：**
+- リーンな開発プロセス
+- 市場検証重視
+- 実用的な品質基準
+- 成長指標の追跡
+- 高速デプロイ
 
-## How to Choose
+## 選び方ガイド
 
-### By Team Size
-- **1-3 developers**: Basic Development
-- **4-10 developers**: Startup Development or Open Source Development
-- **10+ developers**: Enterprise Development
+### チーム規模で選ぶ
+- **1-3名**：基本開発
+- **4-10名**：スタートアップ開発またはオープンソース開発
+- **10名以上**：エンタープライズ開発
 
-### By Industry
-- **Regulated industries** (finance, healthcare): Enterprise Development
-- **Tech startups**: Startup Development
-- **Open source projects**: Open Source Development
-- **General software development**: Basic Development
+### 業界で選ぶ
+- **規制業界（金融・医療等）**：エンタープライズ開発
+- **テック系スタートアップ**：スタートアップ開発
+- **OSSプロジェクト**：オープンソース開発
+- **一般的なソフトウェア開発**：基本開発
 
-### By Compliance Requirements
-- **High compliance** (SOX, HIPAA, GDPR): Enterprise Development
-- **Medium compliance**: Basic Development with additional security
-- **Low compliance**: Startup Development or Basic Development
+### コンプライアンス要件で選ぶ
+- **高い**（SOX, HIPAA, GDPR等）：エンタープライズ開発
+- **中程度**：基本開発＋セキュリティ追加
+- **低い**：スタートアップ開発または基本開発
 
-### By Budget Constraints
-- **High budget**: Enterprise Development
-- **Medium budget**: Basic Development
-- **Low budget/bootstrapped**: Startup Development
+### 予算で選ぶ
+- **高予算**：エンタープライズ開発
+- **中予算**：基本開発
+- **低予算・自費**：スタートアップ開発
 
-## Getting Started
+## はじめ方
 
-1. **Choose your prompt** based on the criteria above
-2. **Copy the prompt content** to your project
-3. **Customize file paths** in the `<file_paths>` section
-4. **Set up required files** (PRD, architecture docs, etc.)
-5. **Configure `.claude/settings.json`** from the template
-6. **Start development** with `/bootstrap` command
+1. 上記基準でプロンプトを選択
+2. プロンプト内容をプロジェクトにコピー
+3. `<file_paths>` セクションをカスタマイズ
+4. 必要ファイル（PRD, アーキテクチャ等）を用意
+5. `.claude/settings.json` をテンプレートから設定
+6. `/bootstrap` コマンドで開発開始
 
-## Customization
+## カスタマイズ例
 
-Each prompt can be customized by:
-
-### Adjusting Quality Gates
+### 品質ゲート調整
 ```yaml
-# Example: Lowering test coverage for faster development
+# 例：テストカバレッジを60%に緩和
 test_coverage_requirements:
   standard_features:
-    line_coverage: "≥60%"  # Reduced from 80%
+    line_coverage: ">=60%"  # 80%から緩和
 ```
 
-### Modifying Approval Process
+### 承認プロセス変更
 ```yaml
-# Example: Removing approval gates for faster iteration
+# 例：手動承認をスキップ
 human_approval_gate:
-  approver: "None"  # Skip manual approval
+  approver: "None"
   auto_approve: true
 ```
 
-### Adding Custom Phases
+### 独自フェーズ追加
 ```yaml
-# Example: Adding a performance testing phase
+# 例：パフォーマンステストフェーズ追加
 phase4_5_performance:
   performance_requirements:
-    - load_testing: "Handle 1000 concurrent users"
-    - response_time: "API responses < 200ms"
+    - load_testing: "1000同時ユーザー対応"
+    - response_time: "API応答 < 200ms"
 ```
 
-## Mixing Prompts
+## プロンプトの組み合わせ例
 
-You can combine elements from different prompts:
+### スタートアップ＋OSS
+- スタートアップ開発をベースに
+- OSSコミュニティ機能を追加
+- 主要変更にRFCプロセスを導入
 
-### Example: Startup + Open Source
-- Use Startup Development base
-- Add Open Source community features
-- Include RFC process for major changes
+### 基本＋エンタープライズセキュリティ
+- 基本開発ワークフローをベースに
+- エンタープライズのセキュリティ要件を追加
+- コンプライアンスチェックポイントを導入
 
-### Example: Basic + Enterprise Security
-- Use Basic Development workflow
-- Add Enterprise security requirements
-- Include compliance checkpoints
+## ファイルパス設定
 
-## File Path Configuration
-
-Update the `<file_paths>` section in your chosen prompt:
+選択したプロンプトの `<file_paths>` セクションを更新：
 
 ```yaml
 <file_paths>
@@ -156,16 +152,16 @@ claude_guidelines     = "./CLAUDE.md"
 </file_paths>
 ```
 
-## Integration with Claude Code
+## Claude Codeとの統合
 
-1. **Place your chosen prompt** in the root of your project
-2. **Reference it in your Claude Code session** when starting development
-3. **Use the defined commands** (`/approve`, `/error_status`, etc.)
-4. **Follow the phase progression** as defined in your prompt
+1. 選択したプロンプトをプロジェクトルートに配置
+2. Claude Codeセッション開始時に参照
+3. `/approve`、`/error_status` などのコマンドを利用
+4. プロンプトで定義されたフェーズ進行に従う
 
-## Support and Contributions
+## サポート・コントリビューション
 
-- Report issues with prompts in the project repository
-- Contribute improvements via pull requests
-- Share your customizations with the community
-- Request new prompt templates for specific use cases
+- プロンプトの問題はリポジトリで報告
+- プルリクエストで改善に貢献
+- カスタマイズ事例をコミュニティで共有
+- 特定ユースケース向け新プロンプトのリクエスト

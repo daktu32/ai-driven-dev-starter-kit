@@ -7,7 +7,7 @@ export class FileManager {
   private readonly rootDir: string;
 
   constructor(rootDir: string = process.cwd()) {
-    // If running from scripts directory, use parent directory as root
+    // scriptsディレクトリから実行された場合は親ディレクトリをルートとする
     if (path.basename(rootDir) === 'scripts') {
       this.rootDir = path.dirname(rootDir);
     } else {
@@ -85,7 +85,7 @@ export class FileManager {
     for (const file of requiredFiles) {
       const filePath = path.join(this.rootDir, file);
       if (!(await fs.pathExists(filePath))) {
-        issues.push(`Missing required file: ${file}`);
+        issues.push(`必須ファイルが見つかりません: ${file}`);
       }
     }
 
@@ -94,7 +94,7 @@ export class FileManager {
     for (const dir of requiredDirs) {
       const dirPath = path.join(this.rootDir, dir);
       if (!(await fs.pathExists(dirPath))) {
-        issues.push(`Missing required directory: ${dir}`);
+        issues.push(`必須ディレクトリが見つかりません: ${dir}`);
       }
     }
 
@@ -115,7 +115,7 @@ export class FileManager {
     const stackFiles = await fs.readdir(infraDir);
     const isAWS = techStack.infrastructure.toLowerCase().includes('aws');
 
-    // Remove unused stack files based on tech stack
+    // 技術スタックに応じて未使用のスタックファイルを削除
     for (const file of stackFiles) {
       const filePath = path.join(infraDir, file);
       const stats = await fs.stat(filePath);
@@ -123,12 +123,13 @@ export class FileManager {
       if (stats.isFile() && file.endsWith('.ts')) {
         let shouldRemove = false;
 
-        // Remove AWS-specific stacks if not using AWS
+        // AWS未使用の場合はAWS用スタックを削除
         if (!isAWS && file.includes('aws')) {
           shouldRemove = true;
         }
 
-        // Remove auth stack if not needed (could be enhanced with user input)
+        // 認証スタックが不要な場合は削除（将来的にユーザー入力で拡張可能）
+        // 現状は認証スタックは残す
         if (file.includes('auth-stack.ts')) {
           // For now, keep auth stack - could be made configurable
         }
@@ -153,13 +154,13 @@ export class FileManager {
     const content = await fs.readFile(gitignorePath, 'utf-8');
     const lines = content.split('\n');
 
-    // Add backup directory to gitignore if not already present
+    // バックアップディレクトリを.gitignoreに追加（未追加の場合）
     const backupPattern = '.backups/';
     if (!lines.includes(backupPattern)) {
       lines.push('', '# Setup assistant backups', backupPattern);
     }
 
-    // Add any additional patterns
+    // 追加パターンも追加
     for (const pattern of additionalPatterns) {
       if (!lines.includes(pattern)) {
         lines.push(pattern);
@@ -195,7 +196,7 @@ export class FileManager {
 
   async restoreFromBackup(backupDir: string): Promise<void> {
     if (!(await fs.pathExists(backupDir))) {
-      throw new Error(`Backup directory not found: ${backupDir}`);
+      throw new Error(`バックアップディレクトリが見つかりません: ${backupDir}`);
     }
 
     const files = await glob('**/*', {

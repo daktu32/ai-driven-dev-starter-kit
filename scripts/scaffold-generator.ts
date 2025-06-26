@@ -330,6 +330,8 @@ ${this.getProjectTypeSpecificRules()}
     if (await fs.pathExists(nodeModulesPath)) {
       await fs.remove(nodeModulesPath);
     }
+
+    console.log(chalk.gray(`   git commit -m "初回コミット"`));
   }
 
   private printNextSteps(): void {

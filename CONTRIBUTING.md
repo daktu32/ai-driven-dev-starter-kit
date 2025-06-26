@@ -177,8 +177,8 @@ interface ProjectOptions {
 try {
   await processTemplate(templateName);
 } catch (error) {
-  logger.error('Template processing failed', { error });
-  throw new TemplateError(`Failed to process ${templateName}`);
+  logger.error('テンプレート処理に失敗しました', { error });
+  throw new TemplateError(`${templateName} の処理に失敗しました`);
 }
 ```
 
@@ -279,11 +279,11 @@ describe('ScaffoldGenerator Integration', () => {
 ### コミットメッセージ
 
 ```
-feat(templates): Add new CLI template for Go
-fix(scripts): Resolve template path resolution issue
-docs: Update project structure documentation
-test: Add integration tests for scaffold generator
-refactor: Simplify template processing logic
+feat(templates): Go用CLIテンプレートを追加
+fix(scripts): テンプレートパス解決の不具合修正
+docs: プロジェクト構造ドキュメントを更新
+test: scaffold generatorの統合テスト追加
+refactor: テンプレート処理ロジックを簡素化
 ```
 
 ### プルリクエスト

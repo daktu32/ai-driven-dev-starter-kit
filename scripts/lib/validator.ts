@@ -3,15 +3,15 @@ import { ProjectConfig, TechStackConfig } from './types.js';
 export class Validator {
   static validateProjectName(name: string): string | true {
     if (!name || name.trim().length === 0) {
-      return 'Project name is required';
+      return 'プロジェクト名は必須です';
     }
 
     if (name.length > 50) {
-      return 'Project name should be 50 characters or less';
+      return 'プロジェクト名は50文字以内で入力してください';
     }
 
     if (!/^[a-zA-Z0-9\s\-_.]+$/.test(name)) {
-      return 'Project name can only contain letters, numbers, spaces, hyphens, underscores, and dots';
+      return 'プロジェクト名には英数字、スペース、ハイフン、アンダースコア、ドットのみ使用できます';
     }
 
     return true;
@@ -19,11 +19,11 @@ export class Validator {
 
   static validateDescription(description: string): string | true {
     if (!description || description.trim().length === 0) {
-      return 'Project description is required';
+      return 'プロジェクト説明は必須です';
     }
 
     if (description.length > 200) {
-      return 'Description should be 200 characters or less';
+      return '説明は200文字以内で入力してください';
     }
 
     return true;
@@ -31,19 +31,19 @@ export class Validator {
 
   static validateRepositoryUrl(url: string): string | true {
     if (!url || url.trim().length === 0) {
-      return 'Repository URL is required';
+      return 'リポジトリURLは必須です';
     }
 
-    // Basic URL validation
+    // URLの基本バリデーション
     try {
       new URL(url);
     } catch {
-      return 'Please enter a valid URL';
+      return '有効なURLを入力してください';
     }
 
-    // GitHub URL validation (optional - could support other platforms)
+    // GitHub URLバリデーション（現状はGitHubのみ対応）
     if (!url.includes('github.com')) {
-      return 'Currently only GitHub repositories are supported';
+      return '現在はGitHubリポジトリのみ対応しています';
     }
 
     return true;
@@ -69,7 +69,7 @@ export class Validator {
         !techStack[field as keyof TechStackConfig] ||
         techStack[field as keyof TechStackConfig]?.trim().length === 0
       ) {
-        errors.push(`${field} is required`);
+        errors.push(`${field}は必須項目です`);
       }
     }
 

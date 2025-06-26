@@ -1,4 +1,4 @@
-# Claude Code Development Scripts
+# Claude Code 開発スクリプト
 
 Claude Code Development Starter Kit のスクリプトツールです。
 

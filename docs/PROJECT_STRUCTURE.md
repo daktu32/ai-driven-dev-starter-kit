@@ -1,79 +1,79 @@
 # プロジェクト構造
 
-このドキュメントはClaude Code Development Starter Kitのファイル構成を説明しています。
+このドキュメントはClaude Code Development Starter Kitのファイル構成を説明します。
 
-## Root Level Files
+## ルートレベルのファイル
 
-### Core Configuration
-- **`CLAUDE.md`** - AI agent guidelines and project context
-- **`README.md`** - Project overview and setup instructions
-- **`PROMPT.md`** - Main development prompt (simplified version)
+### コア設定
+- **`CLAUDE.md`** - AIエージェントガイド・プロジェクト概要
+- **`README.md`** - プロジェクト概要・セットアップ手順
+- **`PROMPT.md`** - メイン開発プロンプト（簡易版）
 
-### Project Management
-- **`PROGRESS.md`** - Development progress tracking template
-- **`DEVELOPMENT_ROADMAP.md`** - Strategic roadmap template
-- **`CONTRIBUTING.md`** - Contribution guidelines
+### プロジェクト管理
+- **`PROGRESS.md`** - 開発進捗管理テンプレート
+- **`DEVELOPMENT_ROADMAP.md`** - 戦略的ロードマップテンプレート
+- **`CONTRIBUTING.md`** - 貢献ガイドライン
 
-### Setup and Customization
-- **`CUSTOMIZATION_GUIDE.md`** - Step-by-step customization guide
-- **`PROJECT_STRUCTURE.md`** - This file
+### セットアップ・カスタマイズ
+- **`CUSTOMIZATION_GUIDE.md`** - カスタマイズ手順ガイド
+- **`PROJECT_STRUCTURE.md`** - 本ファイル
 
-## Directory Structure
+## ディレクトリ構成
 
 ```
 /
-├── README.md                              # Project overview
-├── CLAUDE.md                              # AI agent guidelines
-├── PROMPT.md                              # Main development prompt
-├── PROGRESS.md                            # Progress tracking template
-├── DEVELOPMENT_ROADMAP.md                 # Roadmap template
-├── CONTRIBUTING.md                        # Contribution guidelines
-├── CUSTOMIZATION_GUIDE.md                 # Customization guide
-├── PROJECT_STRUCTURE.md                   # This file
+├── README.md                              # プロジェクト概要
+├── CLAUDE.md                              # AIエージェントガイド
+├── PROMPT.md                              # メイン開発プロンプト
+├── PROGRESS.md                            # 進捗管理テンプレート
+├── DEVELOPMENT_ROADMAP.md                 # ロードマップテンプレート
+├── CONTRIBUTING.md                        # 貢献ガイドライン
+├── CUSTOMIZATION_GUIDE.md                 # カスタマイズガイド
+├── PROJECT_STRUCTURE.md                   # 本ファイル
 │
-├── .claude/                               # Claude Code configuration
-│   └── settings.json.template             # Settings template
+├── .claude/                               # Claude Code設定
+│   └── settings.json.template             # 設定テンプレート
 │
-├── .github/                               # GitHub configuration
-│   └── workflows/                         # GitHub Actions workflows
-│       ├── ci.yml                         # Main CI pipeline
-│       ├── test.yml                       # E2E test runner
-│       └── deploy.yml.template            # Deployment template
+├── .github/                               # GitHub設定
+│   └── workflows/                         # GitHub Actionsワークフロー
+│       ├── ci.yml                         # メインCIパイプライン
+│       ├── test.yml                       # E2Eテスト用
+│       └── deploy.yml.template            # デプロイ用テンプレート
 │
-├── prompts/                               # Development prompt templates
-│   ├── README.md                          # Prompt selection guide
-│   ├── README-ja.md                       # Japanese guide
-│   ├── basic-development.md               # Basic development prompt
-│   ├── basic-development-ja.md            # Basic prompt (Japanese)
-│   ├── enterprise-development.md          # Enterprise prompt
-│   ├── opensource-development.md          # Open source prompt
-│   └── startup-development.md             # Startup prompt
+├── prompts/                               # 開発プロンプトテンプレート
+│   ├── README.md                          # プロンプト選択ガイド
+│   ├── README-ja.md                       # 日本語ガイド
+│   ├── basic-development.md               # 基本開発プロンプト
+│   ├── basic-development-ja.md            # 基本開発プロンプト（日本語）
+│   ├── enterprise-development.md          # エンタープライズプロンプト
+│   ├── opensource-development.md          # オープンソースプロンプト
+│   └── startup-development.md             # スタートアッププロンプト
 │
-├── docs/                                  # Documentation
-│   ├── tech-stack.md                      # Technology stack definitions
-│   ├── architecture.md                    # System architecture template
-│   ├── implementation-plan.md             # Implementation plan template
-│   ├── prd.md                            # Product requirements template
+├── docs/                                  # ドキュメント
+│   ├── tech-stack.md                      # 技術スタック定義
+│   ├── architecture.md                    # システムアーキテクチャテンプレート
+│   ├── implementation-plan.md             # 実装計画テンプレート
+│   ├── prd.md                             # 要件定義テンプレート
 │   ├── templates/
-│   │   └── requirements.md.template       # Requirements specification template
-│   ├── setup-guide.md                    # Setup instructions
+│   │   └── requirements.md.template       # 要件仕様テンプレート
+│   ├── setup-guide.md                     # セットアップ手順
 │   │
-│   ├── adr/                              # Architecture Decision Records
-│   │   └── template.md                   # ADR template
+│   ├── adr/                               # アーキテクチャ決定記録
+│   │   └── template.md                    # ADRテンプレート
 │   │
-│   └── phase-reports/                    # Phase completion reports
+│   └── phase-reports/                     # フェーズ完了レポート
 │       └── phase1-requirements.md.template
 │
-├── decisions/                             # Architecture Decision Records
+├── decisions/                             # アーキテクチャ決定記録
 │   └── templates/
 │       └── aws-serverless-architecture.md.template
 │
-├── infrastructure/                        # Infrastructure as Code
-│   ├── README.md                          # Infrastructure overview
-│   ├── deployment-env.yaml.template       # Environment configuration
-│   ├── cdk.json                          # AWS CDK configuration
-│   ├── package.json                      # Dependencies
-│   ├── tsconfig.json                     # TypeScript configuration
+├── infrastructure/                        # インフラ（IaC）
+│   ├── README.md                          # インフラ概要
+│   ├── deployment-env.yaml.template       # 環境設定
+│   ├── cdk.json                           # AWS CDK設定
+│   ├── package.json                       # 依存関係
+│   ├── tsconfig.json                      # TypeScript設定
 │   │
 │   ├── bin/                              # CDK application entry points
 │   ├── lib/                              # CDK stack definitions
@@ -134,39 +134,39 @@ Some files have Japanese variants:
 
 ## Maintenance
 
-### Adding New Prompts
-1. Create new prompt file in `prompts/`
-2. Follow existing naming convention
-3. Update `prompts/README.md` with selection criteria
-4. Add Japanese version if needed
+### 新しいプロンプトの追加
+1. `prompts/` に新しいプロンプトファイルを作成
+2. 既存の命名規則に従う
+3. `prompts/README.md` に選択基準を追記
+4. 必要に応じて日本語版も追加
 
-### Adding New Templates
-1. Create template file with `.template` extension
-2. Use `[placeholder]` format for customizable values
-3. Document usage in relevant README
-4. Update this structure documentation
+### 新しいテンプレートの追加
+1. `.template` 拡張子でテンプレートファイルを作成
+2. カスタマイズ値は `[placeholder]` 形式で記述
+3. 利用方法を該当READMEに記載
+4. この構造ガイドも更新
 
-### Version Control
-- All `.template` files should be committed
-- Actual configuration files (without `.template`) should be gitignored
-- Document any environment-specific requirements
+### バージョン管理
+- すべての `.template` ファイルはコミット対象
+- 実際の設定ファイル（.templateなし）はgitignore推奨
+- 環境依存要件は必ずドキュメント化
 
-## Best Practices
+## ベストプラクティス
 
-### File Naming
-- Use kebab-case for files: `file-name.md`
-- Use UPPER_CASE for root-level important files: `README.md`
-- Add `.template` suffix for template files
-- Add language codes for translations: `-ja.md`
+### ファイル命名
+- ファイルはkebab-case推奨: `file-name.md`
+- 重要なルートファイルはUPPER_CASE: `README.md`
+- テンプレートファイルは `.template` サフィックス
+- 翻訳は `-ja.md` サフィックス
 
-### Documentation
-- Keep documentation close to relevant code
-- Use relative links between documents
-- Maintain consistent formatting across files
-- Update this structure guide when adding new directories
+### ドキュメント
+- ドキュメントは関連コードの近くに配置
+- ドキュメント間は相対リンク推奨
+- 書式を統一
+- 新規ディレクトリ追加時は本ガイドも更新
 
-### Organization Principles
-- Group by function rather than file type
-- Keep templates together with their usage context
-- Separate configuration from documentation
-- Maintain clear hierarchy and naming conventions
+### 組織原則
+- ファイル種別より機能単位でグルーピング
+- テンプレートは利用文脈とセットで管理
+- 設定とドキュメントは分離
+- 明確な階層と命名規則を維持
