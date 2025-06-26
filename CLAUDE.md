@@ -1,203 +1,200 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+このファイルは、Claude Code (claude.ai/code) がこのリポジトリのコードを扱う際のガイダンスを提供します。
 
-## Project Overview
+## プロジェクト概要
 
 wezterm-parallel - 
 
-## Technology Stack
+## 技術スタック
 
-See (docs/tech-stack.md) for complete technology stack definitions and rationale.
+完全な技術スタックの定義と根拠については (docs/tech-stack.md) を参照してください。
 
-## Architecture
+## アーキテクチャ
 
-### Overview
+### 概要
 ```
 
-Example:
+例:
  →  →  →  → 
 ```
 
-### Key Components
-- **Frontend**: 
-- **API Layer**: 
-- **Business Logic**: 
-- **Data Layer**: 
+### 主要コンポーネント
+- **フロントエンド**: 
+- **API層**: 
+- **ビジネスロジック**: 
+- **データ層**: 
 
-## Development Philosophy
+## 開発哲学
 
-### Core Principles
-- **Test-Driven Development (TDD)**: Write tests first, then implement
-- **Clean Code**: Maintainable, readable, and well-documented
-- **Security First**: Follow security best practices from the start
-- **Performance**: Optimize for speed and efficiency
-- **Scalability**: Design for growth from day one
+### 基本原則
+- **テスト駆動開発 (TDD)**: テストを先に書き、その後実装
+- **クリーンコード**: 保守性、可読性、適切なドキュメント化
+- **セキュリティファースト**: 最初からセキュリティのベストプラクティスに従う
+- **パフォーマンス**: 速度と効率性を最適化
+- **スケーラビリティ**: 最初から成長を考慮した設計
 
-## Key Features
+## 主要機能
 
-### MVP Features
+### MVP機能
 1. ****: 
 2. ****: 
 3. ****: 
 4. ****: 
 5. ****: 
 
-### Future Features
+### 将来の機能
 - 
 - 
 - 
 
-## Security & Compliance
+## セキュリティとコンプライアンス
 
-### Security Measures
-- **Authentication**: 
-- **Authorization**: 
-- **Data Protection**: 
-- **Network Security**: 
+### セキュリティ対策
+- **認証**: 
+- **認可**: 
+- **データ保護**: 
+- **ネットワークセキュリティ**: 
 
-### Compliance Considerations
-- **Data Privacy**: 
-- **Legal Requirements**: 
-- **Industry Standards**: 
+### コンプライアンス考慮事項
+- **データプライバシー**: 
+- **法的要件**: 
+- **業界標準**: 
 
-## Cost Structure
+## コスト構造
 
-### Estimated Costs
-- **Development Phase**: $/month
-- **MVP Phase**: $/month
-- **Production Phase**: $/month
+### 推定コスト
+- **開発フェーズ**: $/月
+- **MVPフェーズ**: $/月
+- **本番フェーズ**: $/月
 
-### Cost Breakdown
-- **Infrastructure**: 
-- **Third-party Services**: 
-- **Scaling Factors**: 
+### コスト内訳
+- **インフラ**: 
+- **第三者サービス**: 
+- **スケーリング要因**: 
 
-## Development Workflow
+## 開発ワークフロー
 
-### Current Status
-- **Phase**: 
-- **Sprint**: 
-- **Milestone**: 
+### 現在の状況
+- **フェーズ**: 
+- **スプリント**: 
+- **マイルストーン**: 
 
-### Active Development
+### アクティブな開発
 1. 
 2. 
 3. 
 
-## Progress Management Rules
+## 進捗管理ルール
 
-### Required File Updates
-AI agents must keep the following files up to date:
+### 必須ファイル更新
+AIエージェントは以下のファイルを最新に保つ必要があります：
 
-1. **PROGRESS.md** - Development progress tracking
-   - Update after completing each task
-   - Document completed tasks, current work, and next tasks
-   - Include dates and timestamps
+1. **PROGRESS.md** - 開発進捗の追跡
+   - 各タスク完了後に更新
+   - 完了したタスク、現在の作業、次のタスクを文書化
+   - 日付とタイムスタンプを含める
 
-2. **DEVELOPMENT_ROADMAP.md** - Development roadmap
-   - Update as phases progress
-   - Mark completed milestones with checkmarks
-   - Reflect new challenges or changes
+2. **DEVELOPMENT_ROADMAP.md** - 開発ロードマップ
+   - フェーズの進行に応じて更新
+   - 完了したマイルストーンにチェックマークを付ける
+   - 新しい課題や変更を反映
 
-### Update Timing
-- Upon feature implementation completion
-- After important configuration changes
-- During phase transitions
-- After bug fixes or improvements
-- When making new technical decisions
+### 更新タイミング
+- 機能実装完了時
+- 重要な設定変更後
+- フェーズ移行時
+- バグ修正や改善後
+- 新しい技術的決定時
 
-### Update Method
-1. Update relevant files immediately after work completion
-2. Document specific deliverables and changes
-3. Clarify next steps
-4. Include progress updates in commit messages
+### 更新方法
+1. 作業完了直後に該当ファイルを更新
+2. 具体的な成果物と変更を文書化
+3. 次のステップを明確化
+4. コミットメッセージに進捗更新を含める
 
-## Project-Specific Development Rules
+## プロジェクト固有の開発ルール
 
-### Git Workflow
+### Gitワークフロー
 
-#### Branch Strategy
-- **Main Branch**: `main`
-- **Feature Branches**: `feature/task-description`
-- **Bug Fix Branches**: `fix/bug-description`
+#### ブランチ戦略
+- **メインブランチ**: `main`
+- **機能ブランチ**: `feature/task-description`
+- **バグ修正ブランチ**: `fix/bug-description`
 
-#### Required Work Procedures
-Follow these steps for all development work:
+#### 必須作業手順
+すべての開発作業で以下の手順に従ってください：
 
-1. Define feature requirements and document in `docs/specs/`
-2. **Create work branch and isolate with git worktree**
-3. Create tests based on expected inputs and outputs
-4. Run tests and confirm failures
-5. Implement code to pass tests
-6. Refactor once all tests pass
-7. Update progress files (PROGRESS.md, DEVELOPMENT_ROADMAP.md)
+1. 機能要件を定義し、`docs/specs/` に文書化
+2. **作業ブランチを作成し、git worktreeで分離**
+3. 期待される入力と出力に基づいてテストを作成
+4. テストを実行し、失敗を確認
+5. テストを通過するコードを実装
+6. すべてのテストが通過したらリファクタリング
+7. 進捗ファイル（PROGRESS.md、DEVELOPMENT_ROADMAP.md）を更新
 
-#### Worktree Usage
+#### Worktreeの使用方法
 ```bash
-# Required steps
+# 必須手順
 git checkout main && git pull origin main
 git checkout -b feature/task-name
 git worktree add ../project-feature ./feature/task-name
 ```
 
-### Module Structure
+### モジュール構造
 
-- `packages/frontend/`: Frontend application
-- `packages/backend/`: Backend services
-- `packages/shared/`: Shared utilities and types
-- `infrastructure/`: Infrastructure as Code
-- `docs/`: Documentation
-- `scripts/`: Utility scripts
+- `packages/frontend/`: フロントエンドアプリケーション
+- `packages/backend/`: バックエンドサービス
+- `packages/shared/`: 共有ユーティリティとタイプ
+- `infrastructure/`: インフラストラクチャ・アズ・コード
+- `docs/`: ドキュメント
+- `scripts/`: ユーティリティスクリプト
 
-### Coding Standards
+### コーディング標準
 
-#### File Naming Conventions
-- **Components**: `PascalCase.tsx` (React/Vue)
-- **Utilities**: `camelCase.ts`
-- **API Handlers**: `kebab-case.ts`
-- **Test Files**: `*.test.ts(x)` or `*.spec.ts(x)`
-- **Type Definitions**: `*.types.ts`
+#### ファイル命名規則
+- **コンポーネント**: `PascalCase.tsx` (React/Vue)
+- **ユーティリティ**: `camelCase.ts`
+- **APIハンドラー**: `kebab-case.ts`
+- **テストファイル**: `*.test.ts(x)` または `*.spec.ts(x)`
+- **型定義**: `*.types.ts`
 
-#### Quality Checklist
+#### 品質チェックリスト
 実装完了前に以下を確認：
-- `npm run type-check` (TypeScript validation)
+- `npm run type-check` (TypeScript検証)
 - `npm run lint` (ESLint + Prettier)
-- `npm run test` (Jest tests pass)
-- `npm run build` (Production build succeeds)
+- `npm run test` (Jestテスト通過)
+- `npm run build` (本番ビルド成功)
 
-### Cloud Integration Guidelines
+### クラウド統合ガイドライン
 
-#### Service Architecture
-- **Authentication**: 
-- **Database**: 
-- **Storage**: 
-- **Compute**: 
+#### サービスアーキテクチャ
+- **認証**: 
+- **データベース**: 
+- **ストレージ**: 
+- **コンピュート**: 
 - **CDN**: 
 
-#### Security Principles
-- Principle of least privilege
-- Secrets management
-- Secure communication (HTTPS/TLS)
-- Regular security audits
+#### セキュリティ原則
+- 最小権限の原則
+- シークレット管理
+- セキュアな通信（HTTPS/TLS）
+- 定期的なセキュリティ監査
 
-### Prohibited Practices
+### 禁止される実践
 
-The following practices are strictly prohibited:
-- Implementing features without tests
-- Working directly on the main branch
-- Hardcoding secrets or credentials
-- Breaking existing API interfaces
-- Adding external dependencies without approval
-- Skipping documentation updates
-- Ignoring PROGRESS.md and DEVELOPMENT_ROADMAP.md updates
+以下の実践は厳禁です：
+- テストなしでの機能実装
+- メインブランチでの直接作業
+- シークレットや認証情報のハードコーディング
+- 既存APIインターフェースの破壊
+- 承認なしでの外部依存関係の追加
+- ドキュメント更新のスキップ
+- PROGRESS.mdとDEVELOPMENT_ROADMAP.md更新の無視
 
-### Post-Implementation Checklist
--  All tests pass
--  Type checking passes
--  Linting passes
--  Documentation updated
--  PROGRESS.md updated with completed and next tasks
--  DEVELOPMENT_ROADMAP.md updated with progress
--  Changes committed with descriptive message
--  Pull Request created with clear description
+### 実装後チェックリスト
+-  すべてのテストが通過
+-  型チェックが通過
+-  リンティングが通過
+-  ドキュメントが更新済み
+-  PROGRESS.mdが完了したタスクと次のタスクで更新済み

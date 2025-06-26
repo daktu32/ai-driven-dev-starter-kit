@@ -1,1 +1,1 @@
-# CLI (Rust) Project Structure
+# CLI（Rust）プロジェクト構造

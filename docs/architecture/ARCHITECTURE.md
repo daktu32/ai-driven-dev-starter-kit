@@ -1,24 +1,24 @@
-# System Architecture
+# システムアーキテクチャ
 
-## 🏗️ Overview
+## 🏗️ 概要
 
-wezterm-parallel is built using  architecture.
+wezterm-parallelは アーキテクチャを使用して構築されています。
 
 ```mermaid
 graph TB
-    subgraph "Presentation Layer"
+    subgraph "プレゼンテーション層"
         CLIENT
         CDN
         STATIC
     end
     
-    subgraph "Application Layer"
+    subgraph "アプリケーション層"
         API
         SERVICES
         AUTH
     end
     
-    subgraph "Data Layer"
+    subgraph "データ層"
         DB
         STORAGE
         CACHE
@@ -34,57 +34,57 @@ graph TB
     SERVICES --> CACHE
 ```
 
-## 🧠 Design Philosophy
+## 🧠 設計哲学
 
-### Core Principles
+### 基本原則
 
-| Principle | Description | Implementation Impact |
-|-----------|-------------|---------------------|
+| 原則 | 説明 | 実装への影響 |
+|------|------|-------------|
 | **** |  |  |
 | **** |  |  |
 | **** |  |  |
 | **** |  |  |
 
-### Architectural Decisions
+### アーキテクチャ決定
 
 #### 1. 
-**Decision**: 
+**決定**: 
 
-**Rationale**:
+**根拠**:
 - 
 - 
 - 
 
-**Trade-offs**:
+**トレードオフ**:
 - : 
 - : 
 
 #### 2. 
-**Decision**: 
+**決定**: 
 
-**Rationale**:
+**根拠**:
 - 
 - 
 
-## 📁 Project Structure
+## 📁 プロジェクト構造
 
-### Directory Layout
+### ディレクトリレイアウト
 
 ```
 project-root/
-├── packages/              # Monorepo packages
-│   ├── frontend/         # Frontend application
-│   ├── backend/          # Backend services
-│   └── shared/           # Shared utilities
-├── infrastructure/       # Infrastructure as Code
+├── packages/              # モノレポパッケージ
+│   ├── frontend/         # フロントエンドアプリケーション
+│   ├── backend/          # バックエンドサービス
+│   └── shared/           # 共有ユーティリティ
+├── infrastructure/       # インフラストラクチャ・アズ・コード
 │   ├── lib/
-│   │   └── stacks/      # Infrastructure stacks
-│   └── test/            # Infrastructure tests
-├── docs/                # Documentation
-└── scripts/             # Utility scripts
+│   │   └── stacks/      # インフラストラクチャスタック
+│   └── test/            # インフラストラクチャテスト
+├── docs/                # ドキュメント
+└── scripts/             # ユーティリティスクリプト
 ```
 
-### Module Dependencies
+### モジュール依存関係
 
 ```mermaid
 graph TD
@@ -95,7 +95,7 @@ graph TD
     B --> F
 ```
 
-## 🔄 Data Flow
+## 🔄 データフロー
 
 ### 
 
@@ -121,15 +121,15 @@ sequenceDiagram
 
 
 
-## 📊 Data Models
+## 📊 データモデル
 
-### Database Schema
+### データベーススキーマ
 
 #### 
 ```typescript
 interface  {
   id: string;
-  // Add fields
+  // フィールドを追加
   createdAt: Date;
   updatedAt: Date;
 }
@@ -139,83 +139,83 @@ interface  {
 ```typescript
 interface  {
   id: string;
-  // Add fields
+  // フィールドを追加
   createdAt: Date;
   updatedAt: Date;
 }
 ```
 
-### API Models
+### APIモデル
 
 ```typescript
-// Request/Response models
+// リクエスト/レスポンスモデル
 interface  {
-  // Define structure
+  // 構造を定義
 }
 
 interface  {
-  // Define structure
+  // 構造を定義
 }
 ```
 
-## 🔧 Service Architecture
+## 🔧 サービスアーキテクチャ
 
-### Service Organization
+### サービス構成
 
 ```
 services/
-├── auth/              # Authentication service
-├── user/              # User management
+├── auth/              # 認証サービス
+├── user/              # ユーザー管理
 ├── /        # 
 ├── /        # 
-└── shared/            # Shared utilities
+└── shared/            # 共有ユーティリティ
 ```
 
-### Service Communication
+### サービス間通信
 
-- **Protocol**: 
-- **Format**: 
-- **Authentication**: 
+- **プロトコル**: 
+- **フォーマット**: 
+- **認証**: 
 
-## 🚀 Performance Considerations
+## 🚀 パフォーマンス考慮事項
 
-### Optimization Strategies
+### 最適化戦略
 
-1. **Caching**
+1. **キャッシュ**
    - 
    - 
 
-2. **Database Optimization**
+2. **データベース最適化**
    - 
    - 
 
-3. **Network Optimization**
+3. **ネットワーク最適化**
    - 
    - 
 
-### Scalability Patterns
+### スケーラビリティパターン
 
-- **Horizontal Scaling**: 
-- **Load Balancing**: 
-- **Rate Limiting**: 
+- **水平スケーリング**: 
+- **ロードバランシング**: 
+- **レート制限**: 
 
-## 🔒 Security Architecture
+## 🔒 セキュリティアーキテクチャ
 
-### Security Layers
+### セキュリティレイヤー
 
-1. **Network Security**
+1. **ネットワークセキュリティ**
    - 
    - 
 
-2. **Application Security**
+2. **アプリケーションセキュリティ**
    - 
    - 
 
-3. **Data Security**
+3. **データセキュリティ**
    - 
    - 
 
-### Authentication & Authorization
+### 認証と認可
 
 ```typescript
 // Auth flow example
@@ -226,15 +226,15 @@ interface AuthFlow {
 }
 ```
 
-## 📈 Monitoring & Observability
+## 📈 モニタリングとオブザーバビリティ
 
-### Metrics Collection
+### メトリクス収集
 
-- **Application Metrics**: 
-- **Infrastructure Metrics**: 
-- **Business Metrics**: 
+- **アプリケーションメトリクス**: 
+- **インフラストラクチャメトリクス**: 
+- **ビジネスメトリクス**: 
 
-### Logging Strategy
+### ロギング戦略
 
 ```typescript
 // Logging levels and structure
@@ -253,30 +253,30 @@ interface LogEntry {
 }
 ```
 
-### Alerting Rules
+### アラートルール
 
 | Alert | Condition | Severity | Action |
 |-------|-----------|----------|--------|
 |  |  | High/Medium/Low |  |
 |  |  | High/Medium/Low |  |
 
-## 🧪 Testing Strategy
+## 🧪 テスト戦略
 
-### Testing Levels
+### テストレベル
 
-1. **Unit Tests**
+1. **ユニットテスト**
    - Coverage target: %
    - Framework: 
 
-2. **Integration Tests**
+2. **インテグレーションテスト**
    - Scope: 
    - Framework: 
 
-3. **End-to-End Tests**
+3. **エンドツーエンドテスト**
    - Scenarios: 
    - Framework: 
 
-### Test Structure
+### テスト構造
 
 ```typescript
 // Example test structure
@@ -289,15 +289,15 @@ describe('', () => {
 });
 ```
 
-## 🚢 Deployment Architecture
+## 🚢 デプロイアーキテクチャ
 
-### Environments
+### 環境
 
 - **Development**: 
 - **Staging**: 
 - **Production**: 
 
-### Deployment Pipeline
+### デプロイパイプライン
 
 ```mermaid
 graph LR
@@ -309,15 +309,15 @@ graph LR
     F --> G
 ```
 
-### Infrastructure as Code
+### インフラストラクチャ・アズ・コード
 
 - **Tool**: 
 - **State Management**: 
 - **Secret Management**: 
 
-## 📚 Related Documentation
+## 📚 関連ドキュメント
 
-- **Development Guide**: (../CONTRIBUTING.md)
-- **API Documentation**: 
-- **Deployment Guide**: 
-- **Security Guidelines**: 
+- **開発ガイド**: (../CONTRIBUTING.md)
+- **APIドキュメント**: 
+- **デプロイガイド**: 
+- **セキュリティガイドライン**: 

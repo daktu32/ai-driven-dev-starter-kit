@@ -1,4 +1,4 @@
-# Product Requirements Document (PRD)
+# プロダクト要件ドキュメント（PRD）
 
 ## 1. Product Name
 

@@ -1,4 +1,4 @@
-# Startup Development Prompt
+# スタートアップ開発プロンプト
 
 Fast-paced, MVP-focused development for startups with rapid iteration and market validation.
 

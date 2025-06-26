@@ -1,6 +1,6 @@
-# Project Structure
+# プロジェクト構造
 
-This document describes the file organization of the Claude Code Development Starter Kit.
+このドキュメントはClaude Code Development Starter Kitのファイル構成を説明しています。
 
 ## Root Level Files
 

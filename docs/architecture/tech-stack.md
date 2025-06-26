@@ -1,4 +1,4 @@
-# Technology Stack
+# 技術スタック
 
 This document defines the technology stack for this project. Other documentation files reference this as the single source of truth.
 

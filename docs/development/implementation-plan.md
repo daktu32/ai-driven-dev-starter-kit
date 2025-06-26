@@ -1,4 +1,4 @@
-# Implementation Plan
+# 実装計画
 
 **Version**: 1.0  
 **Date**: 2025-06-19  

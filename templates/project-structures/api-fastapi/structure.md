@@ -1,1 +1,1 @@
-# API (FastAPI) Project Structure
+# API（FastAPI）プロジェクト構造

@@ -1,1 +1,1 @@
-# Web (Next.js) Project Structure
+# Web（Next.js）プロジェクト構造

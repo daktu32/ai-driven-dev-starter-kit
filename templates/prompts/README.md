@@ -1,4 +1,4 @@
-# Claude Code Development Prompts
+# Claude Code 開発プロンプト
 
 Choose the appropriate prompt template based on your project type and team size.
 

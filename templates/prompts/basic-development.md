@@ -1,4 +1,4 @@
-# Basic Development Prompt
+# 基本開発プロンプト
 
 A simplified version for smaller projects or teams getting started with Claude Code.
 

@@ -1,4 +1,4 @@
-# Open Source Development Prompt
+# オープンソース開発プロンプト
 
 Collaborative development prompt optimized for open source projects with community contributions.
 

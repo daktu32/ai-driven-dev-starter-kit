@@ -1,4 +1,4 @@
-# Development Progress Report
+# 開発進捗レポート
 
 ## Executive Summary
 

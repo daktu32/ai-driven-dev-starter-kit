@@ -1,4 +1,4 @@
-# Enterprise Development Prompt
+# エンタープライズ開発プロンプト
 
 Comprehensive multi-agent development for enterprise projects with strict compliance requirements.
 
