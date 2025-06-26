@@ -1,290 +1,170 @@
 # Setup Assistant
 
-Interactive CLI tool to customize the Claude Code Development Starter Kit for your specific project.
+Claude Code Development Starter Kit のプロジェクトカスタマイズとスケルトン生成を行う対話形式のCLIツールです。
 
-## NEW: スケルトン生成コマンド
+## 概要
 
-任意のパスに新しいプロジェクトのスケルトンを生成できます。
+- 🎯 **プロジェクトカスタマイズ** - プロジェクト情報とテックスタックに基づいて自動設定
+- 🔧 **スケルトン生成** - 新しいプロジェクトのスケルトンを任意のパスに生成
+- 💾 **安全なファイル操作** - 変更前にバックアップを作成
+- 🎨 **対話形式CLI** - ユーザーフレンドリーなインターフェース
+
+## クイックスタート
 
 ```bash
-# scripts ディレクトリでビルド済みであることを確認
+# scripts ディレクトリでビルド
 npm run build
 
-# スケルトン生成コマンドを実行
+# プロジェクトカスタマイズ
+npm run setup
+
+# スケルトン生成
 npx ./skeleton-generator.js
-
-# またはグローバルインストール後
-npx skeleton
 ```
 
-- 対話形式で生成先パスやプロジェクト名、含めるファイルを選択できます
-- .cursorrules も自動生成されます
+## 機能
 
-## Features
+### プロジェクトカスタマイズ
+- プロジェクト情報の収集（名前、説明、リポジトリURL）
+- チーム規模と開発アプローチの選択
+- テックスタックの選択（フロントエンド、バックエンド、データベース、インフラ）
+- プレースホルダーの自動置換
+- 設定ファイルの生成
 
-- 🎯 **Smart Prompt Selection** - Automatically recommends the best development prompt based on team size, industry, and compliance needs
-- 🔧 **Automated Template Processing** - Replaces all placeholders with your project-specific information
-- 💾 **Safe File Operations** - Creates backups before making any changes
-- 🎨 **Interactive CLI** - User-friendly interface with progress indicators
-- 🔍 **Dry Run Mode** - Preview changes before applying them
-- ✅ **Comprehensive Validation** - Validates project structure and configuration
+### スケルトン生成
+- 対話形式で生成先パスやプロジェクト名を選択
+- 含めるファイルの選択
+- .cursorrules の自動生成
 
-## Quick Start
+## 使用方法
 
-```bash
-# Navigate to the scripts directory
-cd scripts
-
-# Install dependencies
-npm install
-
-# Run the setup assistant
-npm run setup
-
-# Or run in dry-run mode to preview changes
-npm run setup:dry-run
-```
-
-## Usage
-
-### Interactive Setup (Recommended)
+### 対話形式セットアップ（推奨）
 
 ```bash
 npm run setup
 ```
 
-This will guide you through:
-1. Project information (name, description, repository URL)
-2. Team and development approach questions
-3. Technology stack selection
-4. Configuration summary and confirmation
-5. Automated file processing
+以下の手順でガイドします：
+1. プロジェクト情報の入力
+2. チームと開発アプローチの質問
+3. テックスタックの選択
+4. 設定の確認
+5. ファイルの自動処理
 
-### Command Line Options
+### コマンドラインオプション
 
 ```bash
-# Dry run mode - preview changes without modifying files
+# ドライランモード - ファイルを変更せずにプレビュー
 npm run setup:dry-run
 
-# Skip prompt selection (use with --prompt)
+# プロンプト選択をスキップ
 npm run setup -- --skip-prompt --prompt=basic-development
 
-# Verbose output
+# 詳細出力
 npm run setup -- --verbose
 
-# Available prompts
+# 利用可能なプロンプト
 npm run setup -- --prompt=basic-development
 npm run setup -- --prompt=enterprise-development
 npm run setup -- --prompt=opensource-development
 npm run setup -- --prompt=startup-development
 ```
 
-## What It Does
+### 開発アプローチ
 
-### 1. Project Validation
-- Checks for required files and directories
-- Validates project structure
+- **Basic Development** - 小規模チーム（1-3人）、シンプルなワークフロー
+- **Enterprise Development** - 大規模チーム、高コンプライアンス、複雑なガバナンス
+- **Open Source Development** - コミュニティ駆動プロジェクト、コントリビューター管理
+- **Startup Development** - 高速イテレーション、MVP重視、迅速なデプロイ
 
-### 2. Information Collection
-- **Project Info**: Name, description, repository URL
-- **Team Details**: Size, industry, compliance requirements
-- **Tech Stack**: Frontend, backend, database, infrastructure choices
+## プレースホルダーシステム
 
-### 3. Prompt Selection
-Based on your answers, recommends one of four development approaches:
+以下のプレースホルダーが自動的に置換されます：
 
-- **Basic Development** - Small teams (1-3 developers), simple workflow
-- **Enterprise Development** - Large teams, high compliance, complex governance
-- **Open Source Development** - Community-driven projects, contributor management
-- **Startup Development** - Fast iteration, MVP focus, rapid deployment
+### プロジェクトプレースホルダー
+- `[Your project name]` → プロジェクト名
+- `[Your Project Name]` → タイトルケースのプロジェクト名
+- `[project-name]` → ケバブケースのプロジェクト名
+- `[PROJECT_NAME]` → 大文字のプロジェクト名
+- `[Brief description of your project]` → プロジェクト説明
+- `[your-repo-url]` → リポジトリURL
 
-### 4. Template Processing
-- Finds all files with `[placeholder]` patterns
-- Replaces placeholders with your project-specific values
-- Processes files in:
-  - Root configuration files (`CLAUDE.md`, `README.md`)
-  - Documentation (`docs/**/*.md`)
-  - Infrastructure templates (`.claude/**/*.template`)
-  - GitHub workflows (`.github/**/*.template`)
+### テックスタックプレースホルダー
+- `[Frontend Framework]` → 選択されたフロントエンド
+- `[Backend Framework]` → 選択されたバックエンド
+- `[Database]` → 選択されたデータベース
+- `[Infrastructure]` → 選択されたインフラ
 
-### 5. File Management
-- Creates timestamped backups of all modified files
-- Copies selected prompt to `PROMPT.md`
-- Removes unused infrastructure files based on tech stack
-- Generates `.claude/project-config.json` for future reference
+## 開発
 
-## Configuration Output
-
-The setup assistant creates a project configuration file at `.claude/project-config.json`:
-
-```json
-{
-  "projectName": "My Awesome Project",
-  "description": "A revolutionary new application",
-  "repositoryUrl": "https://github.com/username/my-awesome-project",
-  "prompt": "basic-development",
-  "techStack": {
-    "frontend": "Next.js",
-    "backend": "AWS Lambda",
-    "database": "DynamoDB",
-    "infrastructure": "AWS CDK",
-    "deployment": "GitHub Actions",
-    "monitoring": "CloudWatch"
-  },
-  "team": {
-    "size": 3,
-    "type": "small",
-    "industry": "technology",
-    "complianceLevel": "medium"
-  },
-  "customizations": {}
-}
-```
-
-## Placeholder System
-
-The assistant automatically replaces these placeholders throughout your project:
-
-### Project Placeholders
-- `[Your project name]` → Project name
-- `[Your Project Name]` → Title case project name
-- `[project-name]` → Kebab case project name
-- `[PROJECT_NAME]` → Upper case project name
-- `[Brief description of your project]` → Project description
-- `[your-repo-url]` → Repository URL
-- `[your-username]` → GitHub username
-- `[your-project]` → Repository name
-
-### Tech Stack Placeholders
-- `[Frontend Framework]` → Selected frontend
-- `[Backend Framework]` → Selected backend
-- `[Database]` → Selected database
-- `[Infrastructure]` → Selected infrastructure
-- `[Deployment Platform]` → Selected deployment method
-- `[Monitoring Solution]` → Selected monitoring
-
-### Date Placeholders
-- `[YYYY-MM-DD]` → Current date (ISO format)
-- `[Current Date]` → Current date (localized)
-- `[Current Year]` → Current year
-
-## Backup and Recovery
-
-### Backup Creation
-Every run creates a timestamped backup directory:
-```
-.backups/setup-2024-01-15T10-30-45-000Z/
-├── CLAUDE.md
-├── README.md
-├── docs/
-└── ...
-```
-
-### Restore from Backup
-```bash
-# Manual restore - copy files from backup directory
-cp -r .backups/setup-TIMESTAMP/* .
-
-# Or use the FileManager API programmatically
-```
-
-## Development
-
-### Project Structure
+### プロジェクト構造
 ```
 scripts/
-├── setup-assistant.ts          # Main CLI application
+├── setup-assistant.ts          # メインCLIアプリケーション
+├── skeleton-generator.ts       # スケルトン生成ツール
 ├── lib/
-│   ├── types.ts               # TypeScript interfaces
-│   ├── promptSelector.ts      # Prompt selection logic
-│   ├── templateProcessor.ts   # Template processing
-│   ├── fileManager.ts         # File operations
-│   └── validator.ts           # Input validation
-├── package.json               # Dependencies and scripts
-├── tsconfig.json             # TypeScript configuration
-└── README.md                 # This file
+│   ├── types.ts               # TypeScriptインターフェース
+│   ├── promptSelector.ts      # プロンプト選択ロジック
+│   ├── templateProcessor.ts   # テンプレート処理
+│   ├── fileManager.ts         # ファイル操作
+│   └── validator.ts           # 入力検証
+├── package.json               # 依存関係とスクリプト
+├── tsconfig.json             # TypeScript設定
+└── README.md                 # このファイル
 ```
 
-### Building and Testing
+### ビルドとテスト
 
 ```bash
-# Install dependencies
+# 依存関係のインストール
 npm install
 
-# Build TypeScript
+# TypeScriptのビルド
 npm run build
 
-# Run in development mode
+# 開発モードで実行
 npm run dev
 
-# Run tests (when implemented)
+# テスト実行（実装時）
 npm test
 ```
 
-### Adding New Placeholders
+## トラブルシューティング
 
-1. Add placeholder to template files using `[placeholder-name]` format
-2. Update `createTemplateMapping()` in `templateProcessor.ts`
-3. Add validation if needed in `validator.ts`
-4. Update this documentation
+### よくある問題
 
-### Adding New Tech Stack Options
-
-1. Update choices in `collectTechStackInfo()` in `setup-assistant.ts`
-2. Add any specific cleanup logic in `fileManager.ts`
-3. Update infrastructure templates as needed
-
-## Troubleshooting
-
-### Common Issues
-
-**"Missing required file" errors**
-- Ensure you're running from the correct directory
-- Check that all starter kit files are present
+**"Missing required file" エラー**
+- 正しいディレクトリから実行していることを確認
+- すべてのスターターキットファイルが存在することを確認
 
 **"Project structure validation failed"**
-- Make sure you have all required directories and files
-- Run from the project root directory
+- 必要なディレクトリとファイルがすべて存在することを確認
+- プロジェクトルートディレクトリから実行
 
-**Permission errors**
-- Check file permissions
-- Run with appropriate user permissions
-- Ensure backup directory is writable
+**権限エラー**
+- ファイル権限を確認
+- 適切なユーザー権限で実行
+- バックアップディレクトリが書き込み可能であることを確認
 
-### Debug Mode
+### デバッグモード
 
-Run with verbose output to see detailed processing information:
+詳細な処理情報を表示するには：
 ```bash
 npm run setup -- --verbose
 ```
 
-### Reset to Original State
+### 元の状態にリセット
 
-If you need to start over:
-1. Restore from the most recent backup in `.backups/`
-2. Delete `.claude/project-config.json`
-3. Run the setup assistant again
+最初からやり直す場合：
+1. `.backups/` の最新バックアップから復元
+2. `.claude/project-config.json` を削除
+3. セットアップアシスタントを再実行
 
-## Integration with Claude Code
+## Claude Codeとの統合
 
-This setup assistant is designed to work seamlessly with Claude Code:
+このセットアップアシスタントは Claude Code とシームレスに連携します：
 
-- **Structured Output**: All operations provide clear feedback that Claude can parse
-- **Error Handling**: Comprehensive error messages for troubleshooting
-- **Configuration Storage**: Project config is saved for future Claude sessions
-- **Extensible**: Easy to add new features and customizations
-
-## Contributing
-
-To contribute improvements to the setup assistant:
-
-1. Fork the repository
-2. Create a feature branch
-3. Add your improvements with tests
-4. Submit a pull request
-
-Key areas for improvement:
-- Additional tech stack options
-- More sophisticated placeholder replacement
-- Integration with other development tools
-- Enhanced validation and error recovery
+- **構造化された出力** - Claudeが解析できる明確なフィードバック
+- **エラーハンドリング** - トラブルシューティング用の包括的なエラーメッセージ
+- **設定ストレージ** - 将来のClaudeセッション用にプロジェクト設定を保存
+- **拡張性** - 新機能とカスタマイズの追加が容易
