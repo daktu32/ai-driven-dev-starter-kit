@@ -7,9 +7,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node --esm",
-    "setup": "node project-setup.js",
-    "scaffold": "node scaffold-generator.js",
-    "setup:dry-run": "node project-setup.js --dry-run",
+    "setup": "npx tsx project-setup.ts",
+    "scaffold": "npx tsx scaffold-generator.ts",
+    "setup:dry-run": "npx tsx project-setup.ts --dry-run",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

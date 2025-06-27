@@ -14,7 +14,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 609749
+              "duration": 1305208
             }
           },
           {
@@ -27,7 +27,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6589708
+              "duration": 6147708
             }
           },
           {
@@ -40,7 +40,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 362708
+              "duration": 343916
             }
           },
           {
@@ -53,7 +53,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2007082
+              "duration": 1905666
             }
           },
           {
@@ -66,7 +66,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 555417
+              "duration": 528874
             }
           },
           {
@@ -79,7 +79,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 297915
+              "duration": 298542
             }
           },
           {
@@ -127,7 +127,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1159209
+              "duration": 1120292
             }
           },
           {
@@ -140,7 +140,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 511834
+              "duration": 519667
             }
           },
           {
@@ -148,7 +148,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1065084
+              "duration": 358833
             }
           }
         ],
@@ -167,7 +167,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 217750
+              "duration": 893833
             }
           },
           {
@@ -180,7 +180,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1156833
+              "duration": 1010082
             }
           },
           {
@@ -193,7 +193,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 30124
+              "duration": 28791
             }
           },
           {
@@ -206,7 +206,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 552291
+              "duration": 568667
             }
           },
           {
@@ -219,7 +219,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 300082
+              "duration": 302875
             }
           },
           {
@@ -237,7 +237,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 424542
+              "duration": 432500
             }
           },
           {
@@ -250,7 +250,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 389750
+              "duration": 357167
             }
           },
           {
@@ -258,7 +258,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 848792
+              "duration": 102832
             }
           }
         ],
@@ -277,7 +277,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 166333
+              "duration": 565790
             }
           },
           {
@@ -290,7 +290,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1002999
+              "duration": 902667
             }
           },
           {
@@ -303,7 +303,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 14291
+              "duration": 14125
             }
           },
           {
@@ -316,7 +316,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 689624
+              "duration": 647292
             }
           },
           {
@@ -329,7 +329,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 256750
+              "duration": 237375
             }
           },
           {
@@ -377,7 +377,7 @@
             },
             "result": {
               "status": "failed",
-              "duration": 501541,
+              "duration": 504665,
               "error_message": "AssertionError: expected '# cursor rules for test-project\\n\\n##…' to include 'code'\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/ai-tools.steps.ts:128:40)"
             }
           },
@@ -386,7 +386,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 243166
+              "duration": 229000
             }
           }
         ],
@@ -405,7 +405,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 176750
+              "duration": 632875
             }
           },
           {
@@ -418,7 +418,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1142417
+              "duration": 884916
             }
           },
           {
@@ -431,7 +431,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 15000
+              "duration": 16458
             }
           },
           {
@@ -444,7 +444,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1572207
+              "duration": 1330707
             }
           },
           {
@@ -457,7 +457,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 293625
+              "duration": 283250
             }
           },
           {
@@ -470,7 +470,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 264915
+              "duration": 234208
             }
           },
           {
@@ -483,7 +483,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 327708
+              "duration": 306459
             }
           },
           {
@@ -496,7 +496,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 353083
+              "duration": 325291
             }
           },
           {
@@ -504,7 +504,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 1070500
+              "duration": 97292
             }
           }
         ],
@@ -523,7 +523,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 196832
+              "duration": 605583
             }
           },
           {
@@ -536,7 +536,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 986708
+              "duration": 853250
             }
           },
           {
@@ -549,7 +549,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 14666
+              "duration": 15083
             }
           },
           {
@@ -562,7 +562,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 223166
+              "duration": 218583
             }
           },
           {
@@ -610,7 +610,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 715500
+              "duration": 612333
             }
           },
           {
@@ -623,7 +623,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 190833
+              "duration": 211125
             }
           },
           {
@@ -636,7 +636,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 212250
+              "duration": 212874
             }
           },
           {
@@ -644,7 +644,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 893542
+              "duration": 133291
             }
           }
         ],
@@ -663,7 +663,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 227959
+              "duration": 634500
             }
           },
           {
@@ -676,7 +676,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1128333
+              "duration": 928875
             }
           },
           {
@@ -689,7 +689,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 12791
+              "duration": 17416
             }
           },
           {
@@ -702,7 +702,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 139374
+              "duration": 205709
             }
           },
           {
@@ -715,7 +715,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 158000
+              "duration": 186374
             }
           },
           {
@@ -733,7 +733,7 @@
             },
             "result": {
               "status": "failed",
-              "duration": 310624,
+              "duration": 338250,
               "error_message": "AssertionError: expected 'node_modules/\\n.env\\n' to include '.ai-cache/'\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/ai-tools.steps.ts:200:26)"
             }
           },
@@ -755,7 +755,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 218208
+              "duration": 169792
             }
           }
         ],
@@ -785,7 +785,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 181708
+              "duration": 555250
             }
           },
           {
@@ -798,7 +798,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1228374
+              "duration": 935541
             }
           },
           {
@@ -807,11 +807,11 @@
             "line": 10,
             "name": "プロジェクトディレクトリに移動済み",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:15"
+              "location": "test/step-definitions/customization.steps.ts:16"
             },
             "result": {
               "status": "passed",
-              "duration": 157583
+              "duration": 193582
             }
           },
           {
@@ -820,11 +820,11 @@
             "line": 13,
             "name": "README.mdを開く",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:19"
+              "location": "test/step-definitions/customization.steps.ts:20"
             },
             "result": {
               "status": "passed",
-              "duration": 160667
+              "duration": 170834
             }
           },
           {
@@ -833,11 +833,11 @@
             "line": 14,
             "name": "プロジェクト名を\"AI-Powered Task Manager\"に変更する",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:24"
+              "location": "test/step-definitions/customization.steps.ts:25"
             },
             "result": {
               "status": "passed",
-              "duration": 721166
+              "duration": 771041
             }
           },
           {
@@ -851,12 +851,11 @@
             "line": 15,
             "name": "プロジェクトの説明を追加する:",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:35"
+              "location": "test/step-definitions/customization.steps.ts:36"
             },
             "result": {
-              "status": "failed",
-              "duration": 241874,
-              "error_message": "Error: ENOENT: no such file or directory, open '/Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750925466310-79r2qqp1u/AI-Powered Task Manager/README.md'"
+              "status": "passed",
+              "duration": 330083
             }
           },
           {
@@ -865,11 +864,11 @@
             "line": 20,
             "name": "package.jsonのnameフィールドを\"ai-task-manager\"に更新する",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:45"
+              "location": "test/step-definitions/customization.steps.ts:46"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 864166
             }
           },
           {
@@ -878,11 +877,11 @@
             "line": 21,
             "name": "プロジェクト情報が正しく更新される",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:195"
+              "location": "test/step-definitions/customization.steps.ts:196"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 500624
             }
           },
           {
@@ -891,11 +890,11 @@
             "line": 22,
             "name": "全ての設定ファイルで一貫性が保たれる",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:203"
+              "location": "test/step-definitions/customization.steps.ts:204"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "passed",
+              "duration": 277499
             }
           },
           {
@@ -903,7 +902,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 175124
+              "duration": 153665
             }
           }
         ],
@@ -922,7 +921,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 175999
+              "duration": 662540
             }
           },
           {
@@ -935,7 +934,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1055125
+              "duration": 963833
             }
           },
           {
@@ -944,11 +943,11 @@
             "line": 10,
             "name": "プロジェクトディレクトリに移動済み",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:15"
+              "location": "test/step-definitions/customization.steps.ts:16"
             },
             "result": {
               "status": "passed",
-              "duration": 18874
+              "duration": 18833
             }
           },
           {
@@ -957,11 +956,11 @@
             "line": 25,
             "name": ".env.exampleファイルが存在する",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:56"
+              "location": "test/step-definitions/customization.steps.ts:57"
             },
             "result": {
               "status": "passed",
-              "duration": 392832
+              "duration": 387207
             }
           },
           {
@@ -970,11 +969,11 @@
             "line": 26,
             "name": ".envファイルを作成する",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:68"
+              "location": "test/step-definitions/customization.steps.ts:69"
             },
             "result": {
               "status": "passed",
-              "duration": 331083
+              "duration": 265374
             }
           },
           {
@@ -1012,11 +1011,11 @@
             "line": 27,
             "name": "以下の環境変数を設定する:",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:76"
+              "location": "test/step-definitions/customization.steps.ts:77"
             },
             "result": {
               "status": "passed",
-              "duration": 319833
+              "duration": 296999
             }
           },
           {
@@ -1025,11 +1024,11 @@
             "line": 32,
             "name": "アプリケーションが環境変数を正しく読み込める",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:211"
+              "location": "test/step-definitions/customization.steps.ts:212"
             },
             "result": {
               "status": "passed",
-              "duration": 267499
+              "duration": 262249
             }
           },
           {
@@ -1038,11 +1037,11 @@
             "line": 33,
             "name": ".envファイルは.gitignoreに含まれている",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:220"
+              "location": "test/step-definitions/customization.steps.ts:221"
             },
             "result": {
               "status": "passed",
-              "duration": 209542
+              "duration": 209541
             }
           },
           {
@@ -1050,7 +1049,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 806000
+              "duration": 98000
             }
           }
         ],
@@ -1069,7 +1068,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 421375
+              "duration": 606125
             }
           },
           {
@@ -1082,7 +1081,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1024333
+              "duration": 856250
             }
           },
           {
@@ -1091,11 +1090,11 @@
             "line": 10,
             "name": "プロジェクトディレクトリに移動済み",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:15"
+              "location": "test/step-definitions/customization.steps.ts:16"
             },
             "result": {
               "status": "passed",
-              "duration": 14749
+              "duration": 13208
             }
           },
           {
@@ -1104,11 +1103,11 @@
             "line": 36,
             "name": "プロジェクトがNext.jsベースである",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:88"
+              "location": "test/step-definitions/customization.steps.ts:89"
             },
             "result": {
               "status": "passed",
-              "duration": 189499
+              "duration": 156540
             }
           },
           {
@@ -1117,11 +1116,11 @@
             "line": 37,
             "name": "追加のライブラリが必要である",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:92"
+              "location": "test/step-definitions/customization.steps.ts:93"
             },
             "result": {
               "status": "passed",
-              "duration": 104041
+              "duration": 96957
             }
           },
           {
@@ -1135,11 +1134,11 @@
             "line": 38,
             "name": "以下のコマンドを実行する:",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:97"
+              "location": "test/step-definitions/customization.steps.ts:98"
             },
             "result": {
               "status": "passed",
-              "duration": 460000
+              "duration": 406834
             }
           },
           {
@@ -1148,12 +1147,12 @@
             "line": 43,
             "name": "package.jsonに依存関係が追加される",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:227"
+              "location": "test/step-definitions/customization.steps.ts:228"
             },
             "result": {
               "status": "failed",
-              "duration": 329292,
-              "error_message": "AssertionError: expected {} to have property '@tanstack/react-query'\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/customization.steps.ts:232:44)"
+              "duration": 344667,
+              "error_message": "AssertionError: expected {} to have property '@tanstack/react-query'\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/customization.steps.ts:233:44)"
             }
           },
           {
@@ -1162,7 +1161,7 @@
             "line": 44,
             "name": "node_modulesがインストールされる",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:237"
+              "location": "test/step-definitions/customization.steps.ts:238"
             },
             "result": {
               "status": "skipped",
@@ -1175,7 +1174,7 @@
             "line": 45,
             "name": "TypeScriptの型定義が利用可能になる",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:242"
+              "location": "test/step-definitions/customization.steps.ts:243"
             },
             "result": {
               "status": "skipped",
@@ -1187,7 +1186,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 159165
+              "duration": 168041
             }
           }
         ],
@@ -1206,7 +1205,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 305374
+              "duration": 607958
             }
           },
           {
@@ -1219,7 +1218,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1036041
+              "duration": 853875
             }
           },
           {
@@ -1228,11 +1227,11 @@
             "line": 10,
             "name": "プロジェクトディレクトリに移動済み",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:15"
+              "location": "test/step-definitions/customization.steps.ts:16"
             },
             "result": {
               "status": "passed",
-              "duration": 14791
+              "duration": 12499
             }
           },
           {
@@ -1241,11 +1240,11 @@
             "line": 48,
             "name": "package.jsonを編集する",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:104"
+              "location": "test/step-definitions/customization.steps.ts:105"
             },
             "result": {
               "status": "passed",
-              "duration": 219291
+              "duration": 176042
             }
           },
           {
@@ -1289,11 +1288,11 @@
             "line": 49,
             "name": "scriptsセクションに以下を追加する:",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:109"
+              "location": "test/step-definitions/customization.steps.ts:110"
             },
             "result": {
               "status": "passed",
-              "duration": 430959
+              "duration": 341457
             }
           },
           {
@@ -1302,11 +1301,11 @@
             "line": 55,
             "name": "\"npm run db:migrate\"でマイグレーションが実行できる",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:250"
+              "location": "test/step-definitions/customization.steps.ts:251"
             },
             "result": {
               "status": "passed",
-              "duration": 474625
+              "duration": 472291
             }
           },
           {
@@ -1315,11 +1314,11 @@
             "line": 56,
             "name": "カスタムスクリプトが開発ワークフローに統合される",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:258"
+              "location": "test/step-definitions/customization.steps.ts:259"
             },
             "result": {
               "status": "passed",
-              "duration": 228708
+              "duration": 274040
             }
           },
           {
@@ -1327,7 +1326,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 640875
+              "duration": 109999
             }
           }
         ],
@@ -1346,7 +1345,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 196541
+              "duration": 599708
             }
           },
           {
@@ -1359,7 +1358,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 956208
+              "duration": 836082
             }
           },
           {
@@ -1368,11 +1367,11 @@
             "line": 10,
             "name": "プロジェクトディレクトリに移動済み",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:15"
+              "location": "test/step-definitions/customization.steps.ts:16"
             },
             "result": {
               "status": "passed",
-              "duration": 11375
+              "duration": 20166
             }
           },
           {
@@ -1381,11 +1380,11 @@
             "line": 59,
             "name": "追加のディレクトリが必要である",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:127"
+              "location": "test/step-definitions/customization.steps.ts:128"
             },
             "result": {
               "status": "passed",
-              "duration": 115957
+              "duration": 124874
             }
           },
           {
@@ -1429,11 +1428,11 @@
             "line": 60,
             "name": "以下のディレクトリを作成する:",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:131"
+              "location": "test/step-definitions/customization.steps.ts:132"
             },
             "result": {
               "status": "passed",
-              "duration": 810459
+              "duration": 593208
             }
           },
           {
@@ -1442,11 +1441,11 @@
             "line": 66,
             "name": "各ディレクトリにREADME.mdを追加する",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:144"
+              "location": "test/step-definitions/customization.steps.ts:145"
             },
             "result": {
               "status": "passed",
-              "duration": 224083
+              "duration": 131791
             }
           },
           {
@@ -1455,11 +1454,11 @@
             "line": 67,
             "name": "プロジェクト構造が組織のニーズに合致する",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:268"
+              "location": "test/step-definitions/customization.steps.ts:269"
             },
             "result": {
               "status": "passed",
-              "duration": 233458
+              "duration": 222457
             }
           },
           {
@@ -1468,11 +1467,11 @@
             "line": 68,
             "name": "開発者が適切な場所にコードを配置できる",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:277"
+              "location": "test/step-definitions/customization.steps.ts:278"
             },
             "result": {
               "status": "passed",
-              "duration": 203709
+              "duration": 221332
             }
           },
           {
@@ -1480,7 +1479,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 854874
+              "duration": 83209
             }
           }
         ],
@@ -1499,7 +1498,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 184709
+              "duration": 655625
             }
           },
           {
@@ -1512,7 +1511,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1079790
+              "duration": 863125
             }
           },
           {
@@ -1521,11 +1520,11 @@
             "line": 10,
             "name": "プロジェクトディレクトリに移動済み",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:15"
+              "location": "test/step-definitions/customization.steps.ts:16"
             },
             "result": {
               "status": "passed",
-              "duration": 24249
+              "duration": 11999
             }
           },
           {
@@ -1538,7 +1537,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 689875
+              "duration": 391334
             }
           },
           {
@@ -1552,11 +1551,11 @@
             "line": 72,
             "name": "テストカバレッジの閾値を設定する:",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:173"
+              "location": "test/step-definitions/customization.steps.ts:174"
             },
             "result": {
               "status": "passed",
-              "duration": 409542
+              "duration": 286916
             }
           },
           {
@@ -1591,11 +1590,11 @@
             "line": 79,
             "name": "デプロイ環境を追加する:",
             "match": {
-              "location": "test/step-definitions/customization.steps.ts:183"
+              "location": "test/step-definitions/customization.steps.ts:184"
             },
             "result": {
               "status": "passed",
-              "duration": 322292
+              "duration": 240083
             }
           },
           {
@@ -1608,7 +1607,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 305708
+              "duration": 297499
             }
           },
           {
@@ -1616,7 +1615,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 780709
+              "duration": 100958
             }
           }
         ],
@@ -1646,7 +1645,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 200624
+              "duration": 619124
             }
           },
           {
@@ -1659,7 +1658,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 196041
+              "duration": 192957
             }
           },
           {
@@ -1672,7 +1671,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 259374
+              "duration": 250583
             }
           },
           {
@@ -1685,7 +1684,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 194124
+              "duration": 197708
             }
           },
           {
@@ -1698,7 +1697,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 923250
+              "duration": 895582
             }
           },
           {
@@ -1707,11 +1706,11 @@
             "line": 15,
             "name": "プロジェクトタイプとして\"CLI (Rust)\"を選択する",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:66"
+              "location": "test/step-definitions/project-initialization.steps.ts:58"
             },
             "result": {
               "status": "passed",
-              "duration": 376166
+              "duration": 334166
             }
           },
           {
@@ -1720,11 +1719,11 @@
             "line": 16,
             "name": "プロジェクト名として\"my-cli-tool\"を入力する",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:70"
+              "location": "test/step-definitions/project-initialization.steps.ts:62"
             },
             "result": {
               "status": "passed",
-              "duration": 312042
+              "duration": 317416
             }
           },
           {
@@ -1733,11 +1732,11 @@
             "line": 17,
             "name": "開発プロンプトとして\"Basic Development\"を選択する",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:74"
+              "location": "test/step-definitions/project-initialization.steps.ts:66"
             },
             "result": {
               "status": "passed",
-              "duration": 299082
+              "duration": 298625
             }
           },
           {
@@ -1746,12 +1745,11 @@
             "line": 18,
             "name": "\"my-cli-tool\"ディレクトリが作成される",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:78"
+              "location": "test/step-definitions/project-initialization.steps.ts:70"
             },
             "result": {
-              "status": "failed",
-              "duration": 431249,
-              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:80:56)"
+              "status": "passed",
+              "duration": 336457
             }
           },
           {
@@ -1760,11 +1758,12 @@
             "line": 19,
             "name": "Rustプロジェクトの基本構造が生成される",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:83"
+              "location": "test/step-definitions/project-initialization.steps.ts:76"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "failed",
+              "duration": 271457,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:89:70)"
             }
           },
           {
@@ -1773,7 +1772,7 @@
             "line": 20,
             "name": "Cargo.tomlにプロジェクト名\"my-cli-tool\"が設定される",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:142"
+              "location": "test/step-definitions/project-initialization.steps.ts:135"
             },
             "result": {
               "status": "skipped",
@@ -1798,7 +1797,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 260082
+              "duration": 205999
             }
           }
         ],
@@ -1817,7 +1816,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 194124
+              "duration": 740874
             }
           },
           {
@@ -1830,7 +1829,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 26916
+              "duration": 35958
             }
           },
           {
@@ -1843,7 +1842,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 85332
+              "duration": 106042
             }
           },
           {
@@ -1856,7 +1855,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 56791
+              "duration": 72707
             }
           },
           {
@@ -1869,7 +1868,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 624874
+              "duration": 603166
             }
           },
           {
@@ -1878,11 +1877,11 @@
             "line": 25,
             "name": "プロジェクトタイプとして\"Web (Next.js)\"を選択する",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:66"
+              "location": "test/step-definitions/project-initialization.steps.ts:58"
             },
             "result": {
               "status": "passed",
-              "duration": 89332
+              "duration": 103583
             }
           },
           {
@@ -1891,11 +1890,11 @@
             "line": 26,
             "name": "プロジェクト名として\"my-web-app\"を入力する",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:70"
+              "location": "test/step-definitions/project-initialization.steps.ts:62"
             },
             "result": {
               "status": "passed",
-              "duration": 75667
+              "duration": 84749
             }
           },
           {
@@ -1904,11 +1903,11 @@
             "line": 27,
             "name": "開発プロンプトとして\"Startup Development\"を選択する",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:74"
+              "location": "test/step-definitions/project-initialization.steps.ts:66"
             },
             "result": {
               "status": "passed",
-              "duration": 73000
+              "duration": 72875
             }
           },
           {
@@ -1917,12 +1916,11 @@
             "line": 28,
             "name": "\"my-web-app\"ディレクトリが作成される",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:78"
+              "location": "test/step-definitions/project-initialization.steps.ts:70"
             },
             "result": {
-              "status": "failed",
-              "duration": 153874,
-              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:80:56)"
+              "status": "passed",
+              "duration": 114250
             }
           },
           {
@@ -1931,11 +1929,12 @@
             "line": 29,
             "name": "Next.jsプロジェクトの基本構造が生成される",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:100"
+              "location": "test/step-definitions/project-initialization.steps.ts:93"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "failed",
+              "duration": 281375,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:110:25)"
             }
           },
           {
@@ -1944,7 +1943,7 @@
             "line": 30,
             "name": "package.jsonにプロジェクト名\"my-web-app\"が設定される",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:148"
+              "location": "test/step-definitions/project-initialization.steps.ts:141"
             },
             "result": {
               "status": "skipped",
@@ -1969,7 +1968,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 162082
+              "duration": 151667
             }
           }
         ],
@@ -1988,178 +1987,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 225249
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "前提",
-            "line": 9,
-            "name": "開発者がAI Driven Dev Starter Kitをクローン済み",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:6"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 22665
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "かつ",
-            "line": 10,
-            "name": "Node.jsとnpmがインストール済み",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:11"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 36749
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "かつ",
-            "line": 11,
-            "name": "scriptsディレクトリに移動済み",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:20"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 67540
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "もし",
-            "line": 34,
-            "name": "\"npm run scaffold\"を実行する",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:35"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 541500
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "かつ",
-            "line": 35,
-            "name": "プロジェクトタイプとして\"API (FastAPI)\"を選択する",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:66"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 14625
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "かつ",
-            "line": 36,
-            "name": "プロジェクト名として\"my-api-service\"を入力する",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:70"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 11292
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "かつ",
-            "line": 37,
-            "name": "開発プロンプトとして\"Enterprise Development\"を選択する",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:74"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 10708
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "ならば",
-            "line": 38,
-            "name": "\"my-api-service\"ディレクトリが作成される",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:78"
-            },
-            "result": {
-              "status": "failed",
-              "duration": 110666,
-              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:80:56)"
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "かつ",
-            "line": 39,
-            "name": "FastAPIプロジェクトの基本構造が生成される",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:121"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "かつ",
-            "line": 40,
-            "name": "pyproject.tomlにプロジェクト名\"my-api-service\"が設定される",
-            "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:155"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "かつ",
-            "line": 41,
-            "name": ".claude/prompts/enterprise-development.mdが含まれる",
-            "match": {
-              "location": "test/step-definitions/final-steps.ts:101"
-            },
-            "result": {
-              "status": "skipped",
-              "duration": 0
-            }
-          },
-          {
-            "keyword": "After",
-            "hidden": true,
-            "result": {
-              "status": "passed",
-              "duration": 343666
-            }
-          }
-        ],
-        "tags": [],
-        "type": "scenario"
-      },
-      {
-        "description": "",
-        "id": "プロジェクトの初期化;既存プロジェクトのセットアップ",
-        "keyword": "シナリオ",
-        "line": 43,
-        "name": "既存プロジェクトのセットアップ",
-        "steps": [
-          {
-            "keyword": "Before",
-            "hidden": true,
-            "result": {
-              "status": "passed",
-              "duration": 328874
+              "duration": 912290
             }
           },
           {
@@ -2185,7 +2013,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 40250
+              "duration": 39208
             }
           },
           {
@@ -2198,7 +2026,178 @@
             },
             "result": {
               "status": "passed",
-              "duration": 77291
+              "duration": 56749
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "もし",
+            "line": 34,
+            "name": "\"npm run scaffold\"を実行する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:35"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 459792
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 35,
+            "name": "プロジェクトタイプとして\"API (FastAPI)\"を選択する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:58"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 22959
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 36,
+            "name": "プロジェクト名として\"my-api-service\"を入力する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:62"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11124
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 37,
+            "name": "開発プロンプトとして\"Enterprise Development\"を選択する",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:66"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11707
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "ならば",
+            "line": 38,
+            "name": "\"my-api-service\"ディレクトリが作成される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:70"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 64583
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 39,
+            "name": "FastAPIプロジェクトの基本構造が生成される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:114"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 258499,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/project-initialization.steps.ts:131:25)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 40,
+            "name": "pyproject.tomlにプロジェクト名\"my-api-service\"が設定される",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:148"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 41,
+            "name": ".claude/prompts/enterprise-development.mdが含まれる",
+            "match": {
+              "location": "test/step-definitions/final-steps.ts:101"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 148333
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "プロジェクトの初期化;既存プロジェクトのセットアップ",
+        "keyword": "シナリオ",
+        "line": 43,
+        "name": "既存プロジェクトのセットアップ",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 671583
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "前提",
+            "line": 9,
+            "name": "開発者がAI Driven Dev Starter Kitをクローン済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 26959
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 10,
+            "name": "Node.jsとnpmがインストール済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:11"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 41666
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "かつ",
+            "line": 11,
+            "name": "scriptsディレクトリに移動済み",
+            "match": {
+              "location": "test/step-definitions/project-initialization.steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 70042
             }
           },
           {
@@ -2211,7 +2210,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 575209
+              "duration": 486542
             }
           },
           {
@@ -2224,7 +2223,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 331041
+              "duration": 330500
             }
           },
           {
@@ -2233,11 +2232,11 @@
             "line": 46,
             "name": "開発プロンプトとして\"Open Source Development\"を選択する",
             "match": {
-              "location": "test/step-definitions/project-initialization.steps.ts:74"
+              "location": "test/step-definitions/project-initialization.steps.ts:66"
             },
             "result": {
               "status": "passed",
-              "duration": 13875
+              "duration": 14458
             }
           },
           {
@@ -2250,7 +2249,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 136375
+              "duration": 140958
             }
           },
           {
@@ -2262,9 +2261,8 @@
               "location": "test/step-definitions/missing-steps.ts:23"
             },
             "result": {
-              "status": "failed",
-              "duration": 121125,
-              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/missing-steps.ts:25:54)"
+              "status": "passed",
+              "duration": 72208
             }
           },
           {
@@ -2276,8 +2274,9 @@
               "location": "test/step-definitions/final-steps.ts:106"
             },
             "result": {
-              "status": "skipped",
-              "duration": 0
+              "status": "failed",
+              "duration": 274875,
+              "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/final-steps.ts:108:50)"
             }
           },
           {
@@ -2311,7 +2310,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 184417
+              "duration": 157749
             }
           }
         ],
@@ -2341,7 +2340,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 296749
+              "duration": 674167
             }
           },
           {
@@ -2354,7 +2353,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 134250
+              "duration": 131540
             }
           },
           {
@@ -2367,7 +2366,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 124291
+              "duration": 123708
             }
           },
           {
@@ -2380,7 +2379,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 118333
+              "duration": 117375
             }
           },
           {
@@ -2393,7 +2392,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 117833
+              "duration": 115708
             }
           },
           {
@@ -2406,7 +2405,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 330167
+              "duration": 328415
             }
           },
           {
@@ -2419,7 +2418,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 560749
+              "duration": 580665
             }
           },
           {
@@ -2472,8 +2471,9 @@
               "location": "test/step-definitions/template-selection.steps.ts:55"
             },
             "result": {
-              "status": "passed",
-              "duration": 1467124
+              "status": "failed",
+              "duration": 305249,
+              "error_message": "Error: EISDIR: illegal operation on a directory, open '/Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750945818818-6xn98p1s0/src/controllers'"
             }
           },
           {
@@ -2481,7 +2481,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 652874
+              "duration": 176875
             }
           }
         ],
@@ -2500,7 +2500,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 221208
+              "duration": 712999
             }
           },
           {
@@ -2513,7 +2513,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 14040
+              "duration": 13374
             }
           },
           {
@@ -2526,7 +2526,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 7916
+              "duration": 7292
             }
           },
           {
@@ -2539,7 +2539,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 7000
+              "duration": 6457
             }
           },
           {
@@ -2552,7 +2552,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6624
+              "duration": 6082
             }
           },
           {
@@ -2565,7 +2565,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 99000
+              "duration": 89042
             }
           },
           {
@@ -2578,7 +2578,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 549041
+              "duration": 512457
             }
           },
           {
@@ -2632,7 +2632,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 616667
+              "duration": 378083
             }
           },
           {
@@ -2640,7 +2640,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 510916
+              "duration": 454291
             }
           }
         ],
@@ -2659,7 +2659,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 218250
+              "duration": 695165
             }
           },
           {
@@ -2672,7 +2672,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 15582
+              "duration": 12083
             }
           },
           {
@@ -2685,7 +2685,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 7665
+              "duration": 7041
             }
           },
           {
@@ -2698,7 +2698,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6667
+              "duration": 6499
             }
           },
           {
@@ -2711,7 +2711,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6125
+              "duration": 13083
             }
           },
           {
@@ -2724,7 +2724,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 15625
+              "duration": 14499
             }
           },
           {
@@ -2737,7 +2737,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 553916
+              "duration": 513374
             }
           },
           {
@@ -2791,7 +2791,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 537124
+              "duration": 349083
             }
           },
           {
@@ -2799,7 +2799,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 407250
+              "duration": 245791
             }
           }
         ],
@@ -2818,7 +2818,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 189750
+              "duration": 690750
             }
           },
           {
@@ -2831,7 +2831,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 12291
+              "duration": 11541
             }
           },
           {
@@ -2844,7 +2844,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6875
+              "duration": 7082
             }
           },
           {
@@ -2857,7 +2857,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6374
+              "duration": 7166
             }
           },
           {
@@ -2870,7 +2870,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 16041
+              "duration": 6792
             }
           },
           {
@@ -2883,7 +2883,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 14791
+              "duration": 14667
             }
           },
           {
@@ -2896,7 +2896,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 474457
+              "duration": 497500
             }
           },
           {
@@ -2949,8 +2949,9 @@
               "location": "test/step-definitions/template-selection.steps.ts:55"
             },
             "result": {
-              "status": "passed",
-              "duration": 545333
+              "status": "failed",
+              "duration": 252582,
+              "error_message": "Error: EISDIR: illegal operation on a directory, open '/Users/aiq/work/ai-driven-dev-starter-kit/test/temp/test-1750945818827-h8wqvl97u/docs/event-catalog'"
             }
           },
           {
@@ -2958,7 +2959,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 538082
+              "duration": 152125
             }
           }
         ],
@@ -2977,7 +2978,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 223125
+              "duration": 722833
             }
           },
           {
@@ -2990,7 +2991,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 15999
+              "duration": 10499
             }
           },
           {
@@ -3003,7 +3004,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 8082
+              "duration": 6499
             }
           },
           {
@@ -3016,7 +3017,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6666
+              "duration": 6041
             }
           },
           {
@@ -3029,7 +3030,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6209
+              "duration": 5791
             }
           },
           {
@@ -3042,7 +3043,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 582415
+              "duration": 532165
             }
           },
           {
@@ -3055,7 +3056,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 169707
+              "duration": 155250
             }
           },
           {
@@ -3068,7 +3069,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 792750
+              "duration": 691917
             }
           },
           {
@@ -3081,7 +3082,7 @@
             },
             "result": {
               "status": "failed",
-              "duration": 261500,
+              "duration": 279958,
               "error_message": "AssertionError\n    + expected - actual\n\n    -false\n    +true\n\n    at CustomWorld.<anonymous> (/Users/aiq/work/ai-driven-dev-starter-kit/test/step-definitions/template-selection.steps.ts:69:53)"
             }
           },
@@ -3090,7 +3091,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 210791
+              "duration": 157874
             }
           }
         ],
@@ -3120,7 +3121,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 230042
+              "duration": 747499
             }
           },
           {
@@ -3133,7 +3134,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 13040
+              "duration": 13083
             }
           },
           {
@@ -3146,7 +3147,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 127582
+              "duration": 117584
             }
           },
           {
@@ -3159,7 +3160,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 109625
+              "duration": 100417
             }
           },
           {
@@ -3172,7 +3173,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 16125
+              "duration": 17708
             }
           },
           {
@@ -3185,7 +3186,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 436707
+              "duration": 491125
             }
           },
           {
@@ -3233,7 +3234,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 538125
+              "duration": 518916
             }
           },
           {
@@ -3241,7 +3242,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 369707
+              "duration": 412583
             }
           }
         ],
@@ -3260,7 +3261,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 202125
+              "duration": 796375
             }
           },
           {
@@ -3273,7 +3274,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 11833
+              "duration": 11958
             }
           },
           {
@@ -3286,7 +3287,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6750
+              "duration": 6458
             }
           },
           {
@@ -3299,7 +3300,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6082
+              "duration": 6208
             }
           },
           {
@@ -3312,7 +3313,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 14167
+              "duration": 15125
             }
           },
           {
@@ -3325,7 +3326,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 560416
+              "duration": 516665
             }
           },
           {
@@ -3373,7 +3374,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 442457
+              "duration": 347250
             }
           },
           {
@@ -3381,7 +3382,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 380916
+              "duration": 421917
             }
           }
         ],
@@ -3400,7 +3401,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 250792
+              "duration": 833165
             }
           },
           {
@@ -3413,7 +3414,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 11541
+              "duration": 16125
             }
           },
           {
@@ -3426,7 +3427,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6875
+              "duration": 7708
             }
           },
           {
@@ -3439,7 +3440,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6875
+              "duration": 7000
             }
           },
           {
@@ -3452,7 +3453,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 17790
+              "duration": 14791
             }
           },
           {
@@ -3465,7 +3466,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 528292
+              "duration": 552333
             }
           },
           {
@@ -3513,7 +3514,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 300791
+              "duration": 310334
             }
           },
           {
@@ -3521,7 +3522,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 343708
+              "duration": 470166
             }
           }
         ],
@@ -3540,7 +3541,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 218750
+              "duration": 778041
             }
           },
           {
@@ -3553,7 +3554,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 16332
+              "duration": 13624
             }
           },
           {
@@ -3566,7 +3567,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 7500
+              "duration": 6625
             }
           },
           {
@@ -3579,7 +3580,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6292
+              "duration": 6249
             }
           },
           {
@@ -3592,7 +3593,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 14290
+              "duration": 14333
             }
           },
           {
@@ -3605,7 +3606,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 542875
+              "duration": 480540
             }
           },
           {
@@ -3653,7 +3654,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 404457
+              "duration": 348166
             }
           },
           {
@@ -3661,7 +3662,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 418666
+              "duration": 397124
             }
           }
         ],
@@ -3680,7 +3681,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 324415
+              "duration": 814499
             }
           },
           {
@@ -3693,7 +3694,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 16082
+              "duration": 18667
             }
           },
           {
@@ -3706,7 +3707,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 7250
+              "duration": 8540
             }
           },
           {
@@ -3719,7 +3720,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6333
+              "duration": 6957
             }
           },
           {
@@ -3732,7 +3733,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 16583
+              "duration": 17791
             }
           },
           {
@@ -3745,7 +3746,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 149041
+              "duration": 165833
             }
           },
           {
@@ -3758,7 +3759,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 138707
+              "duration": 157749
             }
           },
           {
@@ -3771,7 +3772,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 507625
+              "duration": 466625
             }
           },
           {
@@ -3779,7 +3780,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 640124
+              "duration": 398292
             }
           }
         ],

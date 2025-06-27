@@ -65,7 +65,7 @@ Then('マイクロサービス間のイベント通信構造が生成される',
 });
 
 Then('統合されたアーキテクチャドキュメントが作成される', async function(this: CustomWorld) {
-  const docsPath = path.join(this.context.tempDir, 'docs', 'architecture');
+  const docsPath = path.join(this.getProjectPath(), 'docs', 'architecture');
   expect(await this.directoryExists(docsPath)).to.be.true;
 });
 
@@ -74,7 +74,7 @@ Then('指定されたカスタムプロンプトが使用される', async funct
 });
 
 Then('.claude/prompts/にカスタムプロンプトがコピーされる', async function(this: CustomWorld) {
-  const customPromptPath = path.join(this.context.tempDir, '.claude', 'prompts', 'custom-prompt.md');
+  const customPromptPath = path.join(this.getProjectPath(), '.claude', 'prompts', 'custom-prompt.md');
   expect(await this.fileExists(customPromptPath)).to.be.true;
 });
 
@@ -91,7 +91,7 @@ CustomWorld.prototype.validatePromptCharacteristics = async function(characteris
   const fs = require('fs-extra');
   
   // プロンプトファイルを作成（テスト用）
-  const promptDir = path.join(this.context.tempDir, '.claude', 'prompts');
+  const promptDir = path.join(this.getProjectPath(), '.claude', 'prompts');
   await fs.ensureDir(promptDir);
   
   const promptFile = this.context.developmentPrompt.toLowerCase().replace(/\s+/g, '-') + '.md';
@@ -127,7 +127,7 @@ CustomWorld.prototype.validatePromptCharacteristics = async function(characteris
 
 CustomWorld.prototype.validateArchitectureStructure = async function(structures: any[]) {
   const fs = require('fs-extra');
-  const projectPath = path.join(this.context.tempDir, 'test-project');
+  const projectPath = this.getProjectPath();
   
   for (const structure of structures) {
     const itemPath = structure['ディレクトリ'] || structure['ファイル/ディレクトリ'];
@@ -137,7 +137,7 @@ CustomWorld.prototype.validateArchitectureStructure = async function(structures:
       await fs.ensureDir(fullPath);
       expect(await this.directoryExists(fullPath)).to.be.true;
     } else {
-      await fs.ensureFile(fullPath);
+      await fs.ensureDir(path.dirname(fullPath));
       await fs.writeFile(fullPath, `# ${structure['説明']}\n`);
       expect(await this.fileExists(fullPath)).to.be.true;
     }
@@ -146,7 +146,7 @@ CustomWorld.prototype.validateArchitectureStructure = async function(structures:
 
 CustomWorld.prototype.validateIntegratedArchitecture = async function() {
   const fs = require('fs-extra');
-  const projectPath = path.join(this.context.tempDir, 'test-project');
+  const projectPath = this.getProjectPath();
   
   // マイクロサービス + イベント駆動の統合構造を作成
   const integratedStructure = [

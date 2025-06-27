@@ -1,39 +1,75 @@
 {
   "name": "ai-driven-dev-starter-kit",
   "version": "1.0.0",
-  "description": "このスターターキットは、AI駆動開発やAIエージェントを活用した開発のための包括的なテンプレート集です。setup-assistantを使用することで、プロジェクトの規模や用途に応じた最適な開発環境をscaffoldできます。",
-  "main": "index.js",
+  "description": "AI駆動開発用のテンプレート管理とスケルトン生成ツール - プラグインシステム対応",
+  "type": "module",
+  "main": "dist/index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "scaffold": "tsx scripts/scaffold-generator.ts",
+    "scaffold:plugin": "tsx src/PluginScaffoldGenerator.ts",
     "test": "cucumber-js",
     "test:dry-run": "cucumber-js --dry-run",
     "test:features": "cucumber-js features/",
     "test:reports": "npm run test && echo 'Test reports generated in test/reports/'",
-    "clean:test": "rimraf test/temp test/reports"
+    "clean:test": "rimraf test/temp test/reports",
+    "lint": "eslint src scripts --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\" \"scripts/**/*.ts\"",
+    "clean": "rimraf dist",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/daktu32/ai-driven-dev-starter-kit.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "keywords": [
+    "ai",
+    "development",
+    "template",
+    "scaffold",
+    "generator",
+    "claude",
+    "starter-kit",
+    "plugin"
+  ],
+  "author": "AI Driven Dev Starter Kit",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/daktu32/ai-driven-dev-starter-kit/issues"
   },
   "homepage": "https://github.com/daktu32/ai-driven-dev-starter-kit#readme",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "fs-extra": "^11.3.0",
+    "inquirer": "^9.2.12",
+    "ora": "^8.0.1"
+  },
   "devDependencies": {
     "@cucumber/cucumber": "^11.3.0",
     "@types/chai": "^5.2.2",
     "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/jest": "^29.5.8",
     "@types/node": "^24.0.4",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
     "chai": "^5.2.0",
-    "fs-extra": "^11.3.0",
+    "eslint": "^8.54.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.1.0",
     "rimraf": "^6.0.1",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
+    "tsx": "^4.6.0",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 }

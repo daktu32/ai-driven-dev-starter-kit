@@ -4,11 +4,12 @@ import { expect } from 'chai';
 import * as path from 'path';
 
 Given('プロジェクトが生成済み', async function(this: CustomWorld) {
-  // テスト用プロジェクトを作成
+  // テスト用プロジェクトを外部ディレクトリに作成
   this.context.projectName = 'test-project';
   this.context.projectType = 'Web (Next.js)';
   
-  const projectPath = path.join(this.context.tempDir, this.context.projectName);
+  const projectPath = path.join(this.context.externalProjectDir, this.context.projectName);
+  this.context.targetPath = projectPath;
   await this.createMockProjectStructure(this.context.projectType, projectPath);
 });
 

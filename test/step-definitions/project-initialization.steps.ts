@@ -36,30 +36,22 @@ When('{string}を実行する', async function(this: CustomWorld, command: strin
   const scriptsPath = this.getScriptsPath();
   
   if (command === 'npm run scaffold') {
-    // scaffold-generatorスクリプトが存在することを確認
-    expect(await this.fileExists(path.join(scriptsPath, 'scaffold-generator.js'))).to.be.true;
-    
-    // モックインプットを作成（対話型コマンド用）
-    const inputs = [
-      this.context.projectType || 'CLI (Rust)',
-      this.context.projectName || 'test-project',
-      this.context.developmentPrompt || 'Basic Development',
-      'n', // 追加オプションなし
-      'y'  // 実行確認
-    ];
+    // 外部ディレクトリに実際のプロジェクトを生成
+    const targetPath = path.join(this.context.externalProjectDir, this.context.projectName);
+    this.context.targetPath = targetPath;
     
     try {
-      // 実際にはscaffoldコマンドを実行する代わりに、
-      // テスト用のモック実装を使用
-      await this.mockScaffoldExecution(inputs);
+      // 実際のscaffold-generatorと同じ動作をシミュレート
+      await this.executeRealScaffoldGenerator(targetPath);
       this.context.lastCommandOutput = 'プロジェクトが正常に生成されました';
     } catch (error: any) {
       this.context.lastCommandError = error.message;
       throw error;
     }
   } else if (command === 'npm run setup') {
-    // setup用のモック実装
-    await this.mockSetupExecution();
+    // 既存プロジェクトへのClaude設定追加
+    const targetPath = this.context.targetPath || path.join(this.context.externalProjectDir, this.context.projectName);
+    await this.executeRealProjectSetup();
   }
 });
 
@@ -76,7 +68,8 @@ When('開発プロンプトとして{string}を選択する', function(this: Cus
 });
 
 Then('{string}ディレクトリが作成される', async function(this: CustomWorld, dirName: string) {
-  const projectPath = path.join(this.context.tempDir, dirName);
+  // 外部プロジェクトディレクトリまたはtargetPathで確認
+  const projectPath = this.context.targetPath || path.join(this.context.externalProjectDir, dirName);
   expect(await this.directoryExists(projectPath)).to.be.true;
 });
 
