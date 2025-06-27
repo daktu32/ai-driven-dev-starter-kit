@@ -1,6 +1,6 @@
 # AI Driven Dev Starter Kit
 
-AI駆動開発を始めるためのシンプルなテンプレート集です。Cursor での使用に最適化されています。
+AI駆動開発を始めるためのシンプルなテンプレート集です。Claude Code での使用に最適化されており、Cursor でも利用可能です。
 
 ## 機能
 
@@ -61,15 +61,18 @@ npm run scaffold:plugin
 - 技術制約
 ```
 
-### Step 3: Claude Code起動
+### Step 3: AIエージェントで開発
 
+**Claude Code（推奨）**:
 プロジェクトディレクトリで Claude Code を起動し、以下を指示：
-
 ```
 PRD.mdの内容に基づいてプロジェクトのスケルトンをアレンジして
 ```
 
-### Step 4: Claude Codeで開発
+**Cursor の場合**:
+```
+@PRD.md の内容に基づいてプロジェクトを実装してください
+```
 
 Claudeがサポートします：
 - PRD分析と要件整理
@@ -103,8 +106,9 @@ npm run dev  # または cargo run
 
 ## ドキュメント
 
-### Cursor での使用
-- [`docs/ai-agents/cursor-guide.md`](docs/ai-agents/cursor-guide.md) - Cursor での詳細な使用方法
+### AIエージェント対応
+- [`docs/ai-agents/cursor-guide.md`](docs/ai-agents/cursor-guide.md) - Cursor での使用方法
+- Claude Code での使用がメイン想定
 
 ### プラグイン開発
 - [`docs/architecture/PLUGIN-SYSTEM.md`](docs/architecture/PLUGIN-SYSTEM.md) - プラグインシステムについて
