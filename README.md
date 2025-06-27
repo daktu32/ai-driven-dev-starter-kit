@@ -1,6 +1,6 @@
 # AI Driven Dev Starter Kit
 
-AI駆動開発を始めるためのシンプルなテンプレート集です。様々なAIエージェント（Cursor、GitHub Copilot、ChatGPT、V0など）で利用可能です。
+AI駆動開発を始めるためのシンプルなテンプレート集です。Cursor での使用に最適化されています。
 
 ## 機能
 
@@ -103,13 +103,8 @@ npm run dev  # または cargo run
 
 ## ドキュメント
 
-### AIエージェント対応
-- [`README-UNIVERSAL.md`](README-UNIVERSAL.md) - 全AIエージェント向けガイド
-- [`docs/ai-agents/`](docs/ai-agents/) - 各AIエージェントの詳細ガイド
-  - [Cursor](docs/ai-agents/cursor-guide.md) - 総合開発支援（95%互換）
-  - [GitHub Copilot](docs/ai-agents/github-copilot-guide.md) - コード生成特化（85%互換）
-  - [ChatGPT](docs/ai-agents/chatgpt-guide.md) - 設計・実装支援（80%互換）
-  - [V0](docs/ai-agents/v0-guide.md) - UI/フロントエンド特化（70%互換）
+### Cursor での使用
+- [`docs/ai-agents/cursor-guide.md`](docs/ai-agents/cursor-guide.md) - Cursor での詳細な使用方法
 
 ### プラグイン開発
 - [`docs/architecture/PLUGIN-SYSTEM.md`](docs/architecture/PLUGIN-SYSTEM.md) - プラグインシステムについて
