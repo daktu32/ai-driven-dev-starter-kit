@@ -8,6 +8,7 @@
 - **CLI（Rust）** - コマンドラインツール開発
 - **Web（Next.js）** - フルスタックWebアプリケーション
 - **API（FastAPI）** - RESTful API開発
+- **MCP Server** - Model Context Protocol サーバー開発
 
 ### 開発プロンプト
 - **Basic Development** - 小規模プロジェクト・チーム向け
@@ -42,6 +43,7 @@ project-setupが以下の選択肢を提示します：
    - CLI（Rust）
    - Web（Next.js）
    - API（FastAPI）
+   - MCP Server
 
 2. **開発プロンプト**
    - Basic Development

@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import ora from 'ora';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 interface ScaffoldOptions {
   targetPath: string;
   projectName: string;
-  projectType: 'cli-rust' | 'web-nextjs' | 'api-fastapi';
+  projectType: 'cli-rust' | 'web-nextjs' | 'api-fastapi' | 'mcp-server';
   includeProjectManagement: boolean;
   includeArchitecture: boolean;
   includeTools: boolean;
@@ -19,9 +23,22 @@ interface ScaffoldOptions {
 class ScaffoldGenerator {
   private sourceDir: string;
   private options!: ScaffoldOptions;
+  private cliOptions: { [key: string]: string | boolean } = {};
 
   constructor() {
     this.sourceDir = path.resolve(__dirname, '..');
+    this.parseCLIArgs();
+  }
+
+  private parseCLIArgs(): void {
+    const args = process.argv.slice(2);
+    for (let i = 0; i < args.length; i++) {
+      const arg = args[i];
+      if (arg.startsWith('--')) {
+        const [key, value] = arg.slice(2).split('=');
+        this.cliOptions[key] = value || true;
+      }
+    }
   }
 
   async run(): Promise<void> {
@@ -29,6 +46,12 @@ class ScaffoldGenerator {
     console.log(chalk.gray('新しいプロジェクトのスケルトンを生成します\n'));
 
     try {
+      // ヘルプ表示
+      if (this.cliOptions.help) {
+        this.printHelp();
+        return;
+      }
+
       await this.promptOptions();
       await this.validateTargetPath();
       await this.generateScaffold();
@@ -42,9 +65,28 @@ class ScaffoldGenerator {
     }
   }
 
+  private printHelp(): void {
+    console.log(chalk.cyan.bold('使用方法:'));
+    console.log(chalk.white('  npm run scaffold'));
+    console.log(chalk.white('  npm run scaffold -- --project-name=my-project --project-type=mcp-server'));
+    console.log(chalk.cyan.bold('\nオプション:'));
+    console.log(chalk.white('  --help                    このヘルプを表示'));
+    console.log(chalk.white('  --project-name=NAME       プロジェクト名'));
+    console.log(chalk.white('  --project-type=TYPE       プロジェクトタイプ (cli-rust, web-nextjs, api-fastapi, mcp-server)'));
+    console.log(chalk.white('  --target-path=PATH        生成先パス'));
+    console.log(chalk.cyan.bold('\nプロジェクトタイプ:'));
+    console.log(chalk.white('  cli-rust     Rustで書くCLIツール'));
+    console.log(chalk.white('  web-nextjs   Next.jsでのWebアプリ'));
+    console.log(chalk.white('  api-fastapi  FastAPIでのRESTful API'));
+    console.log(chalk.white('  mcp-server   Model Context Protocol サーバー'));
+  }
+
   private async promptOptions(): Promise<void> {
-    const answers = await inquirer.prompt([
-      {
+    // CLI引数から値があればそれを使用、なければプロンプトで入力
+    const questions = [];
+
+    if (!this.cliOptions['target-path']) {
+      questions.push({
         type: 'input',
         name: 'targetPath',
         message: '生成先のパスを入力してください:',
@@ -55,8 +97,11 @@ class ScaffoldGenerator {
           }
           return true;
         },
-      },
-      {
+      });
+    }
+
+    if (!this.cliOptions['project-name']) {
+      questions.push({
         type: 'input',
         name: 'projectName',
         message: 'プロジェクト名を入力してください:',
@@ -70,8 +115,11 @@ class ScaffoldGenerator {
           }
           return true;
         },
-      },
-      {
+      });
+    }
+
+    if (!this.cliOptions['project-type']) {
+      questions.push({
         type: 'list',
         name: 'projectType',
         message: 'プロジェクトタイプを選択してください:',
@@ -79,35 +127,52 @@ class ScaffoldGenerator {
           { name: 'CLI (Rust)', value: 'cli-rust' },
           { name: 'Web (Next.js)', value: 'web-nextjs' },
           { name: 'API (FastAPI)', value: 'api-fastapi' },
+          { name: 'MCP Server', value: 'mcp-server' },
         ],
-      },
-      {
-        type: 'confirm',
-        name: 'includeProjectManagement',
-        message: 'プロジェクト管理ファイルを含めますか？（PROGRESS.md, ROADMAP.md, CHANGELOG.md）',
-        default: true,
-      },
-      {
-        type: 'confirm',
-        name: 'includeArchitecture',
-        message: 'アーキテクチャテンプレートを含めますか？',
-        default: false,
-      },
-      {
-        type: 'confirm',
-        name: 'includeTools',
-        message: '開発ツール設定を含めますか？（linting, testing, CI/CD）',
-        default: true,
-      },
-      {
-        type: 'confirm',
-        name: 'customCursorRules',
-        message: 'プロジェクト固有の .cursorrules を生成しますか？',
-        default: true,
-      },
-    ]);
+      });
+    }
 
-    this.options = answers as ScaffoldOptions;
+    if (!this.cliOptions['skip-optional']) {
+      questions.push(
+        {
+          type: 'confirm',
+          name: 'includeProjectManagement',
+          message: 'プロジェクト管理ファイルを含めますか？（PROGRESS.md, ROADMAP.md, CHANGELOG.md）',
+          default: true,
+        },
+        {
+          type: 'confirm',
+          name: 'includeArchitecture',
+          message: 'アーキテクチャテンプレートを含めますか？',
+          default: false,
+        },
+        {
+          type: 'confirm',
+          name: 'includeTools',
+          message: '開発ツール設定を含めますか？（linting, testing, CI/CD）',
+          default: true,
+        },
+        {
+          type: 'confirm',
+          name: 'customCursorRules',
+          message: 'プロジェクト固有の .cursorrules を生成しますか？',
+          default: true,
+        }
+      );
+    }
+
+    const answers = await inquirer.prompt(questions);
+
+    // CLI引数の値とプロンプトの答えをマージ
+    this.options = {
+      targetPath: this.cliOptions['target-path'] as string || answers.targetPath,
+      projectName: this.cliOptions['project-name'] as string || answers.projectName,
+      projectType: this.cliOptions['project-type'] as ScaffoldOptions['projectType'] || answers.projectType,
+      includeProjectManagement: this.cliOptions['skip-optional'] ? true : answers.includeProjectManagement ?? true,
+      includeArchitecture: this.cliOptions['skip-optional'] ? false : answers.includeArchitecture ?? false,
+      includeTools: this.cliOptions['skip-optional'] ? true : answers.includeTools ?? true,
+      customCursorRules: this.cliOptions['skip-optional'] ? true : answers.customCursorRules ?? true,
+    };
   }
 
   private async validateTargetPath(): Promise<void> {
@@ -158,6 +223,9 @@ class ScaffoldGenerator {
       // 基本ドキュメントをコピー
       await this.copyBasicDocuments(targetPath);
 
+      // docsディレクトリをコピー
+      await this.copyDocsFiles(targetPath);
+
       // .cursorrules を生成
       if (this.options.customCursorRules) {
         await this.generateCursorRules(targetPath);
@@ -175,14 +243,48 @@ class ScaffoldGenerator {
 
   private async copyProjectStructure(targetPath: string): Promise<void> {
     const templatePath = path.join(this.sourceDir, 'templates', 'project-structures', this.options.projectType);
-    const structureFiles = await fs.readdir(templatePath);
+    
+    if (!(await fs.pathExists(templatePath))) {
+      throw new Error(`テンプレートディレクトリが見つかりません: ${templatePath}`);
+    }
 
-    for (const file of structureFiles) {
-      const sourcePath = path.join(templatePath, file);
-      const targetFilePath = path.join(targetPath, file);
+    await this.copyDirectoryRecursively(templatePath, targetPath);
+  }
 
-      if (await fs.pathExists(sourcePath)) {
-        await fs.copy(sourcePath, targetFilePath);
+  private async copyDirectoryRecursively(sourcePath: string, targetPath: string): Promise<void> {
+    const items = await fs.readdir(sourcePath, { withFileTypes: true });
+
+    for (const item of items) {
+      const sourceItemPath = path.join(sourcePath, item.name);
+      let targetFileName = item.name;
+      
+      // .templateファイルは拡張子を除去
+      if (item.name.endsWith('.template')) {
+        targetFileName = item.name.replace('.template', '');
+      }
+      
+      
+      const targetItemPath = path.join(targetPath, targetFileName);
+
+      if (item.isFile()) {
+        // ファイルをコピーし、プロジェクト名などを置換
+        let content = await fs.readFile(sourceItemPath, 'utf8');
+        const className = this.options.projectName
+          .replace(/-/g, '')
+          .replace(/[^a-zA-Z0-9]/g, '')
+          .replace(/^[0-9]/, '')
+          .replace(/^./, (c) => c.toUpperCase());
+        
+        content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
+        content = content.replace(/\{\{PROJECT_CLASS_NAME\}\}/g, className);
+        content = content.replace(/\{\{PROJECT_DESCRIPTION\}\}/g, `${this.options.projectName} - Generated by Claude Code Dev Starter Kit`);
+        content = content.replace(/\{\{AUTHOR\}\}/g, 'Your Name');
+        
+        await fs.ensureDir(path.dirname(targetItemPath));
+        await fs.writeFile(targetItemPath, content);
+      } else if (item.isDirectory()) {
+        await fs.ensureDir(targetItemPath);
+        await this.copyDirectoryRecursively(sourceItemPath, targetItemPath);
       }
     }
   }
@@ -221,7 +323,6 @@ class ScaffoldGenerator {
 
   private async copyBasicDocuments(targetPath: string): Promise<void> {
     const basicDocs = [
-      'README.md',
       'CONTRIBUTING.md',
       'CLAUDE.md',
     ];
@@ -232,6 +333,38 @@ class ScaffoldGenerator {
 
       if (await fs.pathExists(sourcePath)) {
         await fs.copy(sourcePath, targetFilePath);
+      }
+    }
+  }
+
+  private async copyDocsFiles(targetPath: string): Promise<void> {
+    const docsPath = path.join(this.sourceDir, 'templates', 'docs');
+    const targetDocsPath = path.join(targetPath, 'docs');
+
+    if (await fs.pathExists(docsPath)) {
+      await fs.ensureDir(targetDocsPath);
+      
+      const docsFiles = await fs.readdir(docsPath);
+      for (const file of docsFiles) {
+        const sourcePath = path.join(docsPath, file);
+        let targetFileName = file;
+        
+        // .templateファイルは拡張子を除去
+        if (file.endsWith('.template')) {
+          targetFileName = file.replace('.template', '');
+        }
+        
+        const targetFilePath = path.join(targetDocsPath, targetFileName);
+        
+        if ((await fs.stat(sourcePath)).isFile()) {
+          // ファイルをコピーし、プロジェクト名などを置換
+          let content = await fs.readFile(sourcePath, 'utf8');
+          content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
+          content = content.replace(/\{\{PROJECT_DESCRIPTION\}\}/g, `${this.options.projectName} - Generated by Claude Code Dev Starter Kit`);
+          content = content.replace(/\{\{AUTHOR\}\}/g, 'Your Name');
+          
+          await fs.writeFile(targetFilePath, content);
+        }
       }
     }
   }
@@ -292,6 +425,12 @@ ${this.getProjectTypeSpecificRules()}
 - requirements.txt で依存関係を管理
 - tests/ ディレクトリにテストを配置
 - Pydantic を使用してデータバリデーション`;
+      case 'mcp-server':
+        return `## MCP Server プロジェクト
+- src/index.ts がエントリーポイント
+- Model Context Protocol (MCP) 仕様に準拠
+- tools/, resources/, prompts/ でMCP機能を実装
+- TypeScript + Node.js で開発`;
       default:
         return '';
     }
@@ -348,6 +487,11 @@ ${this.getProjectTypeSpecificRules()}
     } else {
       console.log(chalk.white(`2. 依存関係をインストール:`));
       console.log(chalk.gray(`   npm install`));
+      
+      if (this.options.projectType === 'mcp-server') {
+        console.log(chalk.white(`3. 環境設定:`));
+        console.log(chalk.gray(`   cp .env.example .env`));
+      }
     }
     
     console.log(chalk.white(`3. Git リポジトリを初期化:`));
@@ -363,7 +507,7 @@ ${this.getProjectTypeSpecificRules()}
 }
 
 // メイン実行
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const generator = new ScaffoldGenerator();
   generator.run().catch((error) => {
     console.error(chalk.red('致命的なエラーが発生しました:'), error);
