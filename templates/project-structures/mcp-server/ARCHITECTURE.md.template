@@ -1,0 +1,295 @@
+# アーキテクチャドキュメント - {{PROJECT_NAME}}
+
+バージョン: 1.0  
+作成日: {{DATE}}  
+プロジェクトタイプ: MCP Server
+
+## 🏗️ 概要
+
+このドキュメントは、{{PROJECT_NAME}}のアーキテクチャ設計指針と実装ガイドラインを提供します。Claude Codeなどのエージェントがスケルトンアレンジを行う際の参考資料として使用してください。
+
+## 📋 技術スタック
+
+### 基盤技術
+- **言語**: TypeScript
+- **ランタイム**: Node.js 18+
+- **プロトコル**: Model Context Protocol (MCP) v1.0
+- **SDK**: @modelcontextprotocol/sdk
+
+### 開発ツール
+- **ビルド**: TypeScript Compiler (tsc)
+- **開発サーバー**: tsx watch
+- **テスト**: Jest
+- **リンター**: ESLint + @typescript-eslint
+- **型チェック**: TypeScript strict mode
+
+## 🎯 アーキテクチャ原則
+
+### 設計原則
+1. **MCP仕様準拠**: JSON-RPC 2.0完全準拠
+2. **軽量・高速**: 最小限の依存関係、高速応答
+3. **拡張性**: Tools/Resources/Promptsの追加が容易
+4. **エラー処理**: 適切なエラーハンドリングとログ出力
+5. **型安全性**: TypeScript strict modeでの厳密な型定義
+
+### 品質原則
+- **テスト可能性**: 依存性注入、モック可能な設計
+- **監視可能性**: 構造化ログ、メトリクス収集
+- **保守性**: 明確な責務分離、文書化
+
+## 📁 ディレクトリ構造
+
+```
+{{PROJECT_NAME}}/
+├── src/
+│   ├── index.ts                 # エントリーポイント
+│   ├── server.ts               # MCPサーバーメイン（必要に応じて分離）
+│   ├── types/                  # 型定義
+│   │   ├── index.ts           # 共通型定義
+│   │   ├── mcp.ts             # MCP関連型定義
+│   │   └── domain.ts          # ドメイン固有型定義
+│   ├── tools/                  # MCPツール実装
+│   │   ├── index.ts           # ツール登録・エクスポート
+│   │   ├── example-tool.ts    # 例: 基本ツール実装
+│   │   └── [tool-name].ts     # PRD要件に応じたツール
+│   ├── resources/              # MCPリソース実装
+│   │   ├── index.ts           # リソース登録・エクスポート
+│   │   ├── example-resource.ts # 例: 基本リソース実装
+│   │   └── [resource-name].ts # PRD要件に応じたリソース
+│   ├── prompts/                # MCPプロンプト実装（必要に応じて）
+│   │   ├── index.ts           # プロンプト登録・エクスポート
+│   │   └── [prompt-name].ts   # PRD要件に応じたプロンプト
+│   ├── services/               # ビジネスロジック・外部API連携
+│   │   ├── index.ts           # サービス登録・エクスポート
+│   │   └── [service-name].ts  # 外部サービス連携
+│   ├── utils/                  # ユーティリティ
+│   │   ├── logger.ts          # ログ管理
+│   │   ├── validation.ts      # 入力検証
+│   │   └── cache.ts           # キャッシュ管理（必要に応じて）
+│   └── config/                 # 設定管理
+│       ├── index.ts           # 設定読み込み
+│       └── constants.ts       # 定数定義
+├── tests/                      # テストコード
+│   ├── unit/                  # ユニットテスト
+│   ├── integration/           # 統合テスト
+│   └── fixtures/              # テストデータ
+├── docs/                       # ドキュメント
+├── package.json               # プロジェクト設定
+├── tsconfig.json              # TypeScript設定
+├── jest.config.js             # Jest設定
+├── .env.example               # 環境変数例
+└── README.md                  # プロジェクト説明
+```
+
+## 🔧 コンポーネント設計
+
+### MCP Server (src/index.ts)
+**責務**: MCPプロトコルのメインハンドラー
+```typescript
+class {{PROJECT_CLASS_NAME}}Server {
+  private server: Server;
+  
+  constructor() {
+    // サーバー初期化
+    // ハンドラー登録
+  }
+  
+  private setupHandlers(): void {
+    // ListToolsRequestSchema
+    // CallToolRequestSchema
+    // ListResourcesRequestSchema (必要に応じて)
+    // GetResourceRequestSchema (必要に応じて)
+    // ListPromptsRequestSchema (必要に応じて)
+    // GetPromptRequestSchema (必要に応じて)
+  }
+}
+```
+
+### Tools (src/tools/)
+**責務**: 外部ツール実行機能
+```typescript
+export interface ToolImplementation {
+  name: string;
+  description: string;
+  inputSchema: any;
+  execute(params: unknown): Promise<ToolResult>;
+}
+
+// PRD要件に応じたツール実装例
+export class ExampleTool implements ToolImplementation {
+  name = 'example_tool';
+  description = 'Example tool functionality';
+  
+  inputSchema = {
+    type: 'object',
+    properties: {
+      // 入力パラメータ定義
+    },
+    required: ['param1']
+  };
+  
+  async execute(params: ExampleToolParams): Promise<ToolResult> {
+    // ツール実行ロジック
+  }
+}
+```
+
+### Resources (src/resources/)
+**責務**: データリソース提供
+```typescript
+export interface ResourceProvider {
+  listResources(): Promise<Resource[]>;
+  getResource(uri: string): Promise<string>;
+}
+
+// PRD要件に応じたリソース実装例
+export class ExampleResourceProvider implements ResourceProvider {
+  async listResources(): Promise<Resource[]> {
+    // リソース一覧取得
+  }
+  
+  async getResource(uri: string): Promise<string> {
+    // 特定リソース取得
+  }
+}
+```
+
+### Services (src/services/)
+**責務**: 外部API連携・ビジネスロジック
+```typescript
+// 外部API連携例
+export class ExternalAPIService {
+  constructor(private config: APIConfig) {}
+  
+  async fetchData(params: FetchParams): Promise<APIResponse> {
+    // 外部API呼び出し
+    // エラーハンドリング
+    // レスポンス変換
+  }
+}
+```
+
+## 🔄 データフロー
+
+### 基本フロー
+```
+1. MCP Client → MCP Request
+2. Server → Request Validation
+3. Server → Tool/Resource Handler
+4. Handler → Business Logic (Services)
+5. Services → External APIs (if needed)
+6. Response → Format Conversion
+7. Response → MCP Client
+```
+
+### エラーハンドリングフロー
+```
+1. Error Detection
+2. Error Classification (MCP Error Codes)
+3. Error Logging
+4. Error Response (JSON-RPC 2.0 format)
+```
+
+## 🧪 テスト戦略
+
+### ユニットテスト
+- **対象**: 各コンポーネントの独立テスト
+- **モック**: 外部依存関係のモック化
+- **カバレッジ**: 80%以上を目標
+
+### 統合テスト
+- **対象**: MCP Client-Server間の通信テスト
+- **検証**: プロトコル準拠、エラーハンドリング
+- **環境**: テスト専用環境での実行
+
+### E2Eテスト（必要に応じて）
+- **対象**: 実際のMCPクライアントとの接続テスト
+- **検証**: 実用的なユースケースの動作確認
+
+## 🔒 セキュリティ考慮事項
+
+### 入力検証
+- **すべての入力パラメータの検証**
+- **JSONスキーマによる型チェック**
+- **サニタイゼーション実装**
+
+### 認証・認可
+- **MCP クライアント認証（必要に応じて）**
+- **API キー管理（外部サービス連携時）**
+- **レート制限実装（必要に応じて）**
+
+### データ保護
+- **環境変数による秘密情報管理**
+- **ログ出力時の機密情報マスキング**
+- **一時データの適切な削除**
+
+## 📊 監視・ログ
+
+### ログ設計
+```typescript
+// 構造化ログ例
+logger.info('Tool executed', {
+  toolName: 'example_tool',
+  duration: 150,
+  success: true,
+  requestId: 'req-123'
+});
+```
+
+### メトリクス（必要に応じて）
+- **レスポンス時間**
+- **エラー率**
+- **リクエスト数**
+- **ツール使用状況**
+
+## 🚀 デプロイメント
+
+### 環境構成
+- **開発環境**: tsx watch
+- **テスト環境**: Jest
+- **本番環境**: Node.js + compiled JS
+
+### 環境変数管理
+```bash
+# .env.example
+MCP_SERVER_NAME={{PROJECT_NAME}}
+MCP_SERVER_VERSION=1.0.0
+LOG_LEVEL=info
+
+# PRD要件に応じた設定
+API_KEY=your_api_key_here
+DATABASE_URL=your_database_url_here
+CACHE_TTL=3600
+```
+
+## 🔄 PRD要件対応指針
+
+### Agent向け実装ガイダンス
+
+**1. PRD分析時の重点確認事項**
+- どのような外部データソースが必要か
+- どのような処理・変換が必要か
+- どの程度のパフォーマンスが要求されるか
+- どのような認証・セキュリティが必要か
+
+**2. ツール実装の決定基準**
+- **単一責務**: 1つのツールは1つの機能
+- **冪等性**: 同じ入力は同じ出力
+- **エラー透明性**: 失敗理由の明確化
+- **パフォーマンス**: 3秒以内の応答目標
+
+**3. アーキテクチャ調整指針**
+- **スケール要件**: 同期/非同期処理の選択
+- **データ永続化**: インメモリ/DB/外部サービス
+- **外部依存**: API制限・可用性の考慮
+- **セキュリティレベル**: 認証・暗号化の必要性
+
+**4. 拡張性考慮**
+- **新ツール追加**: tools/ディレクトリでの追加
+- **新リソース追加**: resources/ディレクトリでの追加
+- **設定変更**: config/での一元管理
+- **テスト追加**: tests/での対応ケース追加
+
+---
+
+**📌 重要**: このアーキテクチャは {{PROJECT_NAME}} の PRD要件に基づいて柔軟に調整してください。特に外部API連携、データ処理、パフォーマンス要件については、具体的な要件に応じて最適化を行ってください。

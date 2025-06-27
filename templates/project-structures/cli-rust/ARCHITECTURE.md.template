@@ -1,0 +1,551 @@
+# アーキテクチャドキュメント - {{PROJECT_NAME}}
+
+バージョン: 1.0  
+作成日: {{DATE}}  
+プロジェクトタイプ: CLI Tool (Rust)
+
+## 🏗️ 概要
+
+このドキュメントは、{{PROJECT_NAME}}のアーキテクチャ設計指針と実装ガイドラインを提供します。Claude Codeなどのエージェントがスケルトンアレンジを行う際の参考資料として使用してください。
+
+## 📋 技術スタック
+
+### 言語・ランタイム
+- **言語**: Rust 2021 Edition
+- **最小サポートバージョン**: 1.70+
+- **パッケージマネージャー**: Cargo
+- **ターゲット**: Cross-platform (Windows, macOS, Linux)
+
+### 主要クレート
+- **CLI解析**: clap v4 (Command Line Argument Parser)
+- **エラーハンドリング**: anyhow / thiserror
+- **非同期ランタイム**: tokio (必要に応じて)
+- **シリアライゼーション**: serde + serde_json / serde_yaml
+- **HTTP クライアント**: reqwest (API連携時)
+- **ファイル I/O**: std::fs + walkdir
+
+### 開発ツール
+- **フォーマッター**: rustfmt
+- **リンター**: clippy
+- **テスト**: cargo test + criterion (ベンチマーク)
+- **ドキュメント**: cargo doc
+- **リリース**: cargo-release
+
+## 🎯 アーキテクチャ原則
+
+### 設計原則
+1. **Single Responsibility**: 各モジュールは単一責任
+2. **Fail Fast**: エラーは早期発見・適切な報告
+3. **Zero-Cost Abstractions**: パフォーマンス最優先
+4. **Type Safety**: Rustの型システム最大活用
+5. **User Experience**: 直感的で親切なCLI
+
+### パフォーマンス原則
+- **メモリ効率**: 所有権システム活用、不要コピー回避
+- **並行処理**: 適切な並行・並列処理実装
+- **起動速度**: 高速な起動時間
+- **リソース管理**: 適切なファイル・ネットワークリソース管理
+
+## 📁 ディレクトリ構造
+
+```
+{{PROJECT_NAME}}/
+├── src/
+│   ├── main.rs               # エントリーポイント
+│   ├── lib.rs                # ライブラリルート（必要に応じて）
+│   ├── cli/                  # CLI関連
+│   │   ├── mod.rs           # CLIモジュール定義
+│   │   ├── args.rs          # 引数定義
+│   │   ├── commands/        # サブコマンド実装
+│   │   │   ├── mod.rs
+│   │   │   ├── init.rs      # init サブコマンド
+│   │   │   ├── run.rs       # run サブコマンド
+│   │   │   └── [command].rs # PRD要件に応じたコマンド
+│   │   └── output.rs        # 出力フォーマット
+│   ├── core/                # コアビジネスロジック
+│   │   ├── mod.rs
+│   │   ├── config.rs        # 設定管理
+│   │   ├── [domain].rs      # ドメインロジック
+│   │   └── processor.rs     # 主要処理ロジック
+│   ├── services/            # 外部サービス連携
+│   │   ├── mod.rs
+│   │   ├── api_client.rs    # API クライアント
+│   │   ├── file_service.rs  # ファイル操作
+│   │   └── [service].rs     # PRD要件に応じたサービス
+│   ├── utils/               # ユーティリティ
+│   │   ├── mod.rs
+│   │   ├── error.rs         # エラー定義
+│   │   ├── logger.rs        # ログ管理
+│   │   ├── validation.rs    # 入力検証
+│   │   └── helpers.rs       # ヘルパー関数
+│   └── types/               # 型定義
+│       ├── mod.rs
+│       ├── config.rs        # 設定型
+│       ├── result.rs        # 結果型
+│       └── [domain].rs      # ドメイン型
+├── tests/                   # 統合テスト
+│   ├── integration_test.rs
+│   ├── cli_test.rs
+│   └── fixtures/           # テストデータ
+├── benches/                # ベンチマーク
+│   └── benchmark.rs
+├── docs/                   # ドキュメント
+├── examples/               # 使用例
+│   └── basic_usage.rs
+├── Cargo.toml              # プロジェクト設定
+├── Cargo.lock              # 依存関係ロック
+├── README.md               # プロジェクト説明
+└── .gitignore              # Git除外設定
+```
+
+## 🔧 コンポーネント設計
+
+### Main Entry Point (main.rs)
+**責務**: CLI引数解析、ルーティング、エラーハンドリング
+```rust
+// src/main.rs
+use anyhow::Result;
+use clap::Parser;
+
+mod cli;
+mod core;
+mod services;
+mod utils;
+mod types;
+
+use cli::args::Args;
+use cli::commands;
+
+#[tokio::main] // 非同期処理が必要な場合
+async fn main() -> Result<()> {
+    // ログ初期化
+    utils::logger::init();
+    
+    // CLI引数解析
+    let args = Args::parse();
+    
+    // コマンド実行
+    match commands::execute(args).await {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            eprintln!("Error: {}", e);
+            std::process::exit(1);
+        }
+    }
+}
+```
+
+### CLI Arguments (cli/args.rs)
+**責務**: コマンドライン引数・オプション定義
+```rust
+// src/cli/args.rs
+use clap::{Parser, Subcommand};
+
+#[derive(Parser)]
+#[command(name = "{{PROJECT_NAME}}")]
+#[command(version, about, long_about = None)]
+pub struct Args {
+    /// Verbose output
+    #[arg(short, long)]
+    pub verbose: bool,
+    
+    /// Configuration file path
+    #[arg(short, long)]
+    pub config: Option<String>,
+    
+    #[command(subcommand)]
+    pub command: Commands,
+}
+
+#[derive(Subcommand)]
+pub enum Commands {
+    /// Initialize new project
+    Init {
+        /// Project name
+        name: String,
+        /// Template type
+        #[arg(short, long)]
+        template: Option<String>,
+    },
+    /// Run the main process
+    Run {
+        /// Input file path
+        #[arg(short, long)]
+        input: String,
+        /// Output file path
+        #[arg(short, long)]
+        output: Option<String>,
+    },
+    // PRD要件に応じた追加コマンド
+}
+```
+
+### Command Implementation (cli/commands/)
+**責務**: サブコマンドの具体的実装
+```rust
+// src/cli/commands/run.rs
+use anyhow::{Context, Result};
+use crate::core::processor::Processor;
+use crate::types::config::Config;
+
+pub async fn run_command(
+    input: &str,
+    output: Option<&str>,
+    config: &Config
+) -> Result<()> {
+    // 入力検証
+    crate::utils::validation::validate_input_file(input)
+        .context("Invalid input file")?;
+    
+    // プロセッサ初期化
+    let processor = Processor::new(config);
+    
+    // 処理実行
+    let result = processor.process_file(input).await
+        .context("Failed to process file")?;
+    
+    // 結果出力
+    match output {
+        Some(path) => {
+            crate::services::file_service::write_result(path, &result)
+                .context("Failed to write output")?;
+        }
+        None => {
+            println!("{}", result);
+        }
+    }
+    
+    Ok(())
+}
+```
+
+### Core Business Logic (core/)
+**責務**: ドメインロジック、主要な処理フロー
+```rust
+// src/core/processor.rs
+use anyhow::Result;
+use serde::{Deserialize, Serialize};
+use crate::types::config::Config;
+
+pub struct Processor {
+    config: Config,
+}
+
+impl Processor {
+    pub fn new(config: &Config) -> Self {
+        Self {
+            config: config.clone(),
+        }
+    }
+    
+    pub async fn process_file(&self, input_path: &str) -> Result<ProcessResult> {
+        // ファイル読み込み
+        let content = tokio::fs::read_to_string(input_path).await?;
+        
+        // データ解析
+        let data = self.parse_input(&content)?;
+        
+        // ビジネスロジック実行
+        let processed = self.apply_business_logic(data)?;
+        
+        // 結果フォーマット
+        Ok(ProcessResult {
+            data: processed,
+            metadata: self.generate_metadata(),
+        })
+    }
+    
+    fn parse_input(&self, content: &str) -> Result<InputData> {
+        // 入力データ解析ロジック
+        todo!("Implement based on PRD requirements")
+    }
+    
+    fn apply_business_logic(&self, data: InputData) -> Result<OutputData> {
+        // ビジネスロジック実装
+        todo!("Implement based on PRD requirements")
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ProcessResult {
+    pub data: OutputData,
+    pub metadata: Metadata,
+}
+```
+
+### Error Handling (utils/error.rs)
+**責務**: アプリケーション固有エラー定義
+```rust
+// src/utils/error.rs
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum CliError {
+    #[error("Configuration error: {0}")]
+    Config(String),
+    
+    #[error("Input validation failed: {0}")]
+    Validation(String),
+    
+    #[error("Processing error: {0}")]
+    Processing(String),
+    
+    #[error("IO error: {0}")]
+    Io(#[from] std::io::Error),
+    
+    #[error("Network error: {0}")]
+    Network(#[from] reqwest::Error),
+    
+    #[error("Serialization error: {0}")]
+    Serialization(#[from] serde_json::Error),
+}
+
+pub type CliResult<T> = Result<T, CliError>;
+```
+
+## 🔄 データフロー
+
+### 基本処理フロー
+```
+1. CLI Arguments Parsing (clap)
+2. Configuration Loading (config file + env vars)
+3. Input Validation (file existence, format check)
+4. Business Logic Execution (core processing)
+5. External Service Integration (API calls, file operations)
+6. Result Formatting (JSON, YAML, plain text)
+7. Output Generation (stdout, file, structured format)
+```
+
+### エラーハンドリングフロー
+```
+1. Error Detection (any processing stage)
+2. Error Categorization (CliError variants)
+3. Context Addition (anyhow context)
+4. User-Friendly Message (helpful error reporting)
+5. Exit Code Setting (appropriate exit status)
+```
+
+## 🧪 テスト戦略
+
+### ユニットテスト
+```rust
+// src/core/processor.rs (テスト例)
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::types::config::Config;
+
+    #[tokio::test]
+    async fn test_process_file_success() {
+        let config = Config::default();
+        let processor = Processor::new(&config);
+        
+        // テストデータでファイル処理テスト
+        let result = processor.process_test_data("test input").await;
+        assert!(result.is_ok());
+    }
+    
+    #[test]
+    fn test_input_validation() {
+        // 入力検証テスト
+        assert!(validate_input("valid input").is_ok());
+        assert!(validate_input("").is_err());
+    }
+}
+```
+
+### 統合テスト
+```rust
+// tests/cli_test.rs
+use assert_cmd::Command;
+use predicates::prelude::*;
+use tempfile::TempDir;
+
+#[test]
+fn test_run_command_with_valid_input() {
+    let temp_dir = TempDir::new().unwrap();
+    let input_file = temp_dir.path().join("input.txt");
+    std::fs::write(&input_file, "test data").unwrap();
+    
+    Command::cargo_bin("{{PROJECT_NAME}}")
+        .unwrap()
+        .arg("run")
+        .arg("--input")
+        .arg(input_file.to_str().unwrap())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("processed"));
+}
+```
+
+### ベンチマーク
+```rust
+// benches/benchmark.rs
+use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use {{PROJECT_NAME}}::core::processor::Processor;
+
+fn benchmark_processing(c: &mut Criterion) {
+    let processor = Processor::new(&Default::default());
+    
+    c.bench_function("process_large_file", |b| {
+        b.iter(|| {
+            // 大きなファイル処理のベンチマーク
+            processor.process_test_data(black_box("large test data"))
+        });
+    });
+}
+
+criterion_group!(benches, benchmark_processing);
+criterion_main!(benches);
+```
+
+## 🔒 セキュリティ考慮事項
+
+### 入力検証
+```rust
+// src/utils/validation.rs
+use anyhow::{bail, Result};
+use std::path::Path;
+
+pub fn validate_input_file(path: &str) -> Result<()> {
+    let path = Path::new(path);
+    
+    // ファイル存在確認
+    if !path.exists() {
+        bail!("Input file does not exist: {}", path.display());
+    }
+    
+    // ファイルサイズ確認
+    let metadata = path.metadata()?;
+    if metadata.len() > 100_000_000 { // 100MB制限
+        bail!("Input file too large: {} bytes", metadata.len());
+    }
+    
+    // パストラバーサル攻撃防止
+    if path.to_string_lossy().contains("..") {
+        bail!("Invalid file path: {}", path.display());
+    }
+    
+    Ok(())
+}
+```
+
+### 設定ファイル管理
+- **機密情報の分離**: 環境変数・設定ファイルの適切な使い分け
+- **設定検証**: 不正な設定値の検出・拒否
+- **デフォルト値**: セキュアなデフォルト設定
+
+## 📊 監視・ログ
+
+### ログ設計
+```rust
+// src/utils/logger.rs
+use tracing::{info, warn, error, debug};
+use tracing_subscriber::{EnvFilter, FmtSubscriber};
+
+pub fn init() {
+    let subscriber = FmtSubscriber::builder()
+        .with_env_filter(EnvFilter::from_default_env())
+        .finish();
+    
+    tracing::subscriber::set_global_default(subscriber)
+        .expect("Failed to set tracing subscriber");
+}
+
+// 使用例
+pub fn log_processing_start(file: &str) {
+    info!("Starting processing of file: {}", file);
+}
+
+pub fn log_error(operation: &str, error: &anyhow::Error) {
+    error!("Failed to {}: {:?}", operation, error);
+}
+```
+
+### パフォーマンス測定
+- **実行時間**: 主要処理の時間測定
+- **メモリ使用量**: プロファイリングツール活用
+- **CPU使用率**: システムリソース監視
+
+## 🚀 ビルド・配布
+
+### Cargo.toml設定
+```toml
+[package]
+name = "{{PROJECT_NAME}}"
+version = "1.0.0"
+edition = "2021"
+authors = ["{{AUTHOR}}"]
+description = "{{PROJECT_DESCRIPTION}}"
+license = "MIT"
+repository = "https://github.com/user/{{PROJECT_NAME}}"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+anyhow = "1.0"
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.11", features = ["json"] }
+
+[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "3.0"
+tempfile = "3.0"
+criterion = "0.5"
+
+[[bin]]
+name = "{{PROJECT_NAME}}"
+path = "src/main.rs"
+
+[[bench]]
+name = "benchmark"
+harness = false
+```
+
+### クロスプラットフォーム対応
+```bash
+# ビルドターゲット例
+cargo build --target x86_64-unknown-linux-gnu
+cargo build --target x86_64-pc-windows-gnu
+cargo build --target x86_64-apple-darwin
+```
+
+## 🔄 PRD要件対応指針
+
+### Agent向け実装ガイダンス
+
+**1. PRD分析時の重点確認事項**
+- **コマンド体系**: どのようなサブコマンドが必要か
+- **入出力形式**: ファイル、標準入出力、ネットワーク
+- **パフォーマンス要件**: 処理速度、メモリ使用量
+- **ユーザビリティ**: エラーメッセージ、ヘルプ文書
+
+**2. コマンド設計の決定基準**
+- **直感性**: Unix哲学に準拠した設計
+- **一貫性**: 引数・オプションの命名規則統一
+- **拡張性**: 新しいサブコマンド追加の容易さ
+- **後方互換性**: 既存使用方法の保持
+
+**3. パフォーマンス最適化指針**
+- **並行処理**: CPU集約的処理の並列化
+- **メモリ効率**: ストリーミング処理、適切な所有権管理
+- **I/O最適化**: 非同期I/O、バッファリング
+- **起動速度**: 依存関係最小化、遅延初期化
+
+**4. エラーハンドリング戦略**
+- **早期発見**: 入力検証の徹底
+- **分かりやすさ**: ユーザーフレンドリーなエラーメッセージ
+- **回復可能性**: 適切なリトライ・フォールバック
+- **デバッグ支援**: 詳細ログ、スタックトレース
+
+**5. 配布・運用考慮**
+- **インストール方法**: cargo install, バイナリ配布, パッケージマネージャー
+- **設定管理**: 設定ファイル、環境変数、コマンドライン引数
+- **アップデート**: バージョン管理、自動更新機能
+- **ドキュメント**: man ページ、使用例、トラブルシューティング
+
+---
+
+**📌 重要**: このアーキテクチャは {{PROJECT_NAME}} の PRD要件に基づいて柔軟に調整してください。特にコマンド体系、データ処理フロー、パフォーマンス要件については、具体的な要件に応じて最適化を行ってください。

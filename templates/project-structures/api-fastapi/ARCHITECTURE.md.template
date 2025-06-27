@@ -1,0 +1,484 @@
+# アーキテクチャドキュメント - {{PROJECT_NAME}}
+
+バージョン: 1.0  
+作成日: {{DATE}}  
+プロジェクトタイプ: API Server (FastAPI)
+
+## 🏗️ 概要
+
+このドキュメントは、{{PROJECT_NAME}}のアーキテクチャ設計指針と実装ガイドラインを提供します。Claude Codeなどのエージェントがスケルトンアレンジを行う際の参考資料として使用してください。
+
+## 📋 技術スタック
+
+### バックエンド
+- **フレームワーク**: FastAPI
+- **言語**: Python 3.11+
+- **ASGI サーバー**: Uvicorn
+- **バリデーション**: Pydantic v2
+- **型ヒント**: Python Typing
+
+### データベース
+- **ORM**: SQLAlchemy 2.0
+- **マイグレーション**: Alembic
+- **データベース**: PostgreSQL / SQLite (開発用)
+- **接続プール**: SQLAlchemy Engine
+
+### 認証・セキュリティ
+- **JWT**: PyJWT
+- **パスワードハッシュ**: bcrypt / Passlib
+- **OAuth2**: FastAPI OAuth2 scheme
+- **CORS**: FastAPI CORS middleware
+- **レート制限**: slowapi
+
+### 開発ツール
+- **依存関係管理**: Poetry / pip-tools
+- **コードフォーマット**: Black + isort
+- **リンター**: Ruff / Flake8
+- **型チェック**: mypy
+- **テスト**: pytest + pytest-asyncio
+
+## 🎯 アーキテクチャ原則
+
+### 設計原則
+1. **Domain-Driven Design**: ドメイン中心の設計
+2. **Clean Architecture**: 依存性逆転、レイヤー分離
+3. **RESTful API**: 標準的なHTTPメソッド・ステータスコード
+4. **Type Safety**: Pydantic・mypy による型安全性
+5. **Test-Driven**: テスト駆動開発
+
+### パフォーマンス原則
+- **Async/Await**: 非同期処理による高いスループット
+- **Connection Pooling**: データベース接続効率化
+- **Caching**: Redis・インメモリキャッシュ活用
+- **Lazy Loading**: 必要時データ読み込み
+
+## 📁 ディレクトリ構造
+
+```
+{{PROJECT_NAME}}/
+├── src/
+│   ├── {{PROJECT_NAME}}/          # メインパッケージ
+│   │   ├── __init__.py
+│   │   ├── main.py               # FastAPIアプリケーション
+│   │   ├── core/                 # 核となる設定・ユーティリティ
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py         # 設定管理
+│   │   │   ├── security.py       # セキュリティ・認証
+│   │   │   ├── database.py       # データベース設定
+│   │   │   └── dependencies.py   # 依存性注入
+│   │   ├── api/                  # API エンドポイント
+│   │   │   ├── __init__.py
+│   │   │   ├── main.py           # APIルーター統合
+│   │   │   ├── v1/               # API v1
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── auth.py       # 認証エンドポイント
+│   │   │   │   ├── users.py      # ユーザー管理
+│   │   │   │   └── [feature].py  # 機能別エンドポイント
+│   │   │   └── deps.py           # API依存関係
+│   │   ├── models/               # SQLAlchemyモデル
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py           # ベースモデル
+│   │   │   ├── user.py           # ユーザーモデル
+│   │   │   └── [feature].py      # 機能別モデル
+│   │   ├── schemas/              # Pydanticスキーマ
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py           # ベーススキーマ
+│   │   │   ├── user.py           # ユーザースキーマ
+│   │   │   ├── auth.py           # 認証スキーマ
+│   │   │   └── [feature].py      # 機能別スキーマ
+│   │   ├── services/             # ビジネスロジック
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py           # ベースサービス
+│   │   │   ├── user_service.py   # ユーザー操作
+│   │   │   ├── auth_service.py   # 認証ロジック
+│   │   │   └── [feature]_service.py # 機能別サービス
+│   │   ├── repositories/         # データアクセス層
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py           # ベースリポジトリ
+│   │   │   ├── user_repository.py # ユーザーデータアクセス
+│   │   │   └── [feature]_repository.py # 機能別リポジトリ
+│   │   ├── utils/                # ユーティリティ
+│   │   │   ├── __init__.py
+│   │   │   ├── logging.py        # ログ設定
+│   │   │   ├── validators.py     # カスタムバリデーター
+│   │   │   └── helpers.py        # ヘルパー関数
+│   │   └── exceptions/           # カスタム例外
+│   │       ├── __init__.py
+│   │       ├── base.py           # ベース例外
+│   │       ├── auth.py           # 認証例外
+│   │       └── [feature].py      # 機能別例外
+├── tests/                        # テストコード
+│   ├── __init__.py
+│   ├── conftest.py              # pytest設定
+│   ├── unit/                    # ユニットテスト
+│   │   ├── test_services/
+│   │   ├── test_repositories/
+│   │   └── test_utils/
+│   ├── integration/             # 統合テスト
+│   │   ├── test_api/
+│   │   └── test_database/
+│   └── fixtures/                # テストフィクスチャ
+├── alembic/                     # データベースマイグレーション
+│   ├── versions/
+│   ├── env.py
+│   └── script.py.mako
+├── docs/                        # API ドキュメント
+├── requirements/                # 依存関係
+│   ├── base.txt
+│   ├── dev.txt
+│   └── prod.txt
+├── pyproject.toml               # プロジェクト設定
+├── alembic.ini                  # Alembic設定
+├── .env.example                 # 環境変数例
+└── README.md                    # プロジェクト説明
+```
+
+## 🔧 コンポーネント設計
+
+### FastAPI Application (main.py)
+**責務**: アプリケーション初期化、ミドルウェア設定
+```python
+# src/{{PROJECT_NAME}}/main.py
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from .api.main import api_router
+from .core.config import settings
+
+app = FastAPI(
+    title="{{PROJECT_NAME}}",
+    version="1.0.0",
+    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+)
+
+# CORS設定
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# APIルーター登録
+app.include_router(api_router, prefix=settings.API_V1_STR)
+```
+
+### Pydantic Models (schemas/)
+**責務**: リクエスト・レスポンスの型定義、バリデーション
+```python
+# schemas/user.py
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
+from datetime import datetime
+
+class UserBase(BaseModel):
+    email: EmailStr
+    full_name: Optional[str] = None
+    is_active: bool = True
+
+class UserCreate(UserBase):
+    password: str = Field(..., min_length=8)
+
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = None
+    password: Optional[str] = Field(None, min_length=8)
+
+class UserInDB(UserBase):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    
+    model_config = {"from_attributes": True}
+
+class User(UserInDB):
+    pass
+```
+
+### SQLAlchemy Models (models/)
+**責務**: データベーステーブル定義、リレーション
+```python
+# models/user.py
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy.sql import func
+
+from .base import Base
+
+class User(Base):
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    full_name = Column(String, nullable=True)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+```
+
+### Repository Pattern (repositories/)
+**責務**: データアクセス抽象化、クエリ実装
+```python
+# repositories/user_repository.py
+from typing import Optional, List
+from sqlalchemy.orm import Session
+from sqlalchemy import select
+
+from ..models.user import User
+from ..schemas.user import UserCreate, UserUpdate
+from .base import BaseRepository
+
+class UserRepository(BaseRepository[User, UserCreate, UserUpdate]):
+    def get_by_email(self, db: Session, email: str) -> Optional[User]:
+        statement = select(User).where(User.email == email)
+        return db.execute(statement).scalar_one_or_none()
+    
+    def get_active_users(self, db: Session, skip: int = 0, limit: int = 100) -> List[User]:
+        statement = select(User).where(User.is_active == True).offset(skip).limit(limit)
+        return db.execute(statement).scalars().all()
+```
+
+### Service Layer (services/)
+**責務**: ビジネスロジック、複数リポジトリの調整
+```python
+# services/user_service.py
+from typing import Optional
+from sqlalchemy.orm import Session
+
+from ..core.security import get_password_hash, verify_password
+from ..repositories.user_repository import UserRepository
+from ..schemas.user import UserCreate, UserUpdate
+from ..models.user import User
+
+class UserService:
+    def __init__(self, user_repo: UserRepository):
+        self.user_repo = user_repo
+    
+    def create_user(self, db: Session, user_create: UserCreate) -> User:
+        # パスワードハッシュ化
+        hashed_password = get_password_hash(user_create.password)
+        
+        # ユーザー作成データ準備
+        user_data = user_create.model_dump()
+        user_data["hashed_password"] = hashed_password
+        del user_data["password"]
+        
+        return self.user_repo.create(db, obj_in=user_data)
+    
+    def authenticate(self, db: Session, email: str, password: str) -> Optional[User]:
+        user = self.user_repo.get_by_email(db, email=email)
+        if not user or not verify_password(password, user.hashed_password):
+            return None
+        return user
+```
+
+## 🔄 データフロー
+
+### リクエスト処理フロー
+```
+1. HTTP Request → FastAPI
+2. Request Validation → Pydantic Schema
+3. Dependency Injection → Dependencies
+4. Route Handler → API Endpoint
+5. Service Layer → Business Logic
+6. Repository Layer → Data Access
+7. Database Query → SQLAlchemy
+8. Response Formatting → Pydantic Schema
+9. HTTP Response → Client
+```
+
+### 認証フロー
+```
+1. Login Request → /auth/login
+2. Credential Validation → UserService.authenticate
+3. JWT Token Generation → Security Utils
+4. Token Response → Client
+5. Authenticated Request → Authorization Header
+6. Token Validation → Security Dependencies
+7. User Context → Request Handler
+```
+
+## 🧪 テスト戦略
+
+### ユニットテスト
+```python
+# tests/unit/test_services/test_user_service.py
+import pytest
+from unittest.mock import Mock
+
+from src.{{PROJECT_NAME}}.services.user_service import UserService
+from src.{{PROJECT_NAME}}.schemas.user import UserCreate
+
+@pytest.fixture
+def user_service():
+    mock_repo = Mock()
+    return UserService(user_repo=mock_repo)
+
+def test_create_user_hashes_password(user_service):
+    # テスト実装
+    user_create = UserCreate(email="test@example.com", password="password123")
+    # ...
+```
+
+### 統合テスト
+```python
+# tests/integration/test_api/test_users.py
+import pytest
+from fastapi.testclient import TestClient
+
+from src.{{PROJECT_NAME}}.main import app
+
+@pytest.fixture
+def client():
+    return TestClient(app)
+
+def test_create_user_endpoint(client, db_session):
+    response = client.post(
+        "/api/v1/users/",
+        json={"email": "test@example.com", "password": "password123"}
+    )
+    assert response.status_code == 201
+    assert response.json()["email"] == "test@example.com"
+```
+
+## 🔒 セキュリティ考慮事項
+
+### 認証・認可
+```python
+# core/security.py
+from passlib.context import CryptContext
+from jose import JWTError, jwt
+from datetime import datetime, timedelta
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+```
+
+### 入力検証
+- **Pydantic**: 自動的な型変換・バリデーション
+- **カスタムバリデーター**: ビジネスルール検証
+- **SQLインジェクション対策**: SQLAlchemy ORM使用
+- **XSS対策**: 適切なエスケープ処理
+
+## 📊 監視・ログ
+
+### 構造化ログ
+```python
+# utils/logging.py
+import structlog
+from pythonjsonlogger import jsonlogger
+
+def setup_logging():
+    structlog.configure(
+        processors=[
+            structlog.stdlib.filter_by_level,
+            structlog.stdlib.add_logger_name,
+            structlog.stdlib.add_log_level,
+            structlog.processors.JSONRenderer()
+        ],
+        context_class=dict,
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        wrapper_class=structlog.stdlib.BoundLogger,
+        cache_logger_on_first_use=True,
+    )
+```
+
+### メトリクス
+- **Prometheus**: メトリクス収集
+- **レスポンス時間**: エンドポイント別監視
+- **エラー率**: HTTP ステータスコード別
+- **リクエスト数**: スループット監視
+
+## 🚀 デプロイメント
+
+### 環境構成
+```python
+# core/config.py
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+    PROJECT_NAME: str = "{{PROJECT_NAME}}"
+    VERSION: str = "1.0.0"
+    API_V1_STR: str = "/api/v1"
+    
+    # データベース
+    DATABASE_URL: str
+    
+    # セキュリティ
+    SECRET_KEY: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    
+    # CORS
+    BACKEND_CORS_ORIGINS: List[str] = []
+    
+    class Config:
+        env_file = ".env"
+
+settings = Settings()
+```
+
+### Docker設定
+```dockerfile
+# Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements/prod.txt .
+RUN pip install -r prod.txt
+
+COPY src/ ./src/
+COPY alembic/ ./alembic/
+COPY alembic.ini .
+
+CMD ["uvicorn", "src.{{PROJECT_NAME}}.main:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+## 🔄 PRD要件対応指針
+
+### Agent向け実装ガイダンス
+
+**1. PRD分析時の重点確認事項**
+- **データモデル**: どのようなエンティティが必要か
+- **API設計**: どのようなエンドポイントが必要か
+- **認証要件**: どのようなセキュリティレベルが必要か
+- **パフォーマンス要件**: 同期/非同期処理の選択
+
+**2. エンドポイント設計の決定基準**
+- **RESTful設計**: 標準的なHTTPメソッド使用
+- **バージョニング**: API進化への対応
+- **ページネーション**: 大量データの効率的取得
+- **フィルタリング**: 柔軟な検索・絞り込み
+
+**3. データモデル設計指針**
+- **正規化**: 適切なテーブル設計
+- **インデックス**: クエリパフォーマンス最適化
+- **制約**: データ整合性保証
+- **マイグレーション**: スキーマ変更管理
+
+**4. セキュリティ実装**
+- **認証方式**: JWT vs Session の選択
+- **認可レベル**: ロールベース vs リソースベース
+- **入力検証**: Pydantic + カスタムバリデーター
+- **レート制限**: API乱用防止
+
+**5. パフォーマンス最適化**
+- **非同期処理**: I/O集約的処理の最適化
+- **キャッシュ戦略**: Redis・インメモリキャッシュ
+- **データベース最適化**: クエリ・インデックス最適化
+- **スケーリング**: 水平・垂直スケーリング対応
+
+---
+
+**📌 重要**: このアーキテクチャは {{PROJECT_NAME}} の PRD要件に基づいて柔軟に調整してください。特にデータモデル、API設計、パフォーマンス要件については、具体的な要件に応じて最適化を行ってください。

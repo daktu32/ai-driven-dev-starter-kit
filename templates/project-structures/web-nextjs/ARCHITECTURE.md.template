@@ -1,0 +1,391 @@
+# アーキテクチャドキュメント - {{PROJECT_NAME}}
+
+バージョン: 1.0  
+作成日: {{DATE}}  
+プロジェクトタイプ: Web Application (Next.js)
+
+## 🏗️ 概要
+
+このドキュメントは、{{PROJECT_NAME}}のアーキテクチャ設計指針と実装ガイドラインを提供します。Claude Codeなどのエージェントがスケルトンアレンジを行う際の参考資料として使用してください。
+
+## 📋 技術スタック
+
+### フロントエンド
+- **フレームワーク**: Next.js 14+ (App Router)
+- **言語**: TypeScript
+- **スタイリング**: Tailwind CSS
+- **UIコンポーネント**: Headless UI / Radix UI
+- **アイコン**: Heroicons / Lucide Icons
+- **フォント**: Inter / Google Fonts
+
+### 状態管理
+- **グローバル状態**: Zustand / Redux Toolkit
+- **サーバー状態**: TanStack Query (React Query)
+- **フォーム**: React Hook Form + Zod
+- **URL状態**: Next.js Router + useSearchParams
+
+### バックエンド（Next.js）
+- **API Routes**: App Router API
+- **認証**: NextAuth.js / Auth0
+- **データベース**: Prisma + PostgreSQL / Supabase
+- **バリデーション**: Zod
+- **ファイルアップロード**: Uploadthing / Cloudinary
+
+### 開発ツール
+- **ビルド**: Next.js Turbopack
+- **型チェック**: TypeScript strict mode
+- **リンター**: ESLint + Prettier
+- **テスト**: Vitest + Testing Library
+- **E2E**: Playwright
+
+## 🎯 アーキテクチャ原則
+
+### 設計原則
+1. **Component-First**: 再利用可能なコンポーネント設計
+2. **Server-First**: SSRを最大活用、クライアント処理最小化
+3. **Type-Safe**: TypeScript strict mode、ランタイム検証
+4. **Performance-First**: Core Web Vitals最適化
+5. **Accessibility-First**: WCAG 2.1 AA準拠
+
+### パフォーマンス原則
+- **Code Splitting**: ページ・コンポーネント単位の分割
+- **Image Optimization**: next/image活用
+- **Font Optimization**: next/font活用
+- **Bundle Analysis**: 定期的なバンドルサイズ監視
+
+## 📁 ディレクトリ構造
+
+```
+{{PROJECT_NAME}}/
+├── src/
+│   ├── app/                    # App Router (Next.js 13+)
+│   │   ├── (auth)/            # ルートグループ: 認証が必要なページ
+│   │   │   ├── dashboard/
+│   │   │   └── settings/
+│   │   ├── (public)/          # ルートグループ: 公開ページ
+│   │   │   ├── about/
+│   │   │   └── contact/
+│   │   ├── api/               # API Routes
+│   │   │   ├── auth/
+│   │   │   ├── users/
+│   │   │   └── [feature]/
+│   │   ├── globals.css        # グローバルスタイル
+│   │   ├── layout.tsx         # ルートレイアウト
+│   │   ├── page.tsx           # ホームページ
+│   │   ├── loading.tsx        # ローディングUI
+│   │   ├── error.tsx          # エラーUI
+│   │   └── not-found.tsx      # 404ページ
+│   ├── components/            # UIコンポーネント
+│   │   ├── ui/               # 基本UIコンポーネント
+│   │   │   ├── Button.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── Modal.tsx
+│   │   │   └── index.ts      # re-export
+│   │   ├── layout/           # レイアウトコンポーネント
+│   │   │   ├── Header.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── Navigation.tsx
+│   │   ├── forms/            # フォームコンポーネント
+│   │   │   ├── LoginForm.tsx
+│   │   │   ├── ContactForm.tsx
+│   │   │   └── [feature]Form.tsx
+│   │   └── [feature]/        # 機能別コンポーネント
+│   │       ├── [Feature]List.tsx
+│   │       ├── [Feature]Card.tsx
+│   │       └── [Feature]Detail.tsx
+│   ├── lib/                   # ユーティリティ・設定
+│   │   ├── auth.ts           # 認証設定
+│   │   ├── db.ts             # データベース設定
+│   │   ├── utils.ts          # 汎用ユーティリティ
+│   │   ├── validations.ts    # Zodスキーマ
+│   │   └── constants.ts      # 定数定義
+│   ├── hooks/                # カスタムフック
+│   │   ├── useAuth.ts        # 認証フック
+│   │   ├── useLocalStorage.ts # ローカルストレージ
+│   │   └── use[Feature].ts   # 機能別フック
+│   ├── store/                # 状態管理
+│   │   ├── index.ts          # ストア設定
+│   │   ├── authStore.ts      # 認証状態
+│   │   └── [feature]Store.ts # 機能別状態
+│   ├── types/                # 型定義
+│   │   ├── index.ts          # 共通型定義
+│   │   ├── api.ts            # API型定義
+│   │   ├── auth.ts           # 認証型定義
+│   │   └── [feature].ts      # 機能別型定義
+│   └── styles/               # スタイル
+│       ├── globals.css       # Tailwindベース
+│       └── components.css    # コンポーネント専用
+├── public/                   # 静的ファイル
+│   ├── images/
+│   ├── icons/
+│   └── favicon.ico
+├── prisma/                   # データベーススキーマ（Prisma使用時）
+│   ├── schema.prisma
+│   └── migrations/
+├── tests/                    # テストコード
+│   ├── __mocks__/           # モック
+│   ├── components/          # コンポーネントテスト
+│   ├── pages/               # ページテスト
+│   └── e2e/                 # E2Eテスト
+├── docs/                     # ドキュメント
+├── package.json             # プロジェクト設定
+├── next.config.js           # Next.js設定
+├── tailwind.config.js       # Tailwind設定
+├── tsconfig.json            # TypeScript設定
+├── .env.local               # 環境変数
+└── README.md                # プロジェクト説明
+```
+
+## 🔧 コンポーネント設計
+
+### ページコンポーネント (app/*/page.tsx)
+**責務**: ページレベルのデータ取得、SEO、レイアウト
+```typescript
+// app/dashboard/page.tsx
+export default async function DashboardPage() {
+  // Server Component でのデータ取得
+  const data = await fetchUserData();
+  
+  return (
+    <div>
+      <PageHeader title="Dashboard" />
+      <DashboardContent data={data} />
+    </div>
+  );
+}
+
+export const metadata: Metadata = {
+  title: 'Dashboard - {{PROJECT_NAME}}',
+  description: 'User dashboard'
+};
+```
+
+### UIコンポーネント (components/ui/)
+**責務**: 再利用可能な基本UIコンポーネント
+```typescript
+// components/ui/Button.tsx
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  loading?: boolean;
+}
+
+export const Button: React.FC<ButtonProps> = ({
+  variant = 'primary',
+  size = 'md',
+  loading = false,
+  children,
+  ...props
+}) => {
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size }))}
+      disabled={loading}
+      {...props}
+    >
+      {loading ? <Spinner /> : children}
+    </button>
+  );
+};
+```
+
+### フォームコンポーネント (components/forms/)
+**責務**: 入力検証、送信処理、エラーハンドリング
+```typescript
+// components/forms/ContactForm.tsx
+const contactSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email'),
+  message: z.string().min(10, 'Message too short')
+});
+
+export const ContactForm: React.FC = () => {
+  const form = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema)
+  });
+  
+  const mutation = useMutation({
+    mutationFn: submitContact,
+    onSuccess: () => {
+      toast.success('Message sent successfully!');
+      form.reset();
+    }
+  });
+  
+  return (
+    <form onSubmit={form.handleSubmit(mutation.mutate)}>
+      {/* フォームフィールド */}
+    </form>
+  );
+};
+```
+
+## 🔄 データフロー
+
+### クライアント-サーバー間通信
+```
+1. User Interaction
+2. Client Component State Update
+3. API Call (fetch/axios)
+4. API Route Handler (app/api/*)
+5. Database Query (Prisma)
+6. Response Processing
+7. UI Update (React Query Cache)
+```
+
+### 状態管理フロー
+```
+1. Global State (Zustand/Redux) → アプリ全体共有状態
+2. Server State (React Query) → API データキャッシュ
+3. Local State (useState) → コンポーネント固有状態
+4. URL State (Next.js Router) → ルーティング状態
+```
+
+## 🧪 テスト戦略
+
+### ユニットテスト
+- **対象**: ユーティリティ関数、カスタムフック
+- **ツール**: Vitest
+- **カバレッジ**: 80%以上を目標
+
+### コンポーネントテスト
+- **対象**: UIコンポーネント、フォーム
+- **ツール**: Testing Library
+- **テスト内容**: レンダリング、ユーザーインタラクション、プロパティ
+
+### 統合テスト
+- **対象**: API Routes、認証フロー
+- **ツール**: Vitest + MSW (Mock Service Worker)
+- **テスト内容**: エンドポイント、データベース操作
+
+### E2Eテスト
+- **対象**: 重要なユーザーフロー
+- **ツール**: Playwright
+- **テスト内容**: 登録、ログイン、主要機能
+
+## 🎨 デザインシステム
+
+### Tailwind設定
+```javascript
+// tailwind.config.js
+module.exports = {
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        primary: { /* カスタムカラー */ },
+        secondary: { /* カスタムカラー */ }
+      },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif']
+      }
+    }
+  },
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography')
+  ]
+};
+```
+
+### コンポーネントライブラリ
+- **基本原則**: Headless UI + Tailwind CSS
+- **アクセシビリティ**: WAI-ARIA準拠
+- **レスポンシブ**: Mobile-first設計
+- **ダークモード**: システム設定対応
+
+## 🔒 セキュリティ考慮事項
+
+### 認証・認可
+- **セッション管理**: NextAuth.js / JWT
+- **CSRF保護**: Next.js内蔵機能
+- **XSS対策**: CSP (Content Security Policy)
+- **入力検証**: Zod + server-side validation
+
+### データ保護
+- **環境変数**: .env.local での機密情報管理
+- **API Security**: レート制限、CORS設定
+- **データベース**: Prismaによる型安全なクエリ
+
+## 📊 パフォーマンス最適化
+
+### Next.js最適化
+```typescript
+// next.config.js
+const nextConfig = {
+  experimental: {
+    turbo: true // Turbopack有効化
+  },
+  images: {
+    domains: ['example.com'], // 画像最適化
+    formats: ['image/webp', 'image/avif']
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production'
+  }
+};
+```
+
+### Core Web Vitals
+- **LCP**: 画像最適化、コード分割
+- **FID**: JavaScript最小化、適切なイベントハンドリング
+- **CLS**: レイアウトシフト防止、適切なサイジング
+
+## 🚀 デプロイメント
+
+### 推奨プラットフォーム
+- **Vercel**: Next.js最適化、自動デプロイ
+- **Netlify**: 静的サイト、エッジ機能
+- **AWS**: 本格的なインフラ要件
+
+### 環境変数管理
+```bash
+# .env.local
+NEXTAUTH_SECRET=your_secret_here
+NEXTAUTH_URL=http://localhost:3000
+DATABASE_URL=postgresql://...
+
+# PRD要件に応じた設定
+STRIPE_SECRET_KEY=sk_test_...
+UPLOADTHING_SECRET=ut_...
+REDIS_URL=redis://...
+```
+
+## 🔄 PRD要件対応指針
+
+### Agent向け実装ガイダンス
+
+**1. PRD分析時の重点確認事項**
+- **ユーザーペルソナ**: どのようなUIが適切か
+- **データ要件**: どのような状態管理が必要か
+- **パフォーマンス要件**: SSR/CSR/SSGの選択
+- **デバイス対応**: レスポンシブ要件
+
+**2. ページ構成の決定基準**
+- **情報アーキテクチャ**: サイトマップに基づくルーティング
+- **ユーザーフロー**: 認証状態・権限に基づくアクセス制御
+- **SEO要件**: 静的生成・動的生成の選択
+- **国際化**: 多言語対応の必要性
+
+**3. コンポーネント設計指針**
+- **再利用性**: Design System準拠
+- **アクセシビリティ**: WCAG基準クリア
+- **パフォーマンス**: 遅延読み込み・仮想化
+- **テスト容易性**: Props駆動設計
+
+**4. 状態管理戦略**
+- **グローバル vs ローカル**: 状態のスコープ決定
+- **永続化**: ローカルストレージ・セッション管理
+- **サーバー状態**: キャッシュ戦略・楽観的更新
+- **フォーム状態**: 検証・送信・エラー処理
+
+**5. API設計指針**
+- **RESTful**: 標準的なHTTPメソッド・ステータスコード
+- **バリデーション**: 入力検証・型安全性
+- **エラーハンドリング**: 適切なエラーレスポンス
+- **パフォーマンス**: ページネーション・フィルタリング
+
+---
+
+**📌 重要**: このアーキテクチャは {{PROJECT_NAME}} の PRD要件に基づいて柔軟に調整してください。特にユーザーインターフェース、データフロー、パフォーマンス要件については、具体的な要件に応じて最適化を行ってください。
