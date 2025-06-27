@@ -17,6 +17,7 @@
     "test:dry-run": "cucumber-js --dry-run",
     "test:features": "cucumber-js features/",
     "test:reports": "npm run test && echo 'Test reports generated in test/reports/'",
+    "test:plugin": "tsx test/plugin-system-test.ts",
     "clean:test": "rimraf test/temp test/reports",
     "lint": "eslint src scripts --ext .ts",
     "format": "prettier --write \"src/**/*.ts\" \"scripts/**/*.ts\"",

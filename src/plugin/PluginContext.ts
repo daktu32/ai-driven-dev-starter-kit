@@ -68,12 +68,12 @@ class PluginFileSystemImpl implements PluginFileSystem {
   }
 
   async readFile(filePath: string, encoding: string = 'utf8'): Promise<string> {
-    return fs.readFile(filePath, encoding);
+    return fs.readFile(filePath, { encoding: encoding as BufferEncoding });
   }
 
   async writeFile(filePath: string, content: string, encoding: string = 'utf8'): Promise<void> {
     await fs.ensureFile(filePath);
-    return fs.writeFile(filePath, content, encoding);
+    return fs.writeFile(filePath, content, { encoding: encoding as BufferEncoding });
   }
 
   async ensureDir(dirPath: string): Promise<void> {
@@ -132,7 +132,7 @@ class PluginConfigImpl implements PluginConfig {
   }
 
   get<T = any>(key: string, defaultValue?: T): T {
-    return this.config.has(key) ? this.config.get(key) : defaultValue;
+    return this.config.has(key) ? this.config.get(key) : (defaultValue as T);
   }
 
   async set(key: string, value: any): Promise<void> {
