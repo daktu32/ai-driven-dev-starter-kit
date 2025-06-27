@@ -21,6 +21,8 @@ import {
   ConfigOption
 } from './types.js';
 import { PluginContextImpl } from './PluginContext.js';
+import { PluginValidator, ValidationResult } from './PluginValidator.js';
+import { PluginMonitor, monitorPerformance } from './PluginMonitor.js';
 
 /**
  * プラグイン登録情報
@@ -36,6 +38,8 @@ interface PluginRegistration {
   active: boolean;
   /** エラー状態 */
   error?: Error;
+  /** 品質検証結果 */
+  validationResult?: ValidationResult;
 }
 
 /**
@@ -52,6 +56,10 @@ export interface PluginManagerConfig {
   maxPlugins?: number;
   /** タイムアウト時間（ミリ秒） */
   timeout?: number;
+  /** 品質検証を有効にするか */
+  enableValidation?: boolean;
+  /** パフォーマンス監視を有効にするか */
+  enableMonitoring?: boolean;
 }
 
 /**
@@ -63,15 +71,19 @@ export class PluginManager extends EventEmitter {
   private config: PluginManagerConfig;
   private context: PluginContext;
   private initialized = false;
+  private validator?: PluginValidator;
+  private monitor?: PluginMonitor;
 
-  constructor(config: PluginManagerConfig) {
+  constructor(config: PluginManagerConfig, context?: PluginContext) {
     super();
     this.config = {
       maxPlugins: 50,
       timeout: 30000,
+      enableValidation: true,
+      enableMonitoring: true,
       ...config
     };
-    this.context = new PluginContextImpl();
+    this.context = context || new PluginContextImpl();
   }
 
   /**
@@ -83,6 +95,18 @@ export class PluginManager extends EventEmitter {
     }
 
     this.context.logger.info('プラグインマネージャーを初期化中...');
+
+    // 品質検証システムの初期化
+    if (this.config.enableValidation) {
+      this.validator = new PluginValidator(this.context);
+      this.context.logger.info('プラグイン品質検証システムを有効化');
+    }
+
+    // パフォーマンス監視システムの初期化
+    if (this.config.enableMonitoring) {
+      this.monitor = new PluginMonitor(this.context);
+      this.context.logger.info('プラグインパフォーマンス監視システムを有効化');
+    }
 
     // プラグインディレクトリの確保
     await fs.ensureDir(this.config.pluginDir);
