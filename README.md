@@ -1,30 +1,40 @@
 # AI Driven Dev Starter Kit
 
-AI駆動開発のための包括的なテンプレート集。**PRDベース開発フロー**により、プロダクト要件定義から実装まで、AIエージェントとシームレスに協働できます。
+AI駆動開発のための**エンタープライズレベル**プラグインシステム。**PRDベース開発フロー**により、プロダクト要件定義から実装まで、AIエージェントとシームレスに協働できます。
 
-## 🚀 主要機能
+## ✨ v1.0 完成機能
 
-### プロジェクトテンプレート
-- **CLI（Rust）** - コマンドラインツール開発
-- **Web（Next.js）** - フルスタックWebアプリケーション
-- **API（FastAPI）** - RESTful API開発
+### 🔌 プラグインベースアーキテクチャ
+- **拡張可能設計** - 新しいプロジェクトタイプを簡単追加
+- **品質保証システム** - 自動検証・認証・パフォーマンス監視
+- **コミュニティエコシステム** - プラグイン共有・貢献受け入れ
+
+### 📋 コアプラグイン（4種類）
 - **MCP Server** - Model Context Protocol サーバー開発
+- **CLI（Rust）** - 高性能コマンドラインツール
+- **Web（Next.js）** - フルスタックWebアプリケーション  
+- **API（FastAPI）** - RESTful API・マイクロサービス
 
-### 開発プロンプト
-- **Basic Development** - 小規模プロジェクト・チーム向け
-- **Startup Development** - スタートアップ向け
-- **Enterprise Development** - エンタープライズ向け
-- **Open Source Development** - オープンソース向け
+### 🎯 PRD駆動開発フロー
+- **構造化要件定義** - プロダクト要件ドキュメント(PRD)ベース
+- **AI自動最適化** - 要件に基づく最適なアーキテクチャ提案
+- **継続的改善** - 要件変更に応じた自動再最適化
 
-### 支援ツール
-- **Coding Agents** - Claude Code、GitHub Copilot、Cursor設定
-- **Architectures** - AWS Serverless、マイクロサービス等
-- **Development Tools** - ESLint、Prettier、Jest、CI/CD設定
+### 🛡️ エンタープライズ品質
+- **自動品質検証** - セキュリティ・パフォーマンス・コード品質
+- **リアルタイム監視** - プラグイン動作・パフォーマンス追跡  
+- **包括的ドキュメント** - 開発者・ユーザー向け完備
 
 ## 🎯 PRDベース開発フロー
 
 ### Step 1: プロジェクト生成
 
+**プラグインベース生成**（推奨）:
+```bash
+npm run scaffold:plugin
+```
+
+**従来の生成方法**:
 ```bash
 cd scripts
 npm install
@@ -32,10 +42,10 @@ npm run scaffold
 ```
 
 プロジェクトタイプを選択：
-- **MCP Server** - Model Context Protocol サーバー
-- **Web (Next.js)** - フルスタックWebアプリケーション
-- **API (FastAPI)** - RESTful API
-- **CLI (Rust)** - コマンドラインツール
+- **MCP Server** - Model Context Protocol サーバー（TypeScript + Node.js）
+- **Web (Next.js)** - フルスタックWebアプリケーション（React + TypeScript）
+- **API (FastAPI)** - RESTful API（Python + FastAPI）
+- **CLI (Rust)** - 高性能コマンドラインツール（Rust + Clap）
 
 ### Step 2: PRD.md完成
 
@@ -234,19 +244,60 @@ npm run deploy # または cargo install
 
 ## 📚 ドキュメント
 
-### 開発者向け
-- `docs/development/` - 開発者・コーディングエージェント向けドキュメント
-- `docs/architecture/` - アーキテクチャ・技術ドキュメント
+### 🏗️ アーキテクチャ
+- [`docs/architecture/ARCHITECTURE.md`](docs/architecture/ARCHITECTURE.md) - システムアーキテクチャ全体
+- [`docs/architecture/PLUGIN-SYSTEM.md`](docs/architecture/PLUGIN-SYSTEM.md) - プラグインシステム設計
+- [`docs/architecture/PLUGIN-REGISTRY.md`](docs/architecture/PLUGIN-REGISTRY.md) - プラグインレジストリ設計
 
-### プロジェクト概要
-- `docs/project/` - プロジェクト概要・ビジネス向けドキュメント
+### 👥 開発者向け
+- [`docs/development/PROGRESS.md`](docs/development/PROGRESS.md) - 開発進捗・完了機能
+- [`docs/development/DEVELOPMENT_ROADMAP.md`](docs/development/DEVELOPMENT_ROADMAP.md) - 開発ロードマップ
+- [`docs/community/PLUGIN-DEVELOPMENT-GUIDE.md`](docs/community/PLUGIN-DEVELOPMENT-GUIDE.md) - プラグイン開発ガイド
 
-### テンプレート
-- `templates/` - scaffold用テンプレート集
+### 📖 サンプル・例
+- [`docs/examples/plugin-development-example.md`](docs/examples/plugin-development-example.md) - React Native プラグイン開発例
+
+### 🔌 プラグイン開発
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) - コントリビューションガイド
+
+## 🚀 プラグイン開発
+
+新しいプロジェクトタイプのプラグインを開発して、エコシステムに貢献できます：
+
+### クイックスタート
+```bash
+# プラグイン開発ガイドを確認
+cat docs/community/PLUGIN-DEVELOPMENT-GUIDE.md
+
+# React Native プラグイン例を参照
+cat docs/examples/plugin-development-example.md
+```
+
+### 求められているプラグイン
+- **Frontend**: Vue.js, Angular, Svelte
+- **Mobile**: Flutter, Ionic, React Native (Windows)
+- **Backend**: Spring Boot, Django, Laravel
+- **DevOps**: Terraform, Kubernetes, Docker Compose
+- **Database**: PostgreSQL, MongoDB, Redis
+
+## 🎯 プロジェクト状況
+
+### ✅ 完成済み（Phase 1-5）
+- プラグインベースアーキテクチャ
+- PRD駆動開発フロー
+- 品質保証・監視システム
+- コミュニティエコシステム
+
+### 🚧 今後の展開（各生成プロジェクト内）
+- **Phase 6+**: 高度なAI統合機能
+- AIエージェント間協働
+- 自動テスト・デプロイパイプライン
 
 ## 🤝 コントリビューション
 
-このプロジェクトへの貢献を歓迎します。詳細は `CONTRIBUTING.md` を参照してください。
+プラグイン開発、バグ修正、ドキュメント改善など、あらゆる貢献を歓迎します。
+
+詳細は [`CONTRIBUTING.md`](CONTRIBUTING.md) と [`docs/community/PLUGIN-DEVELOPMENT-GUIDE.md`](docs/community/PLUGIN-DEVELOPMENT-GUIDE.md) を参照してください。
 
 ## 📄 ライセンス
 
@@ -254,8 +305,9 @@ npm run deploy # または cargo install
 
 ## 🆘 サポート
 
-問題や質問がある場合は、GitHubのIssuesでお知らせください。
+- **Issues**: バグ報告・機能要求は [GitHub Issues](https://github.com/daktu32/ai-driven-dev-starter-kit/issues)
+- **Discussions**: 質問・アイデア交換は [GitHub Discussions](https://github.com/daktu32/ai-driven-dev-starter-kit/discussions)
 
 ---
 
-**AI Driven Dev Starter Kit** - AIを活用した効率的な開発環境を構築しましょう！ 
+**AI Driven Dev Starter Kit v1.0** - エンタープライズレベルのAI駆動開発プラットフォーム 🚀 
