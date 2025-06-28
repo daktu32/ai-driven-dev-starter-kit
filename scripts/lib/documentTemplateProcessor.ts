@@ -256,6 +256,30 @@ export interface DocumentVariables {
   MAIN_DIRECTORY_2_DETAIL: string;
   PROJECT_SPECIFIC_STRUCTURE: string;
   ENTRY_POINT_DESC: string;
+  
+  // Layer 1: Technical Variables (auto-replaced)
+  PROJECT_CLASS_NAME: string;
+  TECH_STACK_FRONTEND: string;
+  TECH_STACK_BACKEND: string;
+  TECH_STACK_DATABASE: string;
+  TECH_STACK_INFRASTRUCTURE: string;
+  REPO_URL: string;
+  
+  // Layer 2: Default Variables (replaceable with defaults)
+  AVAILABILITY_TARGET: string;
+  RESPONSE_TIME_TARGET: string;
+  ERROR_RATE_TARGET: string;
+  TEST_COVERAGE_TARGET: string;
+  CODE_QUALITY_SCORE: string;
+  UPTIME_TARGET: string;
+  RECOVERY_TIME: string;
+  
+  // Layer 3: Guided Placeholders (user input required)
+  YOUR_PRIMARY_KPI: string;
+  YOUR_TARGET_VALUE: string;
+  YOUR_CONSTRAINTS: string;
+  YOUR_USER_PERSONA: string;
+  YOUR_BUSINESS_GOAL: string;
 }
 
 export class DocumentTemplateProcessor {
@@ -379,63 +403,132 @@ export class DocumentTemplateProcessor {
   }
 
   private createDocumentVariables(config: ProjectConfig): DocumentVariables {
+    const technicalVars = this.createTechnicalVariables(config);
+    const defaultVars = this.createDefaultVariables(config);
+    const guidedVars = this.createGuidedPlaceholders(config);
+    
+    return {
+      // 必須プロパティのデフォルト値
+      PROJECT_NAME: config.projectName,
+      PROJECT_DESCRIPTION: config.description || `${config.projectName}の説明`,
+      PROJECT_TAGLINE: `${config.projectName} - 効率的な開発を支援するツール`,
+      PROJECT_DETAILED_DESCRIPTION: config.description || `${config.projectName}は、開発者の生産性向上を目的として作られたツールです。`,
+      PROJECT_PURPOSE: `${config.projectName}の開発効率向上`,
+      TARGET_SCOPE: 'コア機能の実装とテスト',
+      OUT_OF_SCOPE: '高度なカスタマイズ機能',
+      TARGET_USERS: '開発者、エンジニア',
+      
+      // Layer 1: 技術的変数（完全自動置換）
+      ...technicalVars,
+      
+      // Layer 2: デフォルト値変数（置換+カスタマイズ可能）
+      ...defaultVars,
+      
+      // Layer 3: ガイダンス付きプレースホルダー（ユーザー記入）
+      ...guidedVars
+    } as DocumentVariables;
+  }
+
+  private createTechnicalVariables(config: ProjectConfig): Partial<DocumentVariables> {
     const now = new Date();
-    const projectName = config.projectName;
     const currentDate = now.toISOString().split('T')[0] || '2024-01-01';
     const username = this.extractUsername(config.repositoryUrl) || 'developer';
-    
-    // プロジェクトタイプに基づく適切なデフォルト値を設定
     const projectTypeDefaults = this.getProjectTypeDefaults(config.projectType);
     
     return {
-      // Project Info
-      PROJECT_NAME: projectName,
-      PROJECT_DESCRIPTION: config.description || `${projectName}の説明`,
-      PROJECT_TAGLINE: `${projectName} - 効率的な開発を支援するツール`,
-      PROJECT_DETAILED_DESCRIPTION: config.description || `${projectName}は、開発者の生産性向上を目的として作られたツールです。`,
-      PROJECT_PURPOSE: `${projectName}の主要目的と価値提案`,
-      TARGET_SCOPE: `${projectName}が対象とする機能・ユーザー範囲`,
-      OUT_OF_SCOPE: `${projectName}の対象外となる範囲`,
-      TARGET_USERS: `${projectName}の主要ユーザー`,
+      // Layer 1: 技術的変数（完全自動置換）
+      PROJECT_CLASS_NAME: this.toClassName(config.projectName),
+      PROJECT_TYPE: config.projectType,
+      TECH_STACK_FRONTEND: config.techStack?.frontend || projectTypeDefaults.techStack.frontend || 'TBD',
+      TECH_STACK_BACKEND: config.techStack?.backend || projectTypeDefaults.techStack.backend || 'TBD',
+      TECH_STACK_DATABASE: config.techStack?.database || projectTypeDefaults.techStack.database || 'TBD',
+      TECH_STACK_INFRASTRUCTURE: config.techStack?.infrastructure || projectTypeDefaults.techStack.infrastructure || 'TBD',
+      REPO_URL: config.repositoryUrl,
+      
+      // Repository & Contact
+      GITHUB_ISSUES_URL: `${config.repositoryUrl}/issues`,
+      GITHUB_DISCUSSIONS_URL: `${config.repositoryUrl}/discussions`,
+      CONTACT_EMAIL: 'support@example.com',
+      LICENSE_TYPE: 'MIT',
+
+      // Dates & Author
+      CREATION_DATE: currentDate,
+      LAST_UPDATE: currentDate,
+      VERSION: '1.0.0',
+      AUTHOR: username,
+      APPROVER: username,
 
       // Requirements Document specific
-      DOCUMENT_PURPOSE: `${projectName}のシステム要件を明確に定義し、開発チーム及び関係者間での共通理解を確立する`,
-      SYSTEM_SCOPE: `${projectName}の機能範囲と技術的境界を定義`,
+      DOCUMENT_PURPOSE: `${config.projectName}のシステム要件を明確に定義し、開発チーム及び関係者間での共通理解を確立する`,
+      SYSTEM_SCOPE: `${config.projectName}の機能範囲と技術的境界を定義`,
       MVP_DEFINITION: '最小限の機能で価値を提供できる製品バージョン',
       SYSTEM_OVERVIEW: projectTypeDefaults.systemOverview,
 
+      // Technical Stack
+      TECH_STACK: this.formatTechStack(config.techStack),
+      
+      // Development Status
+      IMPLEMENTATION_SIZE: `約${this.estimateCodeSize(config)}行`,
+      TEST_STATUS: '基本テスト実装済み',
+      COVERAGE_STATUS: '70%以上',
+      
+      // Project Structure specific
+      ...this.getProjectStructureDefaults(config.projectType),
+    };
+  }
+
+  private toClassName(projectName: string): string {
+    return projectName
+      .split(/[-_\s]+/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('');
+  }
+
+  private createDefaultVariables(config: ProjectConfig): Partial<DocumentVariables> {
+    const projectTypeDefaults = this.getProjectTypeDefaults(config.projectType);
+    
+    return {
+      // Layer 2: デフォルト値変数（置換+カスタマイズ可能）
+      AVAILABILITY_TARGET: "99.9%",
+      RESPONSE_TIME_TARGET: "2秒以内",
+      ERROR_RATE_TARGET: "0.1%以下",
+      TEST_COVERAGE_TARGET: "80%以上",
+      CODE_QUALITY_SCORE: "A以上",
+      UPTIME_TARGET: "99.9%",
+      RECOVERY_TIME: "30分以内",
+      
       // Terms and Definitions
-      TERM_1: projectTypeDefaults.terms[0]?.name || 'Terms',
-      TERM_2: projectTypeDefaults.terms[1]?.name || 'Framework',
-      TERM_3: projectTypeDefaults.terms[2]?.name || 'Protocol',
-      DEFINITION_1: projectTypeDefaults.terms[0]?.definition || 'プロジェクト固有の用語',
-      DEFINITION_2: projectTypeDefaults.terms[1]?.definition || '使用するフレームワーク',
-      DEFINITION_3: projectTypeDefaults.terms[2]?.definition || '通信プロトコル',
+      TERM_1: projectTypeDefaults.terms?.[0]?.name || 'Terms',
+      TERM_2: projectTypeDefaults.terms?.[1]?.name || 'Framework',
+      TERM_3: projectTypeDefaults.terms?.[2]?.name || 'Protocol',
+      DEFINITION_1: projectTypeDefaults.terms?.[0]?.definition || 'プロジェクト固有の用語',
+      DEFINITION_2: projectTypeDefaults.terms?.[1]?.definition || '使用するフレームワーク',
+      DEFINITION_3: projectTypeDefaults.terms?.[2]?.definition || '通信プロトコル',
 
       // Functional Requirements
-      FUNCTIONAL_REQ_1: projectTypeDefaults.functionalReqs[0] || 'コア機能',
-      FUNCTIONAL_REQ_2: projectTypeDefaults.functionalReqs[1] || 'インターフェース',
-      FUNCTIONAL_REQ_3: projectTypeDefaults.functionalReqs[2] || 'データ管理',
-      FUNCTIONAL_REQ_4: projectTypeDefaults.functionalReqs[3] || '通信機能',
-      FUNCTIONAL_REQ_5: projectTypeDefaults.functionalReqs[4] || '監視機能',
-
-      // Requirement details - 各機能要件の詳細
-      REQUIREMENT_1_1: `${projectTypeDefaults.functionalReqs[0] || 'コア機能'}の基本実装`,
-      REQUIREMENT_1_2: `${projectTypeDefaults.functionalReqs[0] || 'コア機能'}のデータ管理`,
-      REQUIREMENT_1_3: `${projectTypeDefaults.functionalReqs[0] || 'コア機能'}のエラーハンドリング`,
-      REQUIREMENT_2_1: `${projectTypeDefaults.functionalReqs[1] || 'インターフェース'}のインターフェース設計`,
-      REQUIREMENT_2_2: `${projectTypeDefaults.functionalReqs[1] || 'インターフェース'}のユーザビリティ`,
-      REQUIREMENT_2_3: `${projectTypeDefaults.functionalReqs[1] || 'インターフェース'}のレスポンシブ対応`,
-      REQUIREMENT_3_1: `${projectTypeDefaults.functionalReqs[2] || 'データ管理'}の認証機能`,
-      REQUIREMENT_3_2: `${projectTypeDefaults.functionalReqs[2] || 'データ管理'}の認可機能`,
-      REQUIREMENT_3_3: `${projectTypeDefaults.functionalReqs[2] || 'データ管理'}のセッション管理`,
-      REQUIREMENT_4_1: `${projectTypeDefaults.functionalReqs[3] || '通信機能'}の通信プロトコル`,
-      REQUIREMENT_4_2: `${projectTypeDefaults.functionalReqs[3] || '通信機能'}のデータ形式`,
-      REQUIREMENT_4_3: `${projectTypeDefaults.functionalReqs[3] || '通信機能'}のエラー処理`,
-      REQUIREMENT_5_1: `${projectTypeDefaults.functionalReqs[4] || '監視機能'}の監視機能`,
-      REQUIREMENT_5_2: `${projectTypeDefaults.functionalReqs[4] || '監視機能'}のログ出力`,
-      REQUIREMENT_5_3: `${projectTypeDefaults.functionalReqs[4] || '監視機能'}のメトリクス収集`,
-
+      FUNCTIONAL_REQ_1: projectTypeDefaults.functionalReqs?.[0] || 'コア機能',
+      FUNCTIONAL_REQ_2: projectTypeDefaults.functionalReqs?.[1] || 'インターフェース',
+      FUNCTIONAL_REQ_3: projectTypeDefaults.functionalReqs?.[2] || 'データ管理',
+      FUNCTIONAL_REQ_4: projectTypeDefaults.functionalReqs?.[3] || '通信機能',
+      FUNCTIONAL_REQ_5: projectTypeDefaults.functionalReqs?.[4] || '監視機能',
+      
+      // Requirement details
+      REQUIREMENT_1_1: 'コア機能の基本操作',
+      REQUIREMENT_1_2: 'コア機能のパフォーマンス',
+      REQUIREMENT_1_3: 'コア機能のエラーハンドリング',
+      REQUIREMENT_2_1: 'インターフェース設計',
+      REQUIREMENT_2_2: 'ユーザビリティ',
+      REQUIREMENT_2_3: 'レスポンシブ対応',
+      REQUIREMENT_3_1: 'データの認証機能',
+      REQUIREMENT_3_2: 'データの認可機能',
+      REQUIREMENT_3_3: 'データのセッション管理',
+      REQUIREMENT_4_1: '通信プロトコル',
+      REQUIREMENT_4_2: 'データ形式',
+      REQUIREMENT_4_3: 'エラー処理',
+      REQUIREMENT_5_1: '監視機能',
+      REQUIREMENT_5_2: 'ログ出力',
+      REQUIREMENT_5_3: 'メトリクス収集',
+      
       // Non-functional Requirements
       AVAILABILITY_REQ_1: '稼働率99.9%以上を目標とする',
       AVAILABILITY_REQ_2: 'メンテナンス時間は月1回、最大2時間以内',
@@ -453,6 +546,26 @@ export class DocumentTemplateProcessor {
       MAINTENANCE_REQ_2: 'ログ監視とアラート機能',
       MAINTENANCE_REQ_3: 'バックアップとリストア機能',
 
+      // System Requirements - Layer 2: デフォルト値変数（置換+カスタマイズ可能）
+      MIN_OS: 'macOS 12.0+, Linux (Ubuntu 20.04+), Windows 10+',
+      RECOMMENDED_OS: 'macOS 13.0+, Linux (Ubuntu 22.04+), Windows 11+',
+      MIN_CPU: '2コア',
+      RECOMMENDED_CPU: '4コア以上',
+      MIN_MEMORY: '4GB RAM',
+      RECOMMENDED_MEMORY: '8GB RAM以上',
+      MIN_STORAGE: '500MB',
+      RECOMMENDED_STORAGE: '1GB以上（SSD推奨）',
+
+      // Architecture - Layer 2: デフォルト値変数（置換+カスタマイズ可能）
+      ARCHITECTURE_DIAGRAM: '[アーキテクチャ図をここに挿入]',
+      LAYER_1_NAME: 'プレゼンテーション層',
+      LAYER_2_NAME: 'ビジネスロジック層',
+      LAYER_3_NAME: 'データアクセス層',
+
+      // API Types - Layer 2: デフォルト値変数（置換+カスタマイズ可能）
+      API_TYPES: 'REST API, WebSocket API',
+      API_TYPES_DETAIL: 'RESTful API、リアルタイムWebSocket通信',
+
       // Technical Architecture Layers
       LAYER_1: 'プレゼンテーション層',
       LAYER_2: 'アプリケーション層',
@@ -462,10 +575,10 @@ export class DocumentTemplateProcessor {
       LAYER_6: 'セキュリティ層',
       LAYER_7: '監視・ログ層',
       LAYER_8: '外部連携層',
-      TECH_STACK_1: config.techStack.frontend || projectTypeDefaults.techStack.frontend || 'TBD',
-      TECH_STACK_2: config.techStack.backend || projectTypeDefaults.techStack.backend || 'TBD',
-      TECH_STACK_3: config.techStack.database || projectTypeDefaults.techStack.database || 'TBD',
-      TECH_STACK_4: config.techStack.infrastructure || projectTypeDefaults.techStack.infrastructure || 'TBD',
+      TECH_STACK_1: config.techStack?.frontend || 'TBD',
+      TECH_STACK_2: config.techStack?.backend || 'TBD',
+      TECH_STACK_3: config.techStack?.database || 'TBD',
+      TECH_STACK_4: config.techStack?.infrastructure || 'TBD',
       TECH_STACK_5: 'Docker/Kubernetes',
       TECH_STACK_6: 'OAuth 2.0/JWT',
       TECH_STACK_7: 'Prometheus/Grafana',
@@ -478,7 +591,7 @@ export class DocumentTemplateProcessor {
       REASON_6: 'セキュアな認証・認可',
       REASON_7: '運用監視とトラブルシューティング',
       REASON_8: '外部システムとの統合',
-
+      
       // External Integrations
       EXTERNAL_INTEGRATION_1: 'サードパーティAPI連携',
       EXTERNAL_INTEGRATION_2: 'データベース外部連携',
@@ -492,7 +605,7 @@ export class DocumentTemplateProcessor {
       INTEGRATION_REQ_3_1: 'メール送信機能',
       INTEGRATION_REQ_3_2: 'プッシュ通知機能',
       INTEGRATION_REQ_3_3: 'SMS通知機能（オプション）',
-
+      
       // Risks and Constraints
       RISK_1: '技術的複雑性による開発遅延',
       RISK_2: '外部API依存による可用性影響',
@@ -506,7 +619,7 @@ export class DocumentTemplateProcessor {
       MITIGATION_1: 'プロトタイプ開発と段階的実装',
       MITIGATION_2: 'フォールバック機能の実装',
       MITIGATION_3: '定期的なセキュリティ監査',
-
+      
       // Acceptance Criteria
       ACCEPTANCE_CRITERIA_1: '全ての機能要件が実装され、テストが通過している',
       ACCEPTANCE_CRITERIA_2: 'パフォーマンス要件を満たしている',
@@ -517,7 +630,7 @@ export class DocumentTemplateProcessor {
       SECURITY_CRITERIA_1: 'OWASP Top 10の脆弱性対策完了',
       SECURITY_CRITERIA_2: 'ペネトレーションテスト合格',
       SECURITY_CRITERIA_3: 'データ暗号化の実装確認',
-
+      
       // Abbreviations and References
       ABBREVIATION_1: 'API',
       ABBREVIATION_2: 'UI/UX',
@@ -528,26 +641,26 @@ export class DocumentTemplateProcessor {
       REFERENCE_DOC_1: 'システム設計書',
       REFERENCE_DOC_2: 'API仕様書',
       REFERENCE_DOC_3: 'セキュリティ設計書',
-
+      
       // Version History
       VERSION_1: '1.0.0',
       VERSION_2: '1.1.0',
       VERSION_3: '1.2.0',
-      DATE_1: currentDate,
-      DATE_2: currentDate,
-      DATE_3: currentDate,
+      DATE_1: new Date().toISOString().split('T')[0],
+      DATE_2: new Date().toISOString().split('T')[0],
+      DATE_3: new Date().toISOString().split('T')[0],
       CHANGE_1: '初版作成',
       CHANGE_2: '要件詳細化',
       CHANGE_3: 'セキュリティ要件追加',
-      AUTHOR_1: username,
-      AUTHOR_2: username,
-      AUTHOR_3: username,
-
+      AUTHOR_1: this.extractUsername(config.repositoryUrl),
+      AUTHOR_2: this.extractUsername(config.repositoryUrl),
+      AUTHOR_3: this.extractUsername(config.repositoryUrl),
+      
       // Business Goals
       BUSINESS_GOAL_1: '開発効率の向上',
       BUSINESS_GOAL_2: 'コード品質の向上',
       BUSINESS_GOAL_3: 'チーム協業の促進',
-
+      
       // MVP Features
       MVP_FEATURES: 'コア機能、基本UI、基本API',
       MVP_FEATURE_1: '基本機能システム',
@@ -556,7 +669,7 @@ export class DocumentTemplateProcessor {
       ISSUE_REF_2: 'Issue #2',
       MVP_FEATURE_1_BRIEF: '基本的な機能を提供',
       MVP_FEATURE_2_BRIEF: '直感的なユーザーインターフェース',
-
+      
       // Core Features
       CORE_FEATURE_1: 'データ管理',
       CORE_FEATURE_2: 'プロセス制御',
@@ -566,7 +679,7 @@ export class DocumentTemplateProcessor {
       CORE_FEATURE_2_BRIEF: '柔軟なプロセス制御機能',
       CORE_FEATURE_3_BRIEF: '包括的なユーザー管理',
       CORE_FEATURE_4_BRIEF: '高速で信頼性の高い通信',
-
+      
       // Extended Features
       EXT_FEATURE_1: 'ダッシュボード',
       EXT_FEATURE_2: 'レポート機能',
@@ -574,60 +687,159 @@ export class DocumentTemplateProcessor {
       EXT_FEATURE_1_BRIEF: 'リアルタイムダッシュボード',
       EXT_FEATURE_2_BRIEF: '詳細レポート生成',
       EXT_FEATURE_3_BRIEF: 'システム監視とアラート',
-
+      
       // Technical Stack
-      TECH_STACK: this.formatTechStack(config.techStack),
       TECH_CATEGORY_1: 'フロントエンド',
       TECH_CATEGORY_2: 'バックエンド',
       TECH_CATEGORY_3: 'インフラストラクチャ',
-      TECH_LIST_1: config.techStack.frontend || 'React/Next.js',
-      TECH_LIST_2: config.techStack.backend || 'Node.js/Express',
-      TECH_LIST_3: config.techStack.infrastructure || 'AWS/Docker',
-
-      // System Requirements
-      MIN_OS: 'macOS 12.0+, Linux (Ubuntu 20.04+), Windows 10+',
-      RECOMMENDED_OS: 'macOS 13.0+, Linux (Ubuntu 22.04+), Windows 11+',
-      MIN_CPU: '2コア',
-      RECOMMENDED_CPU: '4コア以上',
-      MIN_MEMORY: '4GB RAM',
-      RECOMMENDED_MEMORY: '8GB RAM以上',
-      MIN_STORAGE: '500MB',
-      RECOMMENDED_STORAGE: '1GB以上（SSD推奨）',
-
-      // API Types
-      API_TYPES: 'REST API, WebSocket API',
-      API_TYPES_DETAIL: 'RESTful API、リアルタイムWebSocket通信',
-
-      // Architecture
-      ARCHITECTURE_DIAGRAM: '[アーキテクチャ図をここに挿入]',
-      LAYER_1_NAME: 'プレゼンテーション層',
-      LAYER_2_NAME: 'ビジネスロジック層',
-      LAYER_3_NAME: 'データアクセス層',
-
-      // Development Status
-      IMPLEMENTATION_SIZE: `約${this.estimateCodeSize(config)}行`,
-      TEST_STATUS: '基本テスト実装済み',
-      COVERAGE_STATUS: '70%以上',
-
-      // Contact Info
-      GITHUB_ISSUES_URL: `${config.repositoryUrl}/issues`,
-      GITHUB_DISCUSSIONS_URL: `${config.repositoryUrl}/discussions`,
-      CONTACT_EMAIL: 'support@example.com',
-      LICENSE_TYPE: 'MIT',
-
-      // Dates
-      CREATION_DATE: currentDate,
-      LAST_UPDATE: currentDate,
-      VERSION: '1.0.0',
-      AUTHOR: username,
-      APPROVER: username,
-
-      // Project Structure specific
-      PROJECT_TYPE: config.projectType,
-      ...this.getProjectStructureDefaults(config.projectType),
+      TECH_LIST_1: config.techStack?.frontend || 'React/Next.js',
+      TECH_LIST_2: config.techStack?.backend || 'Node.js/Express',
+      TECH_LIST_3: config.techStack?.infrastructure || 'AWS/Docker',
     };
   }
 
+  private createGuidedPlaceholders(config: ProjectConfig): Partial<DocumentVariables> {
+    const examples = this.getExamplesByProjectType(config.projectType);
+    
+    return {
+      // Layer 3: ガイダンス付きプレースホルダー（ユーザー記入）
+      YOUR_PRIMARY_KPI: `[YOUR_PRIMARY_KPI] <!-- 例: ツール利用者満足度 -->`,
+      YOUR_TARGET_VALUE: `[YOUR_TARGET_VALUE] <!-- 例: 4.5/5.0以上 -->`,
+      YOUR_CONSTRAINTS: `[YOUR_CONSTRAINTS] <!-- 例: リリースまで3ヶ月、予算100万円 -->`,
+      YOUR_USER_PERSONA: `[YOUR_USER_PERSONA] <!-- 例: データサイエンティスト -->`,
+      YOUR_BUSINESS_GOAL: `[YOUR_BUSINESS_GOAL] <!-- 例: ${examples.businessGoal} -->`,
+      // Project Purpose
+      PROJECT_PURPOSE: `[YOUR_PROJECT_PURPOSE] <!-- 例: ${examples.purpose} -->`,
+      TARGET_SCOPE: `[YOUR_TARGET_SCOPE] <!-- 例: ${examples.scope} -->`,
+      OUT_OF_SCOPE: `[YOUR_OUT_OF_SCOPE] <!-- 例: ${examples.outOfScope} -->`,
+      TARGET_USERS: `[YOUR_TARGET_USERS] <!-- 例: ${examples.users} -->`,
+
+      // Business Goals & KPIs - Layer 3: ガイダンス付きプレースホルダー（ユーザー記入）
+      BUSINESS_GOAL_1: `[YOUR_PRIMARY_GOAL] <!-- 例: ${examples.businessGoal} -->`,
+      BUSINESS_GOAL_2: `[YOUR_SECONDARY_GOAL] <!-- 例: 開発効率の向上 -->`,
+      BUSINESS_GOAL_3: `[YOUR_TERTIARY_GOAL] <!-- 例: チーム協業の促進 -->`,
+
+      // Functional Requirements - Layer 3: ガイダンス付きプレースホルダー（ユーザー記入）
+      FUNCTIONAL_REQ_1: `[YOUR_CORE_FEATURE] <!-- 例: ${examples.coreFeature} -->`,
+      FUNCTIONAL_REQ_2: `[YOUR_UI_FEATURE] <!-- 例: ${examples.uiFeature} -->`,
+      FUNCTIONAL_REQ_3: `[YOUR_DATA_FEATURE] <!-- 例: ${examples.dataFeature} -->`,
+      FUNCTIONAL_REQ_4: `[YOUR_INTEGRATION_FEATURE] <!-- 例: ${examples.integrationFeature} -->`,
+      FUNCTIONAL_REQ_5: `[YOUR_ADDITIONAL_FEATURE] <!-- 例: ${examples.additionalFeature} -->`,
+
+      // MVP & Features - Layer 3: ガイダンス付きプレースホルダー（ユーザー記入）
+      MVP_FEATURES: `[YOUR_MVP_FEATURES] <!-- 例: ${examples.mvpFeatures} -->`,
+      MVP_FEATURE_1: `[YOUR_MVP_FEATURE_1] <!-- 例: ${examples.mvpFeature1} -->`,
+      MVP_FEATURE_2: `[YOUR_MVP_FEATURE_2] <!-- 例: ${examples.mvpFeature2} -->`,
+      MVP_FEATURE_1_BRIEF: `[YOUR_MVP_FEATURE_1_DESCRIPTION] <!-- 例: ${examples.mvpFeature1Brief} -->`,
+      MVP_FEATURE_2_BRIEF: `[YOUR_MVP_FEATURE_2_DESCRIPTION] <!-- 例: ${examples.mvpFeature2Brief} -->`,
+
+      // Core Features - Layer 3: ガイダンス付きプレースホルダー（ユーザー記入）
+      CORE_FEATURE_1: `[YOUR_CORE_FEATURE_1] <!-- 例: ${examples.coreFeature1} -->`,
+      CORE_FEATURE_2: `[YOUR_CORE_FEATURE_2] <!-- 例: ${examples.coreFeature2} -->`,
+      CORE_FEATURE_3: `[YOUR_CORE_FEATURE_3] <!-- 例: ${examples.coreFeature3} -->`,
+      CORE_FEATURE_4: `[YOUR_CORE_FEATURE_4] <!-- 例: ${examples.coreFeature4} -->`,
+
+      // Extended Features - Layer 3: ガイダンス付きプレースホルダー（ユーザー記入）
+      EXT_FEATURE_1: `[YOUR_EXT_FEATURE_1] <!-- 例: ${examples.extFeature1} -->`,
+      EXT_FEATURE_2: `[YOUR_EXT_FEATURE_2] <!-- 例: ${examples.extFeature2} -->`,
+      EXT_FEATURE_3: `[YOUR_EXT_FEATURE_3] <!-- 例: ${examples.extFeature3} -->`,
+
+      // User Stories & Personas - Layer 3: ガイダンス付きプレースホルダー（ユーザー記入）
+      ISSUE_REF_1: '[Issue #1] <!-- GitHubイシュー番号 -->',
+      ISSUE_REF_2: '[Issue #2] <!-- GitHubイシュー番号 -->',
+    };
+  }
+
+  // New helper methods for Layer 2 and Layer 3
+  private getProjectTypePerformanceDefaults(projectType: string) {
+    const defaults = {
+      'mcp-server': {
+        MAX_CONCURRENT_CONNECTIONS: "1000",
+        TOOL_EXECUTION_TIMEOUT: "30秒",
+        RESOURCE_FETCH_TIMEOUT: "10秒",
+        MCP_PROTOCOL_COMPLIANCE: "100%",
+        TOOL_SUCCESS_RATE: "99%以上",
+      },
+      'cli-rust': {
+        STARTUP_TIME: "100ms以内",
+        MEMORY_USAGE: "10MB以下", 
+        BINARY_SIZE: "20MB以下",
+        EXECUTION_SPEED: "従来比50%高速化",
+      },
+      'web-nextjs': {
+        PAGE_LOAD_TIME: "3秒以内",
+        LIGHTHOUSE_SCORE: "90以上",
+        CUMULATIVE_LAYOUT_SHIFT: "0.1以下",
+        FIRST_CONTENTFUL_PAINT: "1.5秒以内",
+      },
+      'api-fastapi': {
+        API_RESPONSE_TIME: "100ms以内",
+        THROUGHPUT: "1000 req/sec",
+        CONCURRENT_USERS: "10000",
+        API_UPTIME: "99.9%",
+      }
+    };
+    
+    return defaults[projectType as keyof typeof defaults] || defaults['mcp-server'];
+  }
+
+  private getExamplesByProjectType(projectType: string) {
+    const examples = {
+      'mcp-server': {
+        purpose: 'AIエージェント向けツール・リソース提供',
+        scope: 'MCP仕様準拠のツール実行・リソース取得機能',
+        outOfScope: 'AIモデル自体の学習・推論機能',
+        users: 'AI開発者、データサイエンティスト、AIエージェント運用者',
+        businessGoal: 'AI開発効率の向上',
+        coreFeature: 'MCP対応ツール実行',
+        uiFeature: '管理コンソール',
+        dataFeature: 'リソース管理',
+        integrationFeature: '外部API連携',
+        additionalFeature: 'プロンプト管理',
+        mvpFeatures: 'ツール実行、リソース取得、基本監視',
+        mvpFeature1: 'ツール実行システム',
+        mvpFeature2: 'リソース管理',
+        mvpFeature1Brief: 'AI クライアントからのツール実行要求を処理',
+        mvpFeature2Brief: 'AI が参照可能なリソースを提供・管理',
+        coreFeature1: 'JSON-RPC通信',
+        coreFeature2: 'ツール管理',
+        coreFeature3: 'リソース管理',
+        coreFeature4: 'エラーハンドリング',
+        extFeature1: 'ダッシュボード',
+        extFeature2: 'ログ解析',
+        extFeature3: 'パフォーマンス監視',
+      },
+      'cli-rust': {
+        purpose: 'コマンドライン業務の効率化・自動化',
+        scope: 'ファイル処理、データ変換、システム管理タスク',
+        outOfScope: 'GUI アプリケーション、Webサービス',
+        users: '開発者、システム管理者、DevOpsエンジニア',
+        businessGoal: '作業時間の短縮・品質向上',
+        coreFeature: 'ファイル処理',
+        uiFeature: 'CLI インターフェース',
+        dataFeature: 'データ変換',
+        integrationFeature: 'システム連携',
+        additionalFeature: '設定管理',
+        mvpFeatures: '基本コマンド、ヘルプ、エラー処理',
+        mvpFeature1: 'コマンド実行',
+        mvpFeature2: 'ファイル操作',
+        mvpFeature1Brief: '効率的なコマンドライン処理',
+        mvpFeature2Brief: '安全なファイル操作機能',
+        coreFeature1: 'コマンドパーサー',
+        coreFeature2: 'ファイルI/O',
+        coreFeature3: 'エラーハンドリング',
+        coreFeature4: '設定管理',
+        extFeature1: 'プラグインシステム',
+        extFeature2: 'バッチ処理',
+        extFeature3: 'ログ管理',
+      }
+      // 他のプロジェクトタイプも同様に定義可能
+    };
+    
+    return examples[projectType as keyof typeof examples] || examples['mcp-server'];
+  }
+
+  // Helper methods for variable processing
   private formatTechStack(techStack: any): string {
     const parts = [];
     if (techStack.frontend) parts.push(`Frontend: ${techStack.frontend}`);
