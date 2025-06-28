@@ -35,7 +35,7 @@ export async function loadPlugin(pluginPath: string): Promise<Plugin> {
 
     return pluginModule.default;
   } catch (error) {
-    throw new Error(`プラグインのロードに失敗: ${pluginPath} - ${error.message}`);
+    throw new Error(`プラグインのロードに失敗: ${pluginPath} - ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 

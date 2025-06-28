@@ -212,14 +212,14 @@ class CliRustPlugin implements Plugin {
       return {
         success: false,
         generatedFiles: [],
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         warnings: []
       };
     }
   }
 
   private prepareTemplateVariables(options: ScaffoldOptions): Record<string, string> {
-    const currentDate = new Date().toISOString().split('T')[0];
+    const currentDate: string = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
     
     // Rustの命名規則に従ったパッケージ名
     const packageName = options.projectName
@@ -525,16 +525,17 @@ update:
 \tcargo update
 `;
 
-if (options.options.benchmarking) {
-  makefile += `
+    let finalMakefile = makefile;
+    if (options.options.benchmarking) {
+      finalMakefile += `
 bench:
 \tcargo bench
 `;
-}
+    }
 
     await context.fileSystem.writeFile(
       path.join(options.targetPath, 'Makefile'),
-      makefile
+      finalMakefile
     );
 
     // .gitignore
@@ -807,7 +808,7 @@ jobs:
     } catch (error) {
       return {
         healthy: false,
-        message: `ヘルスチェック中にエラーが発生しました: ${error.message}`,
+        message: `ヘルスチェック中にエラーが発生しました: ${error instanceof Error ? error.message : String(error)}`,
         details
       };
     }

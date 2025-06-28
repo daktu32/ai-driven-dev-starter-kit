@@ -194,14 +194,14 @@ class ApiFastapiPlugin implements Plugin {
       return {
         success: false,
         generatedFiles: [],
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         warnings: []
       };
     }
   }
 
   private prepareTemplateVariables(options: ScaffoldOptions): Record<string, string> {
-    const currentDate = new Date().toISOString().split('T')[0];
+    const currentDate: string = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
     
     const className = options.projectName
       .replace(/-/g, '_')
@@ -792,7 +792,7 @@ coverage.xml
     } catch (error) {
       return {
         healthy: false,
-        message: `ヘルスチェック中にエラーが発生しました: ${error.message}`,
+        message: `ヘルスチェック中にエラーが発生しました: ${error instanceof Error ? error.message : String(error)}`,
         details
       };
     }

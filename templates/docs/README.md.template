@@ -1,0 +1,130 @@
+# {{PROJECT_NAME}}
+
+{{PROJECT_DESCRIPTION}}
+
+## 🎯 概要
+
+**{{PROJECT_NAME}}** - {{PROJECT_TAGLINE}}
+
+{{PROJECT_DETAILED_DESCRIPTION}}
+
+## ✨ 主要機能
+
+### MVP機能
+- 🔥 **{{MVP_FEATURE_1}}** ({{ISSUE_REF_1}}): {{MVP_FEATURE_1_BRIEF}}
+- ⚡ **{{MVP_FEATURE_2}}** ({{ISSUE_REF_2}}): {{MVP_FEATURE_2_BRIEF}}
+
+### コア機能
+- 📋 **{{CORE_FEATURE_1}}**: {{CORE_FEATURE_1_BRIEF}}
+- 🔄 **{{CORE_FEATURE_2}}**: {{CORE_FEATURE_2_BRIEF}}
+- 🛠️ **{{CORE_FEATURE_3}}**: {{CORE_FEATURE_3_BRIEF}}
+- 🔗 **{{CORE_FEATURE_4}}**: {{CORE_FEATURE_4_BRIEF}}
+
+### 拡張機能
+- 📊 **{{EXT_FEATURE_1}}**: {{EXT_FEATURE_1_BRIEF}}
+- 📈 **{{EXT_FEATURE_2}}**: {{EXT_FEATURE_2_BRIEF}}
+- 📝 **{{EXT_FEATURE_3}}**: {{EXT_FEATURE_3_BRIEF}}
+
+## 🚀 クイックスタート
+
+### 前提条件
+- {{PREREQUISITE_1}}
+- {{PREREQUISITE_2}}
+- {{PREREQUISITE_3}}
+
+### インストール
+
+```bash
+{{INSTALL_COMMAND}}
+```
+
+### 基本的な使い方
+
+```bash
+{{BASIC_USAGE_EXAMPLE}}
+```
+
+## 💻 システム要件
+
+| 項目 | 最小要件 | 推奨 |
+|------|----------|------|
+| OS | {{MIN_OS}} | {{RECOMMENDED_OS}} |
+| CPU | {{MIN_CPU}} | {{RECOMMENDED_CPU}} |
+| メモリ | {{MIN_MEMORY}} | {{RECOMMENDED_MEMORY}} |
+| ストレージ | {{MIN_STORAGE}} | {{RECOMMENDED_STORAGE}} |
+
+## 📚 ドキュメント
+
+- [📋 機能仕様書](docs/FEATURE-SPEC.md) - 詳細な機能仕様
+- [🏗️ アーキテクチャ](docs/ARCHITECTURE.md) - システム設計
+- [🔌 API仕様](docs/API.md) - API詳細
+- [🔧 デプロイメント](docs/DEPLOYMENT.md) - インストール・設定ガイド
+- [🧪 テスト](docs/TESTING.md) - テスト戦略
+- [🔒 セキュリティ](docs/SECURITY.md) - セキュリティ設計
+- [👥 コントリビューション](docs/CONTRIBUTING.md) - 開発参加ガイド
+
+## 🎬 デモ・使用例
+
+### {{USE_CASE_1}}
+
+```bash
+{{USE_CASE_1_EXAMPLE}}
+```
+
+### {{USE_CASE_2}}
+
+```bash
+{{USE_CASE_2_EXAMPLE}}
+```
+
+## 🛠️ 技術スタック
+
+- **{{TECH_CATEGORY_1}}**: {{TECH_LIST_1}}
+- **{{TECH_CATEGORY_2}}**: {{TECH_LIST_2}}
+- **{{TECH_CATEGORY_3}}**: {{TECH_LIST_3}}
+
+詳細は [tech-stack.md](docs/tech-stack.md) を参照。
+
+## 📊 開発状況
+
+- **実装規模**: {{IMPLEMENTATION_SIZE}}
+- **テスト状況**: {{TEST_STATUS}}
+- **カバレッジ**: {{COVERAGE_STATUS}}
+
+最新の進捗は [PROGRESS.md](docs/PROGRESS.md) を参照。
+
+## 🤝 コントリビューション
+
+プロジェクトへの貢献を歓迎します！
+
+1. このリポジトリをフォーク
+2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
+3. 変更をコミット (`git commit -m 'Add amazing feature'`)
+4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
+5. プルリクエストを作成
+
+詳細は [CONTRIBUTING.md](docs/CONTRIBUTING.md) を参照してください。
+
+## 📄 ライセンス
+
+このプロジェクトは [{{LICENSE_TYPE}}](LICENSE) の下でライセンスされています。
+
+## 🙏 謝辞
+
+- {{ACKNOWLEDGMENT_1}}
+- {{ACKNOWLEDGMENT_2}}
+- {{ACKNOWLEDGMENT_3}}
+
+## 📞 サポート・連絡先
+
+- 🐛 **バグ報告**: [GitHub Issues]({{GITHUB_ISSUES_URL}})
+- 💬 **議論**: [GitHub Discussions]({{GITHUB_DISCUSSIONS_URL}})
+- 📧 **その他**: {{CONTACT_EMAIL}}
+
+---
+
+⭐ このプロジェクトが役に立った場合は、スターを付けてください！
+
+---
+
+**注意**: `{{VARIABLE_NAME}}`の部分は、プロジェクト固有の内容に置き換えてください。

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 import fs from 'fs-extra';
+import { readdir } from 'fs/promises';
 import * as path from 'path';
-import { fileURLToPath } from 'url';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import ora from 'ora';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { glob } from 'glob';
+import { DocumentTemplateProcessor } from './lib/documentTemplateProcessor.js';
+import { ProjectConfig } from './lib/types.js';
 
 interface ScaffoldOptions {
   targetPath: string;
@@ -26,7 +26,7 @@ class ScaffoldGenerator {
   private cliOptions: { [key: string]: string | boolean } = {};
 
   constructor() {
-    this.sourceDir = path.resolve(__dirname, '..');
+    this.sourceDir = path.resolve(process.cwd());
     this.parseCLIArgs();
   }
 
@@ -34,9 +34,11 @@ class ScaffoldGenerator {
     const args = process.argv.slice(2);
     for (let i = 0; i < args.length; i++) {
       const arg = args[i];
-      if (arg.startsWith('--')) {
+      if (arg && arg.startsWith('--')) {
         const [key, value] = arg.slice(2).split('=');
-        this.cliOptions[key] = value || true;
+        if (key) {
+          this.cliOptions[key] = value || true;
+        }
       }
     }
   }
@@ -220,11 +222,8 @@ class ScaffoldGenerator {
         await this.copyToolsFiles(targetPath);
       }
 
-      // 基本ドキュメントをコピー
-      await this.copyBasicDocuments(targetPath);
-
-      // docsディレクトリをコピー
-      await this.copyDocsFiles(targetPath);
+      // ドキュメントテンプレートを処理
+      await this.processDocumentTemplates(targetPath);
 
       // .cursorrules を生成
       if (this.options.customCursorRules) {
@@ -234,9 +233,24 @@ class ScaffoldGenerator {
       // package.json を更新
       await this.updatePackageJson(targetPath);
 
+      // テンプレートファイルのクリーンアップ
+      await this.cleanupTemplateFiles(targetPath);
+
+      // 生成結果を検証
+      await this.verifyGeneratedProject(targetPath);
+
       spinner.succeed('スケルトンの生成が完了しました');
     } catch (error) {
       spinner.fail('スケルトンの生成に失敗しました');
+      console.error(chalk.red('\n❌ エラーの詳細:'));
+      console.error(chalk.red((error as Error).message));
+      
+      // クリーンアップ（部分的に生成されたファイルを削除）
+      if (await fs.pathExists(targetPath)) {
+        console.log(chalk.yellow('\n🧹 生成途中のファイルをクリーンアップしています...'));
+        await fs.remove(targetPath);
+      }
+      
       throw error;
     }
   }
@@ -252,7 +266,7 @@ class ScaffoldGenerator {
   }
 
   private async copyDirectoryRecursively(sourcePath: string, targetPath: string): Promise<void> {
-    const items = await fs.readdir(sourcePath, { withFileTypes: true });
+    const items = await readdir(sourcePath, { withFileTypes: true });
 
     for (const item of items) {
       const sourceItemPath = path.join(sourcePath, item.name);
@@ -275,7 +289,7 @@ class ScaffoldGenerator {
           .replace(/^[0-9]/, '')
           .replace(/^./, (c) => c.toUpperCase());
         
-        const currentDate = new Date().toISOString().split('T')[0];
+        const currentDate = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
         
         content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
         content = content.replace(/\{\{PROJECT_CLASS_NAME\}\}/g, className);
@@ -301,7 +315,14 @@ class ScaffoldGenerator {
       const targetFilePath = path.join(targetPath, file);
 
       if (await fs.pathExists(sourcePath)) {
-        await fs.copy(sourcePath, targetFilePath);
+        // テンプレート処理のためcopyDirectoryRecursivelyを使用
+        let content = await fs.readFile(sourcePath, 'utf8');
+        const currentDate = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
+        
+        content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
+        content = content.replace(/\{\{DATE\}\}/g, currentDate);
+        
+        await fs.writeFile(targetFilePath, content);
       }
     }
   }
@@ -311,7 +332,8 @@ class ScaffoldGenerator {
     const targetArchPath = path.join(targetPath, 'docs', 'architecture');
 
     if (await fs.pathExists(archPath)) {
-      await fs.copy(archPath, targetArchPath);
+      await fs.ensureDir(targetArchPath);
+      await this.copyDirectoryRecursively(archPath, targetArchPath);
     }
   }
 
@@ -320,11 +342,98 @@ class ScaffoldGenerator {
     const targetToolsPath = path.join(targetPath, 'tools');
 
     if (await fs.pathExists(toolsPath)) {
-      await fs.copy(toolsPath, targetToolsPath);
+      await fs.ensureDir(targetToolsPath);
+      await this.copyDirectoryRecursively(toolsPath, targetToolsPath);
     }
   }
 
-  private async copyBasicDocuments(targetPath: string): Promise<void> {
+  private async processDocumentTemplates(targetPath: string): Promise<void> {
+    const processor = new DocumentTemplateProcessor(this.sourceDir);
+    const config = this.createProjectConfig();
+
+    try {
+      // ドキュメントテンプレートを処理
+      const processedFiles = await processor.processDocumentTemplates(config, targetPath);
+      console.log(chalk.green(`✓ ${processedFiles.length}個のドキュメントテンプレートを処理しました`));
+
+      // プロジェクト用CLAUDE.mdを生成
+      await processor.createProjectCLAUDE(config, targetPath);
+      console.log(chalk.green('✓ CLAUDE.mdを生成しました'));
+
+    } catch (error) {
+      console.warn(chalk.yellow('⚠ ドキュメントテンプレートの処理中にエラーが発生しました:'), error);
+      // フォールバック: 基本ドキュメントのみコピー
+      await this.copyBasicDocumentsFallback(targetPath);
+    }
+  }
+
+  private createProjectConfig(): ProjectConfig {
+    return {
+      projectName: this.options.projectName,
+      projectType: this.options.projectType,
+      description: `${this.options.projectName} - AI駆動開発スターターキットで生成`,
+      repositoryUrl: `https://github.com/your-username/${this.options.projectName.toLowerCase().replace(/\s+/g, '-')}`,
+      prompt: 'basic-development',
+      techStack: {
+        frontend: this.getDefaultTechStack('frontend'),
+        backend: this.getDefaultTechStack('backend'),
+        database: this.getDefaultTechStack('database'),
+        infrastructure: this.getDefaultTechStack('infrastructure'),
+        deployment: this.getDefaultTechStack('deployment'),
+        monitoring: this.getDefaultTechStack('monitoring'),
+      },
+      team: {
+        size: 1,
+        type: 'individual',
+        industry: 'Technology',
+        complianceLevel: 'low',
+      },
+      customizations: {},
+    };
+  }
+
+  private getDefaultTechStack(category: string): string {
+    const defaults: { [key: string]: { [key: string]: string } } = {
+      'cli-rust': {
+        frontend: 'Terminal UI',
+        backend: 'Rust',
+        database: 'SQLite',
+        infrastructure: 'Docker',
+        deployment: 'GitHub Releases',
+        monitoring: 'Logs',
+      },
+      'web-nextjs': {
+        frontend: 'Next.js/React',
+        backend: 'Next.js API Routes',
+        database: 'PostgreSQL',
+        infrastructure: 'Vercel',
+        deployment: 'Vercel',
+        monitoring: 'Vercel Analytics',
+      },
+      'api-fastapi': {
+        frontend: 'N/A',
+        backend: 'FastAPI/Python',
+        database: 'PostgreSQL',
+        infrastructure: 'Docker/AWS',
+        deployment: 'AWS ECS',
+        monitoring: 'CloudWatch',
+      },
+      'mcp-server': {
+        frontend: 'N/A',
+        backend: 'Node.js/TypeScript',
+        database: 'JSON Files',
+        infrastructure: 'Docker',
+        deployment: 'npm Registry',
+        monitoring: 'Logs',
+      },
+    };
+
+    return defaults[this.options.projectType]?.[category] || 'TBD';
+  }
+
+  private async copyBasicDocumentsFallback(targetPath: string): Promise<void> {
+    console.log(chalk.yellow('フォールバック: 基本ドキュメントをコピーしています...'));
+    
     const basicDocs = [
       'CONTRIBUTING.md',
       'CLAUDE.md',
@@ -336,58 +445,6 @@ class ScaffoldGenerator {
 
       if (await fs.pathExists(sourcePath)) {
         await fs.copy(sourcePath, targetFilePath);
-      }
-    }
-
-    // PRD.mdテンプレートをコピー
-    await this.copyPRDTemplate(targetPath);
-  }
-
-  private async copyPRDTemplate(targetPath: string): Promise<void> {
-    const prdTemplatePath = path.join(this.sourceDir, 'templates', 'PRD.md.template');
-    const targetPRDPath = path.join(targetPath, 'PRD.md');
-
-    if (await fs.pathExists(prdTemplatePath)) {
-      let content = await fs.readFile(prdTemplatePath, 'utf8');
-      
-      // プレースホルダーを置換
-      const currentDate = new Date().toISOString().split('T')[0];
-      content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
-      content = content.replace(/\{\{PROJECT_TYPE\}\}/g, this.options.projectType);
-      content = content.replace(/\{\{DATE\}\}/g, currentDate);
-      
-      await fs.writeFile(targetPRDPath, content);
-    }
-  }
-
-  private async copyDocsFiles(targetPath: string): Promise<void> {
-    const docsPath = path.join(this.sourceDir, 'templates', 'docs');
-    const targetDocsPath = path.join(targetPath, 'docs');
-
-    if (await fs.pathExists(docsPath)) {
-      await fs.ensureDir(targetDocsPath);
-      
-      const docsFiles = await fs.readdir(docsPath);
-      for (const file of docsFiles) {
-        const sourcePath = path.join(docsPath, file);
-        let targetFileName = file;
-        
-        // .templateファイルは拡張子を除去
-        if (file.endsWith('.template')) {
-          targetFileName = file.replace('.template', '');
-        }
-        
-        const targetFilePath = path.join(targetDocsPath, targetFileName);
-        
-        if ((await fs.stat(sourcePath)).isFile()) {
-          // ファイルをコピーし、プロジェクト名などを置換
-          let content = await fs.readFile(sourcePath, 'utf8');
-          content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
-          content = content.replace(/\{\{PROJECT_DESCRIPTION\}\}/g, `${this.options.projectName} - Generated by Claude Code Dev Starter Kit`);
-          content = content.replace(/\{\{AUTHOR\}\}/g, 'Your Name');
-          
-          await fs.writeFile(targetFilePath, content);
-        }
       }
     }
   }
@@ -467,12 +524,24 @@ ${this.getProjectTypeSpecificRules()}
       
       // プロジェクト名を更新
       packageJson.name = this.options.projectName.toLowerCase().replace(/\s+/g, '-');
-      packageJson.description = `${this.options.projectName} - Generated by Claude Code Dev Starter Kit`;
+      packageJson.description = `${this.options.projectName} - AI-driven development project`;
       
-      // リポジトリ情報をクリア
+      // スターターキット情報をクリア
       delete packageJson.repository;
       delete packageJson.bugs;
       delete packageJson.homepage;
+      delete packageJson.keywords;
+      
+      // 新しいプロジェクト用情報を設定
+      packageJson.author = "Your Name";
+      packageJson.repository = {
+        type: "git",
+        url: `git+https://github.com/your-username/${this.options.projectName.toLowerCase().replace(/\s+/g, '-')}.git`
+      };
+      packageJson.bugs = {
+        url: `https://github.com/your-username/${this.options.projectName.toLowerCase().replace(/\s+/g, '-')}/issues`
+      };
+      packageJson.homepage = `https://github.com/your-username/${this.options.projectName.toLowerCase().replace(/\s+/g, '-')}#readme`;
       
       await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
     }
@@ -494,6 +563,35 @@ ${this.getProjectTypeSpecificRules()}
     }
 
     console.log(chalk.gray(`   git commit -m "初回コミット"`));
+  }
+
+  private async verifyGeneratedProject(targetPath: string): Promise<void> {
+    const projectTypeFiles: { [key: string]: string[] } = {
+      'mcp-server': ['package.json', 'tsconfig.json', 'src/index.ts'],
+      'cli-rust': ['Cargo.toml', 'src/main.rs'],
+      'web-nextjs': ['package.json', 'tsconfig.json'],
+      'api-fastapi': ['requirements.txt', 'main.py']
+    };
+    
+    const requiredFiles = projectTypeFiles[this.options.projectType] || [];
+    const commonFiles = ['CLAUDE.md'];
+    const allRequiredFiles = [...commonFiles, ...requiredFiles];
+    
+    const missingFiles: string[] = [];
+    
+    for (const file of allRequiredFiles) {
+      const filePath = path.join(targetPath, file);
+      if (!(await fs.pathExists(filePath))) {
+        missingFiles.push(file);
+      }
+    }
+    
+    if (missingFiles.length > 0) {
+      throw new Error(
+        `プロジェクト生成が不完全です。以下のファイルが見つかりません:\n` +
+        missingFiles.map(f => `  - ${f}`).join('\n')
+      );
+    }
   }
 
   private printNextSteps(): void {
@@ -535,6 +633,36 @@ ${this.getProjectTypeSpecificRules()}
     
     console.log(chalk.cyan.bold('\n🎉 PRDベース開発の準備が完了しました！'));
     console.log(chalk.yellow('💡 PRD.mdを完成させてからClaude Codeで開発を開始してください'));
+  }
+
+  private async cleanupTemplateFiles(targetPath: string): Promise<void> {
+    try {
+      // .template ファイルを再帰的に検索
+      const templateFiles = await glob('**/*.template', { 
+        cwd: targetPath,
+        absolute: true 
+      });
+      
+      let removedCount = 0;
+      for (const templateFile of templateFiles) {
+        const cleanFile = templateFile.replace('.template', '');
+        
+        // .template ファイルを削除（対応するファイルが存在する場合のみ）
+        if (await fs.pathExists(cleanFile)) {
+          await fs.remove(templateFile);
+          removedCount++;
+          console.log(chalk.gray(`  削除: ${path.relative(targetPath, templateFile)}`));
+        } else {
+          console.warn(chalk.yellow(`⚠ 処理されていないテンプレートファイル: ${path.relative(targetPath, templateFile)}`));
+        }
+      }
+      
+      if (removedCount > 0) {
+        console.log(chalk.green(`✓ ${removedCount}個のテンプレートファイルを削除しました`));
+      }
+    } catch (error) {
+      console.warn(chalk.yellow('⚠ テンプレートファイルのクリーンアップ中にエラー:'), error);
+    }
   }
 }
 

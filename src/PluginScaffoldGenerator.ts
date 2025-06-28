@@ -56,9 +56,11 @@ export class PluginScaffoldGenerator {
     const args = process.argv.slice(2);
     for (let i = 0; i < args.length; i++) {
       const arg = args[i];
-      if (arg.startsWith('--')) {
+      if (arg && arg.startsWith('--')) {
         const [key, value] = arg.slice(2).split('=');
-        this.cliOptions[key] = value || true;
+        if (key) {
+          this.cliOptions[key] = value || true;
+        }
       }
     }
   }
@@ -514,7 +516,7 @@ export class PluginScaffoldGenerator {
     if (await fs.pathExists(prdTemplatePath)) {
       let content = await fs.readFile(prdTemplatePath, 'utf8');
       
-      const currentDate = new Date().toISOString().split('T')[0];
+      const currentDate = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
       content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName!);
       content = content.replace(/\{\{PROJECT_TYPE\}\}/g, this.options.templateId!);
       content = content.replace(/\{\{DATE\}\}/g, currentDate);

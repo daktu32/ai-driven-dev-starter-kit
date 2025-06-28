@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   default: {
     requireModule: ['ts-node/register'],
     require: ['test/step-definitions/**/*.ts', 'test/support/**/*.ts'],

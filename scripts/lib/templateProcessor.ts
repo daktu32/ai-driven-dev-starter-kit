@@ -79,7 +79,7 @@ export class TemplateProcessor {
     let match;
 
     while ((match = placeholderRegex.exec(content)) !== null) {
-      if (!placeholders.includes(match[1])) {
+      if (match[1] && !placeholders.includes(match[1])) {
         placeholders.push(match[1]);
       }
     }
@@ -145,11 +145,11 @@ export class TemplateProcessor {
       // Team info
       'Team Size': config.team.size.toString(),
       'Team Type': config.team.type,
-      Industry: config.team.industry,
-      'Compliance Level': config.team.complianceLevel,
+      Industry: config.team.industry || '',
+      'Compliance Level': config.team.complianceLevel || '',
 
       // Dates
-      'YYYY-MM-DD': new Date().toISOString().split('T')[0],
+      'YYYY-MM-DD': new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10),
       'Current Date': new Date().toLocaleDateString(),
       'Current Year': new Date().getFullYear().toString(),
 
@@ -164,7 +164,7 @@ export class TemplateProcessor {
   private extractUsername(url: string): string {
     try {
       const match = url.match(/github\.com\/([^/]+)/);
-      return match ? match[1] : 'your-username';
+      return match?.[1] || 'your-username';
     } catch {
       return 'your-username';
     }
@@ -173,7 +173,7 @@ export class TemplateProcessor {
   private extractProjectName(url: string): string {
     try {
       const match = url.match(/github\.com\/[^/]+\/([^/]+)/);
-      return match ? match[1].replace(/\.git$/, '') : 'your-project';
+      return match?.[1]?.replace(/\.git$/, '') || 'your-project';
     } catch {
       return 'your-project';
     }

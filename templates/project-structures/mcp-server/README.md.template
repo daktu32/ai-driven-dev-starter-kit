@@ -1,32 +1,45 @@
 # {{PROJECT_NAME}}
 
-{{PROJECT_DESCRIPTION}}
+> {{PROJECT_DESCRIPTION}}
 
-## 概要
+{{PROJECT_NAME}} は Model Context Protocol (MCP) サーバーの実装です。AI クライアント（Claude等）がツールやリソースにアクセスするための高性能サーバーを提供します。
 
-このプロジェクトは Model Context Protocol (MCP) サーバーの実装です。AIクライアント（Claude等）がツールやリソースにアクセスするためのサーバーを提供します。
+## 🚀 クイックスタート
 
-## セットアップ
-
-### 1. 依存関係のインストール
+### セットアップ
 ```bash
+# 1. 依存関係インストール
 npm install
-```
 
-### 2. 環境変数の設定
-```bash
+# 2. 環境変数設定
 cp .env.example .env
-# .envファイルを必要に応じて編集
-```
 
-### 3. 開発サーバーの起動
-```bash
+# 3. 開発サーバー起動
 npm run dev
 ```
 
-## 開発
+### 基本的な使用方法
+```bash
+# ビルド
+npm run build
 
-### 利用可能なスクリプト
+# テスト実行
+npm test
+
+# 本番環境起動
+npm start
+```
+
+## 📚 ドキュメント
+
+詳細なドキュメントは [`docs/`](./docs/) ディレクトリを参照してください：
+
+- **[プロダクト要求仕様書](./docs/PRD.md)** - プロジェクトの要件・目標
+- **[開発者ガイド](./docs/README.md)** - 詳細な開発手順・API仕様
+- **[アーキテクチャ設計](./docs/ARCHITECTURE.md)** - システム設計・技術仕様
+- **[APIリファレンス](./docs/API.md)** - エンドポイント・利用方法
+
+## 🛠️ 開発
 
 - `npm run dev` - 開発モードでサーバー起動（ファイル変更時に自動再起動）
 - `npm run build` - TypeScriptをJavaScriptにコンパイル

@@ -218,9 +218,9 @@ export class PluginManager extends EventEmitter {
         throw error;
       } else {
         throw new PluginLoadError(
-          `プラグインロードに失敗: ${error.message}`,
+          `プラグインロードに失敗: ${error instanceof Error ? error.message : String(error)}`,
           pluginId,
-          error
+          error instanceof Error ? error : new Error(String(error))
         );
       }
     }
@@ -310,7 +310,7 @@ export class PluginManager extends EventEmitter {
       this.registerTemplates(plugin);
 
     } catch (error) {
-      registration.error = error;
+      registration.error = error instanceof Error ? error : new Error(String(error));
       registration.active = false;
       this.plugins.set(plugin.metadata.id, registration);
       throw error;
@@ -367,9 +367,9 @@ export class PluginManager extends EventEmitter {
     } catch (error) {
       this.context.logger.error(`プラグインアンロードに失敗: ${pluginId}`, error);
       throw new PluginError(
-        `プラグインアンロードに失敗: ${error.message}`,
+        `プラグインアンロードに失敗: ${error instanceof Error ? error.message : String(error)}`,
         pluginId,
-        error
+        error instanceof Error ? error : new Error(String(error))
       );
     }
   }
@@ -446,9 +446,9 @@ export class PluginManager extends EventEmitter {
         throw error;
       } else {
         throw new PluginExecutionError(
-          `スケルトン生成に失敗: ${error.message}`,
+          `スケルトン生成に失敗: ${error instanceof Error ? error.message : String(error)}`,
           plugin.metadata.id,
-          error
+          error instanceof Error ? error : new Error(String(error))
         );
       }
     }
@@ -497,8 +497,8 @@ export class PluginManager extends EventEmitter {
       } catch (error) {
         results.set(registration.plugin.metadata.id, {
           healthy: false,
-          message: `ヘルスチェックに失敗: ${error.message}`,
-          details: { error: error.message }
+          message: `ヘルスチェックに失敗: ${error instanceof Error ? error.message : String(error)}`,
+          details: { error: error instanceof Error ? error.message : String(error) }
         });
       }
     }

@@ -65,9 +65,10 @@ export class Validator {
     ];
 
     for (const field of requiredFields) {
+      const value = techStack[field as keyof TechStackConfig];
       if (
-        !techStack[field as keyof TechStackConfig] ||
-        techStack[field as keyof TechStackConfig]?.trim().length === 0
+        !value ||
+        (typeof value === 'string' && value.trim().length === 0)
       ) {
         errors.push(`${field}は必須項目です`);
       }
@@ -143,7 +144,7 @@ export class Validator {
   static extractRepoInfo(url: string): { owner: string; repo: string } | null {
     try {
       const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
-      if (match) {
+      if (match && match[1] && match[2]) {
         return {
           owner: match[1],
           repo: match[2].replace(/\.git$/, ''),

@@ -301,7 +301,7 @@ export class PluginValidator {
             severity: 'warning',
             category: 'interface',
             message: 'Plugin health check failed',
-            details: healthResult.error || 'Health check returned unhealthy status',
+            details: healthResult.message || 'Health check returned unhealthy status',
             location: 'plugin.healthCheck'
           });
         }
@@ -674,7 +674,7 @@ export class PluginValidator {
     }
 
     // カテゴリ別推奨事項
-    const categories = [...new Set(issues.map(i => i.category))];
+    const categories = Array.from(new Set(issues.map(i => i.category)));
     if (categories.includes('documentation')) {
       recommendations.push('Improve documentation to help users understand the plugin');
     }

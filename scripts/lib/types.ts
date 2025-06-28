@@ -1,5 +1,6 @@
 export interface ProjectConfig {
   projectName: string;
+  projectType: 'cli-rust' | 'web-nextjs' | 'api-fastapi' | 'mcp-server';
   description: string;
   repositoryUrl: string;
   targetPath?: string;

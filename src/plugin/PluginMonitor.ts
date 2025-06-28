@@ -497,7 +497,7 @@ export class PluginMonitor extends EventEmitter {
    * 定期パフォーマンスレポート生成
    */
   private generatePerformanceReports(): void {
-    for (const pluginId of this.metrics.keys()) {
+    for (const pluginId of Array.from(this.metrics.keys())) {
       const report = this.generateReport(pluginId);
       if (report) {
         this.context.logger.info('Performance report generated', {
