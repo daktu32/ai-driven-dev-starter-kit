@@ -73,9 +73,12 @@ class ScaffoldGenerator {
     console.log(chalk.white('  npm run scaffold -- --project-name=my-project --project-type=mcp-server'));
     console.log(chalk.cyan.bold('\nオプション:'));
     console.log(chalk.white('  --help                    このヘルプを表示'));
-    console.log(chalk.white('  --project-name=NAME       プロジェクト名'));
-    console.log(chalk.white('  --project-type=TYPE       プロジェクトタイプ (cli-rust, web-nextjs, api-fastapi, mcp-server)'));
-    console.log(chalk.white('  --target-path=PATH        生成先パス'));
+    console.log(chalk.white('  --project-name=NAME       プロジェクト名 (短縮形: --name)'));
+    console.log(chalk.white('  --project-type=TYPE       プロジェクトタイプ (短縮形: --type)'));
+    console.log(chalk.white('  --target-path=PATH        生成先パス (短縮形: --output)'));
+    console.log(chalk.white('  --skip-interactive        すべての対話をスキップ (E2Eテスト用)'));
+    console.log(chalk.white('  --force                   既存ディレクトリの上書き確認をスキップ'));
+    console.log(chalk.white('  --skip-optional           オプション項目の選択をスキップ'));
     console.log(chalk.cyan.bold('\nプロジェクトタイプ:'));
     console.log(chalk.white('  cli-rust     Rustで書くCLIツール'));
     console.log(chalk.white('  web-nextjs   Next.jsでのWebアプリ'));
@@ -84,6 +87,12 @@ class ScaffoldGenerator {
   }
 
   private async promptOptions(): Promise<void> {
+    // --skip-interactive または --non-interactive オプションがある場合は対話をスキップ
+    if (this.cliOptions['skip-interactive'] || this.cliOptions['non-interactive']) {
+      await this.setDefaultOptionsForNonInteractive();
+      return;
+    }
+
     // CLI引数から値があればそれを使用、なければプロンプトで入力
     const questions = [];
 
@@ -177,10 +186,51 @@ class ScaffoldGenerator {
     };
   }
 
+  private async setDefaultOptionsForNonInteractive(): Promise<void> {
+    // 非対話モードでのデフォルト設定
+    this.options = {
+      targetPath: this.cliOptions['target-path'] as string || this.cliOptions['output'] as string || './my-new-project',
+      projectName: this.cliOptions['project-name'] as string || this.cliOptions['name'] as string || 'my-new-project',
+      projectType: this.cliOptions['project-type'] as ScaffoldOptions['projectType'] || this.cliOptions['type'] as ScaffoldOptions['projectType'] || 'mcp-server',
+      includeProjectManagement: true,
+      includeArchitecture: false,
+      includeTools: true,
+      customCursorRules: true,
+    };
+
+    // 必須パラメータのバリデーション
+    if (!this.options.projectName) {
+      throw new Error('非対話モードでは --name または --project-name オプションが必須です');
+    }
+    if (!this.options.projectType) {
+      throw new Error('非対話モードでは --type または --project-type オプションが必須です');
+    }
+    
+    const validTypes = ['cli-rust', 'web-nextjs', 'api-fastapi', 'mcp-server'];
+    if (!validTypes.includes(this.options.projectType)) {
+      throw new Error(`無効なプロジェクトタイプ: ${this.options.projectType}. 有効な値: ${validTypes.join(', ')}`);
+    }
+
+    console.log(chalk.gray(`非対話モード: ${this.options.projectType} プロジェクト "${this.options.projectName}" を "${this.options.targetPath}" に生成します`));
+  }
+
   private async validateTargetPath(): Promise<void> {
     const targetPath = path.resolve(this.options.targetPath);
 
     if (await fs.pathExists(targetPath)) {
+      // --force オプションがある場合は確認をスキップ
+      if (this.cliOptions['force'] || this.cliOptions['overwrite']) {
+        console.log(chalk.yellow(`❗ 既存ディレクトリ "${targetPath}" を上書きします (--force)`));
+        await fs.remove(targetPath);
+        return;
+      }
+
+      // 非対話モードで --force がない場合はエラー
+      if (this.cliOptions['skip-interactive'] || this.cliOptions['non-interactive']) {
+        throw new Error(`ディレクトリ "${targetPath}" は既に存在します。非対話モードでは --force オプションを使用してください。`);
+      }
+
+      // 通常の対話モード（非対話モードでない場合のみ）
       const { overwrite } = await inquirer.prompt([
         {
           type: 'confirm',
@@ -244,12 +294,7 @@ class ScaffoldGenerator {
       spinner.fail('スケルトンの生成に失敗しました');
       console.error(chalk.red('\n❌ エラーの詳細:'));
       console.error(chalk.red((error as Error).message));
-      
-      // クリーンアップ（部分的に生成されたファイルを削除）
-      if (await fs.pathExists(targetPath)) {
-        console.log(chalk.yellow('\n🧹 生成途中のファイルをクリーンアップしています...'));
-        await fs.remove(targetPath);
-      }
+      console.error(chalk.yellow('\n💡 失敗した状態のファイルはデバッグのため保持されます'));
       
       throw error;
     }
