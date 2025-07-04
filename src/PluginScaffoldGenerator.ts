@@ -4,7 +4,7 @@
  * 既存のScaffoldGeneratorをプラグインシステムに対応させた新しい実装
  */
 
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import inquirer from 'inquirer';
@@ -76,7 +76,7 @@ export class PluginScaffoldGenerator {
       // ヘルプ表示
       if (this.cliOptions.help) {
         this.printHelp();
-        return;
+        process.exit(0);
       }
 
       // プラグインマネージャーの初期化
@@ -96,6 +96,9 @@ export class PluginScaffoldGenerator {
 
       console.log(chalk.green.bold('\\n✅ スケルトンの生成が完了しました！'));
       this.printNextSteps();
+      
+      // 正常終了
+      process.exit(0);
 
     } catch (error) {
       console.error(chalk.red.bold('\\n❌ エラーが発生しました:'), error);

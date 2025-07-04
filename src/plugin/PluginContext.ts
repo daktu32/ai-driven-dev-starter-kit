@@ -4,7 +4,8 @@
  * プラグインが利用できるKit機能の具体的な実装を提供します。
  */
 
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
+import { readdir, stat } from 'fs/promises';
 import * as path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
@@ -89,7 +90,7 @@ class PluginFileSystemImpl implements PluginFileSystem {
   }
 
   async readDir(dirPath: string): Promise<string[]> {
-    return fs.readdir(dirPath);
+    return readdir(dirPath);
   }
 }
 
@@ -209,12 +210,12 @@ class TemplateProcessorImpl implements TemplateProcessor {
       const targetEntryPath = path.join(targetPath, targetEntryName);
       
       // ディレクトリまたはファイルの判定
-      const stat = await fs.stat(sourceEntryPath);
+      const statInfo = await stat(sourceEntryPath);
       
-      if (stat.isDirectory()) {
+      if (statInfo.isDirectory()) {
         // ディレクトリの場合、再帰処理
         await this.processTemplateDirectory(sourceEntryPath, targetEntryPath, variables);
-      } else if (stat.isFile()) {
+      } else if (statInfo.isFile()) {
         // ファイルの場合、テンプレート処理
         await this.processTemplateFile(sourceEntryPath, targetEntryPath, variables);
       }

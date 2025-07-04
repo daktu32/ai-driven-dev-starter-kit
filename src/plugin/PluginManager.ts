@@ -4,7 +4,9 @@
  * プラグインのロード、管理、実行を担当するコアクラス
  */
 
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
+import { readdir } from 'fs/promises';
+import { Dirent } from 'fs';
 import * as path from 'path';
 import { EventEmitter } from 'events';
 import {
@@ -143,7 +145,7 @@ export class PluginManager extends EventEmitter {
    */
   private async findPluginFiles(): Promise<string[]> {
     const pluginFiles: string[] = [];
-    const entries = await fs.readdir(this.config.pluginDir, { withFileTypes: true });
+    const entries = await readdir(this.config.pluginDir, { withFileTypes: true });
 
     for (const entry of entries) {
       const fullPath = path.join(this.config.pluginDir, entry.name);
@@ -239,8 +241,9 @@ export class PluginManager extends EventEmitter {
       );
     }
 
-    // ESモジュール形式でインポート
-    const pluginModule = await import(filePath);
+    // ESモジュール形式でインポート（ファイルURL形式）
+    const fileUrl = `file://${path.resolve(filePath)}`;
+    const pluginModule = await import(fileUrl);
     return pluginModule;
   }
 
