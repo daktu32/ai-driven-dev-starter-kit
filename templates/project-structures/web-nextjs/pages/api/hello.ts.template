@@ -1,0 +1,30 @@
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+type Data = {
+  message: string;
+  timestamp: string;
+  project: string;
+};
+
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) {
+  // Only allow GET requests
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', ['GET']);
+    res.status(405).json({
+      message: 'Method not allowed',
+      timestamp: new Date().toISOString(),
+      project: '{{PROJECT_NAME}}',
+    });
+    return;
+  }
+
+  res.status(200).json({
+    message: 'Hello from {{PROJECT_NAME}} API!',
+    timestamp: new Date().toISOString(),
+    project: '{{PROJECT_NAME}}',
+  });
+}

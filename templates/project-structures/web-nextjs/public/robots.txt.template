@@ -1,0 +1,11 @@
+# Robots.txt for {{PROJECT_NAME}}
+# https://www.robotstxt.org/robotstxt.html
+
+User-agent: *
+Allow: /
+
+# Host
+Host: https://{{PROJECT_NAME}}.example.com
+
+# Sitemap
+Sitemap: https://{{PROJECT_NAME}}.example.com/sitemap.xml

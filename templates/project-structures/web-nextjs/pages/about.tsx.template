@@ -1,0 +1,106 @@
+import React from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
+
+const AboutPage: React.FC = () => {
+  return (
+    <>
+      <Head>
+        <title>About - {{PROJECT_NAME}}</title>
+        <meta name="description" content="About {{PROJECT_NAME}}" />
+      </Head>
+
+      <main className="container">
+        <div className="content">
+          <h1>About {{PROJECT_NAME}}</h1>
+          
+          <p>
+            {{PROJECT_DESCRIPTION}}
+          </p>
+
+          <section>
+            <h2>Features</h2>
+            <ul>
+              <li>✅ Next.js 14 with App Router</li>
+              <li>✅ TypeScript support</li>
+              <li>✅ ESLint and Prettier configuration</li>
+              <li>✅ Responsive design</li>
+              <li>✅ API routes</li>
+              <li>✅ SEO optimized</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Tech Stack</h2>
+            <ul>
+              <li><strong>Framework:</strong> Next.js</li>
+              <li><strong>Language:</strong> TypeScript</li>
+              <li><strong>Styling:</strong> CSS Modules / Styled Components</li>
+              <li><strong>Linting:</strong> ESLint</li>
+              <li><strong>Formatting:</strong> Prettier</li>
+            </ul>
+          </section>
+
+          <div className="navigation">
+            <Link href="/" className="button">
+              ← Back to Home
+            </Link>
+          </div>
+        </div>
+      </main>
+
+      <style jsx>{`
+        .container {
+          padding: 2rem;
+          min-height: 100vh;
+          max-width: 800px;
+          margin: 0 auto;
+        }
+
+        .content {
+          line-height: 1.6;
+        }
+
+        .content h1 {
+          color: #333;
+          border-bottom: 2px solid #0070f3;
+          padding-bottom: 0.5rem;
+        }
+
+        .content h2 {
+          color: #555;
+          margin-top: 2rem;
+        }
+
+        .content ul {
+          padding-left: 1.5rem;
+        }
+
+        .content li {
+          margin: 0.5rem 0;
+        }
+
+        .navigation {
+          margin-top: 3rem;
+          text-align: center;
+        }
+
+        .button {
+          display: inline-block;
+          padding: 0.75rem 1.5rem;
+          background-color: #0070f3;
+          color: white;
+          text-decoration: none;
+          border-radius: 5px;
+          transition: background-color 0.2s;
+        }
+
+        .button:hover {
+          background-color: #0051cc;
+        }
+      `}</style>
+    </>
+  );
+};
+
+export default AboutPage;

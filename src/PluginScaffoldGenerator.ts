@@ -253,8 +253,34 @@ export class PluginScaffoldGenerator {
       customCursorRules: this.cliOptions['skip-optional'] ? true : answers.customCursorRules ?? true,
     };
 
-    // 選択されたテンプレートの追加設定がある場合
-    await this.promptTemplateSpecificOptions();
+    // 選択されたテンプレートの追加設定がある場合（オプション設定スキップでなければ）
+    if (!this.cliOptions['skip-optional']) {
+      await this.promptTemplateSpecificOptions();
+    } else {
+      await this.setTemplateDefaultOptions();
+    }
+  }
+
+  /**
+   * テンプレートのデフォルトオプション設定
+   */
+  private async setTemplateDefaultOptions(): Promise<void> {
+    const template = this.pluginManager.getTemplate(this.options.templateId!);
+    if (!template || !template.configOptions || template.configOptions.length === 0) {
+      return;
+    }
+
+    const defaultAnswers: Record<string, any> = {};
+    
+    for (const option of template.configOptions) {
+      defaultAnswers[option.name] = option.defaultValue;
+    }
+    
+    // デフォルト値をオプションに追加
+    this.options = {
+      ...this.options,
+      ...defaultAnswers
+    };
   }
 
   /**
