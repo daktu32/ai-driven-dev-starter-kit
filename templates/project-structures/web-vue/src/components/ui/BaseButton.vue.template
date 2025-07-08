@@ -1,0 +1,113 @@
+<script setup lang="ts">
+interface Props {
+  variant?: 'primary' | 'secondary' | 'outline'
+  size?: 'sm' | 'md' | 'lg'
+  disabled?: boolean
+  type?: 'button' | 'submit' | 'reset'
+}
+
+withDefaults(defineProps<Props>(), {
+  variant: 'primary',
+  size: 'md',
+  disabled: false,
+  type: 'button'
+})
+
+defineEmits<{
+  click: [event: MouseEvent]
+}>()
+</script>
+
+<template>
+  <button
+    :class="[
+      'btn',
+      `btn-${variant}`,
+      `btn-${size}`,
+      { 'btn-disabled': disabled }
+    ]"
+    :disabled="disabled"
+    :type="type"
+    @click="$emit('click', $event)"
+  >
+    <slot />
+  </button>
+</template>
+
+<style scoped>
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  outline: none;
+}
+
+.btn:focus,
+.btn:focus-visible {
+  outline: 2px solid #42b883;
+  outline-offset: 2px;
+}
+
+.btn:disabled,
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variants */
+.btn-primary {
+  background-color: #42b883;
+  color: white;
+  border-color: #42b883;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #369870;
+  border-color: #369870;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #5a6268;
+  border-color: #5a6268;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: #42b883;
+  border-color: #42b883;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background-color: #42b883;
+  color: white;
+}
+
+/* Sizes */
+.btn-sm {
+  padding: 0.4em 0.8em;
+  font-size: 0.875em;
+}
+
+.btn-md {
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+}
+
+.btn-lg {
+  padding: 0.8em 1.6em;
+  font-size: 1.125em;
+}
+</style>

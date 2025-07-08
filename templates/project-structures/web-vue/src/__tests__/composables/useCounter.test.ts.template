@@ -1,0 +1,73 @@
+import { describe, it, expect } from 'vitest'
+import { useCounter } from '../../composables/useCounter'
+
+describe('useCounter', () => {
+  it('initializes with default value of 0', () => {
+    const { count } = useCounter()
+    expect(count.value).toBe(0)
+  })
+
+  it('initializes with custom initial value', () => {
+    const { count } = useCounter(10)
+    expect(count.value).toBe(10)
+  })
+
+  it('increments count', () => {
+    const { count, increment } = useCounter(0)
+    increment()
+    expect(count.value).toBe(1)
+  })
+
+  it('decrements count', () => {
+    const { count, decrement } = useCounter(5)
+    decrement()
+    expect(count.value).toBe(4)
+  })
+
+  it('resets to initial value', () => {
+    const { count, increment, reset } = useCounter(10)
+    
+    increment()
+    increment()
+    expect(count.value).toBe(12)
+    
+    reset()
+    expect(count.value).toBe(10)
+  })
+
+  it('sets count to specific value', () => {
+    const { count, setCount } = useCounter(0)
+    setCount(42)
+    expect(count.value).toBe(42)
+  })
+
+  it('provides computed properties', () => {
+    const { count, setCount, isZero, isPositive, isNegative } = useCounter(0)
+    
+    expect(isZero.value).toBe(true)
+    expect(isPositive.value).toBe(false)
+    expect(isNegative.value).toBe(false)
+    
+    setCount(5)
+    expect(isZero.value).toBe(false)
+    expect(isPositive.value).toBe(true)
+    expect(isNegative.value).toBe(false)
+    
+    setCount(-3)
+    expect(isZero.value).toBe(false)
+    expect(isPositive.value).toBe(false)
+    expect(isNegative.value).toBe(true)
+  })
+
+  it('handles multiple operations', () => {
+    const { count, increment, decrement, setCount } = useCounter(0)
+    
+    increment()
+    increment()
+    decrement()
+    setCount(100)
+    decrement()
+    
+    expect(count.value).toBe(99)
+  })
+})

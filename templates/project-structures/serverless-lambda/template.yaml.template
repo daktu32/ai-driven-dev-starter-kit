@@ -1,0 +1,182 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  {{PROJECT_NAME}}
+  
+  {{PROJECT_DESCRIPTION}}
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Description: Environment name
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs18.x
+    MemorySize: 256
+    Environment:
+      Variables:
+        NODE_ENV: !Ref Environment
+        LOG_LEVEL: info
+    Architectures:
+      - x86_64
+
+Resources:
+  # API Gateway
+  {{PROJECT_NAME}}Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref Environment
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+
+  # Lambda Functions
+  HealthCheckFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist/
+      Handler: handlers/healthCheck.handler
+      Description: Health check endpoint
+      Events:
+        HealthCheck:
+          Type: Api
+          Properties:
+            RestApiId: !Ref {{PROJECT_NAME}}Api
+            Path: /health
+            Method: get
+
+  GetItemsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist/
+      Handler: handlers/getItems.handler
+      Description: Get all items
+      Events:
+        GetItems:
+          Type: Api
+          Properties:
+            RestApiId: !Ref {{PROJECT_NAME}}Api
+            Path: /items
+            Method: get
+      Environment:
+        Variables:
+          ITEMS_TABLE: !Ref ItemsTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ItemsTable
+
+  CreateItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist/
+      Handler: handlers/createItem.handler
+      Description: Create a new item
+      Events:
+        CreateItem:
+          Type: Api
+          Properties:
+            RestApiId: !Ref {{PROJECT_NAME}}Api
+            Path: /items
+            Method: post
+      Environment:
+        Variables:
+          ITEMS_TABLE: !Ref ItemsTable
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref ItemsTable
+
+  GetItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist/
+      Handler: handlers/getItem.handler
+      Description: Get a specific item
+      Events:
+        GetItem:
+          Type: Api
+          Properties:
+            RestApiId: !Ref {{PROJECT_NAME}}Api
+            Path: /items/{id}
+            Method: get
+      Environment:
+        Variables:
+          ITEMS_TABLE: !Ref ItemsTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ItemsTable
+
+  UpdateItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist/
+      Handler: handlers/updateItem.handler
+      Description: Update an existing item
+      Events:
+        UpdateItem:
+          Type: Api
+          Properties:
+            RestApiId: !Ref {{PROJECT_NAME}}Api
+            Path: /items/{id}
+            Method: put
+      Environment:
+        Variables:
+          ITEMS_TABLE: !Ref ItemsTable
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref ItemsTable
+
+  DeleteItemFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist/
+      Handler: handlers/deleteItem.handler
+      Description: Delete an item
+      Events:
+        DeleteItem:
+          Type: Api
+          Properties:
+            RestApiId: !Ref {{PROJECT_NAME}}Api
+            Path: /items/{id}
+            Method: delete
+      Environment:
+        Variables:
+          ITEMS_TABLE: !Ref ItemsTable
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref ItemsTable
+
+  # DynamoDB Table
+  ItemsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "${AWS::StackName}-items"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+
+Outputs:
+  {{PROJECT_NAME}}Api:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${{{PROJECT_NAME}}Api}.execute-api.${AWS::Region}.amazonaws.com/${Environment}/"
+    Export:
+      Name: !Sub "${AWS::StackName}-ApiUrl"
+
+  ItemsTable:
+    Description: "DynamoDB table name"
+    Value: !Ref ItemsTable
+    Export:
+      Name: !Sub "${AWS::StackName}-ItemsTable"

@@ -1,0 +1,38 @@
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import middy from '@middy/core'
+import httpErrorHandler from '@middy/http-error-handler'
+import httpCors from '@middy/http-cors'
+import { createResponse } from '@/lib/response'
+import { logger } from '@/lib/logger'
+
+const healthCheckHandler = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    logger.info('Health check requested', { 
+      requestId: event.requestContext.requestId 
+    })
+
+    const response = {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      service: '{{PROJECT_NAME}}',
+      version: '0.1.0',
+      environment: process.env.NODE_ENV || 'development',
+      requestId: event.requestContext.requestId
+    }
+
+    return createResponse(200, response)
+  } catch (error) {
+    logger.error('Health check failed', { error })
+    
+    return createResponse(500, {
+      status: 'unhealthy',
+      error: 'Internal server error'
+    })
+  }
+}
+
+export const handler = middy(healthCheckHandler)
+  .use(httpErrorHandler())
+  .use(httpCors())

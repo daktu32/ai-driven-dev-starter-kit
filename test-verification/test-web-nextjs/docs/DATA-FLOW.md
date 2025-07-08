@@ -1,0 +1,154 @@
+# データフロー設計書
+
+## 概要
+
+test-web-nextjsにおけるデータの流れを定義します。
+
+## 1. システム全体のデータフロー
+
+```mermaid
+graph TB
+    subgraph "プレゼンテーション層"
+        [COMPONENT_1_1][[COMPONENT_1_1_NAME]]
+        [COMPONENT_1_2][[COMPONENT_1_2_NAME]]
+        [COMPONENT_1_3][[COMPONENT_1_3_NAME]]
+    end
+    
+    subgraph "ビジネスロジック層"
+        [COMPONENT_2_1][[COMPONENT_2_1_NAME]]
+        [COMPONENT_2_2][[COMPONENT_2_2_NAME]]
+        [COMPONENT_2_3][[COMPONENT_2_3_NAME]]
+    end
+    
+    subgraph "データアクセス層"
+        [COMPONENT_3_1][[COMPONENT_3_1_NAME]]
+        [COMPONENT_3_2][[COMPONENT_3_2_NAME]]
+        [COMPONENT_3_3][[COMPONENT_3_3_NAME]]
+    end
+    
+    subgraph "[LAYER_4_NAME]"
+        [COMPONENT_4_1][[COMPONENT_4_1_NAME]]
+        [COMPONENT_4_2][[COMPONENT_4_2_NAME]]
+        [COMPONENT_4_3][[COMPONENT_4_3_NAME]]
+    end
+    
+    [COMPONENT_1_1] --> [COMPONENT_1_2]
+    [COMPONENT_1_2] --> [COMPONENT_2_1]
+    [COMPONENT_1_3] --> [COMPONENT_2_2]
+    
+    [COMPONENT_2_1] --> [COMPONENT_3_1]
+    [COMPONENT_2_1] --> [COMPONENT_3_2]
+    [COMPONENT_2_1] --> [COMPONENT_3_3]
+    
+    [COMPONENT_2_2] --> [COMPONENT_4_1]
+    [COMPONENT_2_2] --> [COMPONENT_3_1]
+    
+    [COMPONENT_3_1] --> [COMPONENT_4_2]
+    [COMPONENT_3_2] --> [COMPONENT_4_2]
+    [COMPONENT_4_1] --> [COMPONENT_4_3]
+    
+    [COMPONENT_3_1] --> [COMPONENT_4_3]
+    [COMPONENT_4_1] --> [COMPONENT_4_3]
+```
+
+## 2. [FLOW_CATEGORY_1] ([FEATURE_REF_1])
+
+### 2.1 [FLOW_1_NAME]
+
+```
+[FLOW_1_STEPS]
+```
+
+### 2.2 [FLOW_2_NAME]
+
+```
+[FLOW_2_STEPS]
+```
+
+## 3. [FLOW_CATEGORY_2] ([FEATURE_REF_2])
+
+### 3.1 [FLOW_3_NAME]
+
+```
+[FLOW_3_STEPS]
+```
+
+### 3.2 [FLOW_4_NAME]
+
+```
+[FLOW_4_STEPS]
+```
+
+## 4. [FLOW_CATEGORY_3]
+
+### 4.1 [FLOW_5_NAME]
+
+```
+[FLOW_5_STEPS]
+```
+
+### 4.2 [FLOW_6_NAME]
+
+```
+[FLOW_6_STEPS]
+```
+
+## 5. 状態管理フロー
+
+### 5.1 [STATE_CATEGORY_1]
+
+```[STATE_FORMAT_1]
+[STATE_STRUCTURE_1]
+```
+
+### 5.2 [STATE_CATEGORY_2]
+
+```[STATE_FORMAT_2]
+[STATE_STRUCTURE_2]
+```
+
+## 6. エラーハンドリングフロー
+
+### 6.1 [ERROR_TYPE_1]
+
+```
+[ERROR_FLOW_1]
+```
+
+### 6.2 [ERROR_TYPE_2]
+
+```
+[ERROR_FLOW_2]
+```
+
+## 7. セキュリティデータフロー
+
+### 7.1 [SECURITY_FLOW_1]
+
+```
+[SECURITY_FLOW_1_STEPS]
+```
+
+### 7.2 [SECURITY_FLOW_2]
+
+```
+[SECURITY_FLOW_2_STEPS]
+```
+
+## 8. パフォーマンス最適化
+
+### 8.1 [OPTIMIZATION_TYPE_1]
+
+- [OPTIMIZATION_1_1]: [OPTIMIZATION_1_1_DESC]
+- [OPTIMIZATION_1_2]: [OPTIMIZATION_1_2_DESC]
+- [OPTIMIZATION_1_3]: [OPTIMIZATION_1_3_DESC]
+
+### 8.2 [OPTIMIZATION_TYPE_2]
+
+- [OPTIMIZATION_2_1]: [OPTIMIZATION_2_1_DESC]
+- [OPTIMIZATION_2_2]: [OPTIMIZATION_2_2_DESC]
+- [OPTIMIZATION_2_3]: [OPTIMIZATION_2_3_DESC]
+
+---
+
+**注意**: `[VARIABLE_NAME]`の部分は、プロジェクト固有の内容に置き換えてください。

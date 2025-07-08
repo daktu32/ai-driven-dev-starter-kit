@@ -1,0 +1,133 @@
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { 
+  DynamoDBDocumentClient, 
+  GetCommand, 
+  PutCommand, 
+  ScanCommand, 
+  UpdateCommand, 
+  DeleteCommand 
+} from '@aws-sdk/lib-dynamodb'
+import { v4 as uuidv4 } from 'uuid'
+import { Item, CreateItemInput, UpdateItemInput } from '@/types'
+import { logger } from './logger'
+
+const client = new DynamoDBClient({})
+const docClient = DynamoDBDocumentClient.from(client)
+
+const TABLE_NAME = process.env.ITEMS_TABLE || 'items'
+
+export class ItemService {
+  async getAllItems(): Promise<Item[]> {
+    try {
+      const command = new ScanCommand({
+        TableName: TABLE_NAME
+      })
+
+      const result = await docClient.send(command)
+      return (result.Items as Item[]) || []
+    } catch (error) {
+      logger.error('Failed to get all items', { error })
+      throw error
+    }
+  }
+
+  async getItem(id: string): Promise<Item | null> {
+    try {
+      const command = new GetCommand({
+        TableName: TABLE_NAME,
+        Key: { id }
+      })
+
+      const result = await docClient.send(command)
+      return (result.Item as Item) || null
+    } catch (error) {
+      logger.error('Failed to get item', { error, id })
+      throw error
+    }
+  }
+
+  async createItem(input: CreateItemInput): Promise<Item> {
+    try {
+      const now = new Date().toISOString()
+      const item: Item = {
+        id: uuidv4(),
+        ...input,
+        createdAt: now,
+        updatedAt: now
+      }
+
+      const command = new PutCommand({
+        TableName: TABLE_NAME,
+        Item: item,
+        ConditionExpression: 'attribute_not_exists(id)'
+      })
+
+      await docClient.send(command)
+      return item
+    } catch (error) {
+      logger.error('Failed to create item', { error, input })
+      throw error
+    }
+  }
+
+  async updateItem(id: string, input: UpdateItemInput): Promise<Item | null> {
+    try {
+      const now = new Date().toISOString()
+      
+      // Build update expression dynamically
+      const updateExpressions: string[] = []
+      const expressionAttributeNames: Record<string, string> = {}
+      const expressionAttributeValues: Record<string, any> = {}
+
+      Object.keys(input).forEach(key => {
+        updateExpressions.push(`#${key} = :${key}`)
+        expressionAttributeNames[`#${key}`] = key
+        expressionAttributeValues[`:${key}`] = input[key]
+      })
+
+      updateExpressions.push('#updatedAt = :updatedAt')
+      expressionAttributeNames['#updatedAt'] = 'updatedAt'
+      expressionAttributeValues[':updatedAt'] = now
+
+      const command = new UpdateCommand({
+        TableName: TABLE_NAME,
+        Key: { id },
+        UpdateExpression: `SET ${updateExpressions.join(', ')}`,
+        ExpressionAttributeNames: expressionAttributeNames,
+        ExpressionAttributeValues: expressionAttributeValues,
+        ConditionExpression: 'attribute_exists(id)',
+        ReturnValues: 'ALL_NEW'
+      })
+
+      const result = await docClient.send(command)
+      return (result.Attributes as Item) || null
+    } catch (error) {
+      if (error.name === 'ConditionalCheckFailedException') {
+        return null // Item not found
+      }
+      logger.error('Failed to update item', { error, id, input })
+      throw error
+    }
+  }
+
+  async deleteItem(id: string): Promise<boolean> {
+    try {
+      const command = new DeleteCommand({
+        TableName: TABLE_NAME,
+        Key: { id },
+        ConditionExpression: 'attribute_exists(id)'
+      })
+
+      await docClient.send(command)
+      return true
+    } catch (error) {
+      if (error.name === 'ConditionalCheckFailedException') {
+        return false // Item not found
+      }
+      logger.error('Failed to delete item', { error, id })
+      throw error
+    }
+  }
+}
+
+export const itemService = new ItemService()

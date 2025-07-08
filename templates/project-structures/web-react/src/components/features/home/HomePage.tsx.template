@@ -1,0 +1,149 @@
+import React, { useState } from 'react'
+import { Button } from '@/components/ui/Button'
+
+export const HomePage: React.FC = () => {
+  const [count, setCount] = useState(0)
+
+  return (
+    <div className="home-page">
+      <div className="hero-section">
+        <h1>Welcome to {{PROJECT_NAME}}</h1>
+        <p className="description">{{PROJECT_DESCRIPTION}}</p>
+        
+        <div className="demo-section">
+          <div className="counter">
+            <Button onClick={() => setCount((count) => count + 1)}>
+              count is {count}
+            </Button>
+            <p>
+              Edit <code>src/components/features/home/HomePage.tsx</code> and save to test HMR
+            </p>
+          </div>
+        </div>
+
+        <div className="features-grid">
+          <div className="feature-card">
+            <div className="feature-icon">⚡</div>
+            <h3>Lightning Fast</h3>
+            <p>Powered by Vite for instant HMR and blazing fast builds</p>
+          </div>
+          
+          <div className="feature-card">
+            <div className="feature-icon">🛡️</div>
+            <h3>Type Safe</h3>
+            <p>Built with TypeScript for better developer experience</p>
+          </div>
+          
+          <div className="feature-card">
+            <div className="feature-icon">🧪</div>
+            <h3>Test Ready</h3>
+            <p>Vitest pre-configured for unit and integration testing</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// CSS-in-JS styles
+const styles = `
+.home-page {
+  padding: 2rem 0;
+}
+
+.hero-section {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #646cff, #747bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.description {
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
+  opacity: 0.8;
+}
+
+.demo-section {
+  margin: 3rem 0;
+}
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.counter code {
+  background-color: rgba(100, 108, 255, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.feature-card {
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  text-align: center;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  border-color: #646cff;
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+  margin: 1rem 0;
+  color: #646cff;
+}
+
+.feature-card p {
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .feature-card {
+    padding: 1.5rem;
+  }
+}
+`
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style')
+  styleSheet.textContent = styles
+  document.head.appendChild(styleSheet)
+}

@@ -1,0 +1,49 @@
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import middy from '@middy/core'
+import httpErrorHandler from '@middy/http-error-handler'
+import httpCors from '@middy/http-cors'
+import { createResponse } from '@/lib/response'
+import { logger } from '@/lib/logger'
+import { itemService } from '@/lib/itemService'
+
+const getItemHandler = async (
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const itemId = event.pathParameters?.id
+    
+    if (!itemId) {
+      return createResponse(400, {
+        error: 'Item ID is required'
+      })
+    }
+
+    logger.info('Getting item', { 
+      requestId: event.requestContext.requestId,
+      itemId
+    })
+
+    const item = await itemService.getItem(itemId)
+
+    if (!item) {
+      return createResponse(404, {
+        error: 'Item not found'
+      })
+    }
+
+    return createResponse(200, {
+      item,
+      message: 'Item retrieved successfully'
+    })
+  } catch (error) {
+    logger.error('Failed to get item', { error })
+    
+    return createResponse(500, {
+      error: 'Failed to retrieve item'
+    })
+  }
+}
+
+export const handler = middy(getItemHandler)
+  .use(httpErrorHandler())
+  .use(httpCors())

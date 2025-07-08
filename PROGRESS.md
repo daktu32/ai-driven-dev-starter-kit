@@ -2,6 +2,13 @@
 
 ## 最新の完了タスク (2025-07-08)
 
+### ✅ 完了 - Issue #10: 他プロジェクトタイプの必要最小限ベース実装追加
+- **web-nextjs完全実装**: Next.js 14対応（package.json、tsconfig.json、next.config.js、App Router構造）
+- **api-fastapi完全実装**: FastAPI現代的実装（requirements.txt、src/main.py、pyproject.toml、非同期対応）
+- **cli-rust既存実装確認**: Cargo.toml、src/main.rs、READMEが完備済みであることを確認
+- **バリデーション修正**: scaffold-generator.tsのapi-fastapi検証ロジック修正（main.py → src/main.py）
+- **動作検証完了**: 全プロジェクトタイプでスケルトン生成とベース実装の動作確認完了
+
 ### ✅ 完了 - Issue #20: 生成結果の完全性検証とE2Eテスト実装
 - **ProjectVerifier拡張**: BuildResult追加、ビルド可能性検証機能実装
 - **E2Eテストスイート**: verification-e2e, project-types-verification, error-cases実装

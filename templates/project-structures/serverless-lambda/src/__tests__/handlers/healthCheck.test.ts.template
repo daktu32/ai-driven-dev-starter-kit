@@ -1,0 +1,89 @@
+import { APIGatewayProxyEvent, Context } from 'aws-lambda'
+import { handler } from '../../handlers/healthCheck'
+
+describe('healthCheck handler', () => {
+  const mockContext: Context = {
+    callbackWaitsForEmptyEventLoop: false,
+    functionName: 'test-function',
+    functionVersion: '1',
+    invokedFunctionArn: 'arn:aws:lambda:us-east-1:123456789012:function:test',
+    memoryLimitInMB: '256',
+    awsRequestId: 'test-request-id',
+    logGroupName: '/aws/lambda/test',
+    logStreamName: 'test-stream',
+    getRemainingTimeInMillis: () => 5000,
+    done: jest.fn(),
+    fail: jest.fn(),
+    succeed: jest.fn(),
+  }
+
+  const mockEvent: APIGatewayProxyEvent = {
+    body: null,
+    headers: {},
+    multiValueHeaders: {},
+    httpMethod: 'GET',
+    isBase64Encoded: false,
+    path: '/health',
+    pathParameters: null,
+    queryStringParameters: null,
+    multiValueQueryStringParameters: null,
+    stageVariables: null,
+    requestContext: {
+      accountId: '123456789012',
+      apiId: 'test-api',
+      authorizer: null,
+      httpMethod: 'GET',
+      identity: {
+        accessKey: null,
+        accountId: null,
+        apiKey: null,
+        apiKeyId: null,
+        caller: null,
+        cognitoAuthenticationProvider: null,
+        cognitoAuthenticationType: null,
+        cognitoIdentityId: null,
+        cognitoIdentityPoolId: null,
+        principalOrgId: null,
+        sourceIp: '127.0.0.1',
+        user: null,
+        userAgent: 'test-user-agent',
+        userArn: null,
+      },
+      path: '/health',
+      protocol: 'HTTP/1.1',
+      requestId: 'test-request-id',
+      requestTime: '01/Jan/2024:00:00:00 +0000',
+      requestTimeEpoch: 1704067200,
+      resourceId: 'test-resource',
+      resourcePath: '/health',
+      stage: 'test',
+    },
+    resource: '/health',
+  }
+
+  it('should return health status', async () => {
+    const result = await handler(mockEvent, mockContext, jest.fn())
+
+    expect(result.statusCode).toBe(200)
+    
+    const body = JSON.parse(result.body)
+    expect(body).toMatchObject({
+      status: 'healthy',
+      service: '{{PROJECT_NAME}}',
+      version: '0.1.0',
+      requestId: 'test-request-id'
+    })
+    expect(body.timestamp).toBeDefined()
+  })
+
+  it('should have proper CORS headers', async () => {
+    const result = await handler(mockEvent, mockContext, jest.fn())
+
+    expect(result.headers).toMatchObject({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS'
+    })
+  })
+})

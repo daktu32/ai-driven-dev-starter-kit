@@ -13,7 +13,7 @@ import { ProjectConfig } from './lib/types.js';
 interface ScaffoldOptions {
   targetPath: string;
   projectName: string;
-  projectType: 'cli-rust' | 'web-nextjs' | 'api-fastapi' | 'mcp-server';
+  projectType: 'cli-rust' | 'web-nextjs' | 'web-react' | 'web-vue' | 'api-fastapi' | 'serverless-lambda' | 'mcp-server';
   includeProjectManagement: boolean;
   includeArchitecture: boolean;
   includeTools: boolean;
@@ -80,10 +80,13 @@ class ScaffoldGenerator {
     console.log(chalk.white('  --force                   既存ディレクトリの上書き確認をスキップ'));
     console.log(chalk.white('  --skip-optional           オプション項目の選択をスキップ'));
     console.log(chalk.cyan.bold('\nプロジェクトタイプ:'));
-    console.log(chalk.white('  cli-rust     Rustで書くCLIツール'));
-    console.log(chalk.white('  web-nextjs   Next.jsでのWebアプリ'));
-    console.log(chalk.white('  api-fastapi  FastAPIでのRESTful API'));
-    console.log(chalk.white('  mcp-server   Model Context Protocol サーバー'));
+    console.log(chalk.white('  cli-rust         Rustで書くCLIツール'));
+    console.log(chalk.white('  web-nextjs       Next.jsでのWebアプリ'));
+    console.log(chalk.white('  web-react        React + TypeScript + Vite'));
+    console.log(chalk.white('  web-vue          Vue.js + TypeScript + Vite'));
+    console.log(chalk.white('  api-fastapi      FastAPIでのRESTful API'));
+    console.log(chalk.white('  serverless-lambda AWS Lambda + SAM + TypeScript'));
+    console.log(chalk.white('  mcp-server       Model Context Protocol サーバー'));
   }
 
   private async promptOptions(): Promise<void> {
@@ -137,7 +140,10 @@ class ScaffoldGenerator {
         choices: [
           { name: 'CLI (Rust)', value: 'cli-rust' },
           { name: 'Web (Next.js)', value: 'web-nextjs' },
+          { name: 'Web (React)', value: 'web-react' },
+          { name: 'Web (Vue.js)', value: 'web-vue' },
           { name: 'API (FastAPI)', value: 'api-fastapi' },
+          { name: 'Serverless (AWS Lambda)', value: 'serverless-lambda' },
           { name: 'MCP Server', value: 'mcp-server' },
         ],
       });
@@ -206,7 +212,7 @@ class ScaffoldGenerator {
       throw new Error('非対話モードでは --type または --project-type オプションが必須です');
     }
     
-    const validTypes = ['cli-rust', 'web-nextjs', 'api-fastapi', 'mcp-server'];
+    const validTypes = ['cli-rust', 'web-nextjs', 'web-react', 'web-vue', 'api-fastapi', 'serverless-lambda', 'mcp-server'];
     if (!validTypes.includes(this.options.projectType)) {
       throw new Error(`無効なプロジェクトタイプ: ${this.options.projectType}. 有効な値: ${validTypes.join(', ')}`);
     }
@@ -463,6 +469,30 @@ class ScaffoldGenerator {
         deployment: 'AWS ECS',
         monitoring: 'CloudWatch',
       },
+      'web-react': {
+        frontend: 'React 18/TypeScript',
+        backend: 'N/A',
+        database: 'N/A',
+        infrastructure: 'Vite',
+        deployment: 'Vercel/Netlify',
+        monitoring: 'Browser DevTools',
+      },
+      'web-vue': {
+        frontend: 'Vue 3/TypeScript',
+        backend: 'N/A',
+        database: 'N/A',
+        infrastructure: 'Vite',
+        deployment: 'Vercel/Netlify',
+        monitoring: 'Vue DevTools',
+      },
+      'serverless-lambda': {
+        frontend: 'N/A',
+        backend: 'AWS Lambda/Node.js',
+        database: 'DynamoDB',
+        infrastructure: 'AWS SAM',
+        deployment: 'AWS CloudFormation',
+        monitoring: 'CloudWatch',
+      },
       'mcp-server': {
         frontend: 'N/A',
         backend: 'Node.js/TypeScript',
@@ -615,7 +645,10 @@ ${this.getProjectTypeSpecificRules()}
       'mcp-server': ['package.json', 'tsconfig.json', 'src/index.ts'],
       'cli-rust': ['Cargo.toml', 'src/main.rs'],
       'web-nextjs': ['package.json', 'tsconfig.json'],
-      'api-fastapi': ['requirements.txt', 'main.py']
+      'web-react': ['package.json', 'tsconfig.json', 'src/App.tsx'],
+      'web-vue': ['package.json', 'tsconfig.json', 'src/App.vue'],
+      'api-fastapi': ['requirements.txt', 'src/main.py'],
+      'serverless-lambda': ['package.json', 'tsconfig.json', 'template.yaml']
     };
     
     const requiredFiles = projectTypeFiles[this.options.projectType] || [];

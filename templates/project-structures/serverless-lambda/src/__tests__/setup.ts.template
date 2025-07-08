@@ -1,0 +1,25 @@
+// Global test setup
+
+// Set test environment variables
+process.env.NODE_ENV = 'test'
+process.env.LOG_LEVEL = 'error'
+process.env.ITEMS_TABLE = 'test-items-table'
+process.env.AWS_REGION = 'us-east-1'
+
+// Mock AWS SDK
+jest.mock('@aws-sdk/client-dynamodb')
+jest.mock('@aws-sdk/lib-dynamodb')
+
+// Mock UUID for consistent test results
+jest.mock('uuid', () => ({
+  v4: jest.fn(() => 'test-uuid-123')
+}))
+
+// Suppress console logs during tests
+global.console = {
+  ...console,
+  log: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+}

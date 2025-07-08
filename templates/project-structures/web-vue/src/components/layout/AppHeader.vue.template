@@ -1,0 +1,91 @@
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+</script>
+
+<template>
+  <header class="header">
+    <div class="header-container">
+      <RouterLink to="/" class="logo">
+        {{PROJECT_NAME}}
+      </RouterLink>
+      <nav class="nav">
+        <RouterLink to="/" class="nav-link">Home</RouterLink>
+        <RouterLink to="/about" class="nav-link">About</RouterLink>
+      </nav>
+    </div>
+  </header>
+</template>
+
+<style scoped>
+.header {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #42b883;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.logo:hover {
+  color: #369870;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #42b883;
+}
+
+.nav-link.router-link-active {
+  color: #42b883;
+}
+
+.nav-link.router-link-active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #42b883;
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 1rem;
+  }
+  
+  .nav {
+    gap: 1rem;
+  }
+  
+  .logo {
+    font-size: 1.2rem;
+  }
+}
+</style>

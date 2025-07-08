@@ -1,0 +1,45 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Enable experimental features for better performance
+  experimental: {
+    // Server Components for better performance
+    serverComponentsExternalPackages: [],
+  },
+  
+  // TypeScript configuration
+  typescript: {
+    // Dangerously allow production builds to successfully complete even if there are type errors.
+    // Set to false for strict type checking
+    ignoreBuildErrors: false,
+  },
+  
+  // ESLint configuration
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if there are ESLint errors.
+    // Set to false for strict linting
+    ignoreDuringBuilds: false,
+  },
+  
+  // Image optimization
+  images: {
+    domains: [],
+    formats: ['image/webp', 'image/avif'],
+  },
+  
+  // Environment variables
+  env: {
+    PROJECT_NAME: '{{PROJECT_NAME}}',
+  },
+  
+  // Redirects
+  async redirects() {
+    return []
+  },
+  
+  // Rewrites
+  async rewrites() {
+    return []
+  },
+}
+
+module.exports = nextConfig

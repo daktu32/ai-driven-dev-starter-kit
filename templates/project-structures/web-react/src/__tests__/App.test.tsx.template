@@ -1,0 +1,35 @@
+import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import { BrowserRouter } from 'react-router-dom'
+import App from '../App'
+
+// Test wrapper component
+const AppWrapper = () => (
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+)
+
+describe('App', () => {
+  it('renders without crashing', () => {
+    render(<AppWrapper />)
+    expect(screen.getByText('{{PROJECT_NAME}}')).toBeDefined()
+  })
+
+  it('displays the project name in header', () => {
+    render(<AppWrapper />)
+    const projectName = screen.getByText('{{PROJECT_NAME}}')
+    expect(projectName).toBeDefined()
+  })
+
+  it('renders navigation links', () => {
+    render(<AppWrapper />)
+    expect(screen.getByText('Home')).toBeDefined()
+    expect(screen.getByText('About')).toBeDefined()
+  })
+
+  it('displays welcome message on home page', () => {
+    render(<AppWrapper />)
+    expect(screen.getByText('Welcome to {{PROJECT_NAME}}')).toBeDefined()
+  })
+})
