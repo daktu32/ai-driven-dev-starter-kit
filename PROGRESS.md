@@ -1,6 +1,19 @@
 # 開発進捗
 
-## 最新の完了タスク (2025-06-28)
+## 最新の完了タスク (2025-07-08)
+
+### ✅ 完了 - Issue #23: scaffold-generator readline エラー修正
+- **重大問題解決**: ERR_USE_AFTER_CLOSE readline エラーの完全修正
+- **動的インポート実装**: static inquirer import → dynamic import で初期化回避
+- **CLI引数パーサー改善**: --key=value と --key value 形式の両方サポート
+- **非対話モード完全対応**: E2Eテスト用の安定した非対話実行実現
+- **テスト検証完了**: 全プロジェクトタイプでreadlineエラー解消確認
+
+### ✅ 完了 - Issue #24: E2E テストスイート・プロジェクト検証機能拡張
+- **ProjectVerifier拡張**: ビルド可能性検証機能追加
+- **E2Eテストスイート**: scaffold-generation.test.ts, project-types.test.ts 実装
+- **品質ゲート設定**: テストカバレッジ75%以上、Jest設定最適化
+- **CI/CD統合**: GitHub Actions対応、エラーケーステスト完備
 
 ### ✅ 完了 - Issue #21: 3層構造の変数置換戦略の実装
 - **実装内容**: DocumentTemplateProcessorに3層構造の変数置換システムを完全実装
@@ -14,17 +27,9 @@
 - **テンプレートファイル除去**: .templateファイルの完全クリーンアップ実装
 - **ファイル役割明確化**: README.md役割分担、structure.md→PROJECT-STRUCTURE.md移動
 
-### ✅ 完了 - Issue #18: fs-extra インポートエラーの緊急修正  
-- fs/promisesからの正しいインポートに修正
-- プロジェクト生成の完全動作確認
-
-### ✅ 完了 - Package.json情報クリーンアップ
-- tools/package.json: 開発ツール専用設定に変更
-- ルートpackage.json: スターターキット情報除去、プロジェクト固有情報設定
-
 ## 現在の作業
 
-🎉 **主要機能完成**: 3層構造の変数置換戦略が完全実装され、テンプレートシステムが大幅に改善されました。
+🎉 **Critical Issue解決**: Issue #23のscaffold-generator readlineエラーが完全修正され、E2Eテストとスケルトン生成が安定動作するようになりました。
 
 ### ✅ 完了 - Issue #21: 3層構造の変数置換戦略の実装
 - **Layer 1: 技術変数**: 完全自動置換実装完了（PROJECT_NAME、DATE、TECH_STACK等）
@@ -87,8 +92,8 @@
 
 ---
 
-**最終更新**: 2025-07-04  
+**最終更新**: 2025-07-08  
 **更新者**: Claude Code AI Agent  
-**主要成果**: プラグインシステム実行時エラー修正 - fs.readFileエラーとプロセスハング問題解決  
-**コミット**: eeee185 - fix: fs.readFile エラーとプロセスハング問題を解決  
-**リポジトリ状態**: ✅ コミット・プッシュ完了
+**主要成果**: Issue #23修正 - scaffold-generator readlineエラー完全解決、E2Eテスト安定化  
+**コミット**: b10928a - fix: Issue #23 - scaffold-generator readlineエラー修正  
+**リポジトリ状態**: ✅ コミット完了、動作検証済み
