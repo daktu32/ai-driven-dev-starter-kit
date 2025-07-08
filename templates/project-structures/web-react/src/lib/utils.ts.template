@@ -1,0 +1,91 @@
+// Utility functions used throughout the application
+
+/**
+ * Concatenates class names, filtering out falsy values
+ */
+export function cn(...classes: (string | undefined | null | boolean)[]): string {
+  return classes.filter(Boolean).join(' ')
+}
+
+/**
+ * Formats a date to a human-readable string
+ */
+export function formatDate(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date
+  return new Intl.DateTimeFormat('ja-JP', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(d)
+}
+
+/**
+ * Formats a number with appropriate localization
+ */
+export function formatNumber(num: number): string {
+  return new Intl.NumberFormat('ja-JP').format(num)
+}
+
+/**
+ * Debounces a function call
+ */
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func.apply(this, args), wait)
+  }
+}
+
+/**
+ * Throttles a function call
+ */
+export function throttle<T extends (...args: any[]) => any>(
+  func: T,
+  limit: number
+): (...args: Parameters<T>) => void {
+  let inThrottle: boolean
+  return (...args: Parameters<T>) => {
+    if (!inThrottle) {
+      func.apply(this, args)
+      inThrottle = true
+      setTimeout(() => inThrottle = false, limit)
+    }
+  }
+}
+
+/**
+ * Generates a random ID
+ */
+export function generateId(): string {
+  return Math.random().toString(36).substr(2, 9)
+}
+
+/**
+ * Capitalizes the first letter of a string
+ */
+export function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+/**
+ * Truncates text to specified length with ellipsis
+ */
+export function truncate(text: string, length: number): string {
+  if (text.length <= length) return text
+  return text.slice(0, length) + '...'
+}
+
+/**
+ * Checks if a value is empty (null, undefined, empty string, empty array, etc.)
+ */
+export function isEmpty(value: any): boolean {
+  if (value === null || value === undefined) return true
+  if (typeof value === 'string') return value.trim() === ''
+  if (Array.isArray(value)) return value.length === 0
+  if (typeof value === 'object') return Object.keys(value).length === 0
+  return false
+}

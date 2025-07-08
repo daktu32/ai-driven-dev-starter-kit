@@ -1,0 +1,270 @@
+# {{PROJECT_NAME}}
+
+{{PROJECT_DESCRIPTION}}
+
+## 機能
+
+- React 18 + TypeScript対応
+- Vite高速開発環境
+- React Router DOM完全対応
+- Vitest単体テスト環境
+- ESLint + TypeScriptルール
+- レスポンシブデザイン
+- モダンなコンポーネント設計
+
+## クイックスタート
+
+### 必要な環境
+
+- Node.js 18.0.0以上
+- npm 8.0.0以上
+
+### インストール
+
+```bash
+# 依存関係をインストール
+npm install
+```
+
+### 開発サーバー起動
+
+```bash
+npm run dev
+```
+
+開発サーバーが http://localhost:3000 で起動します。
+
+### ビルド
+
+```bash
+# 本番用ビルド
+npm run build
+
+# プレビュー
+npm run preview
+```
+
+## 開発
+
+### 利用可能なコマンド
+
+```bash
+# 開発サーバー（ホットリロード）
+npm run dev
+
+# 型チェック
+npm run type-check
+
+# ESLint実行
+npm run lint
+
+# テスト実行
+npm run test
+
+# テストUI（ブラウザ）
+npm run test:ui
+
+# カバレッジ付きテスト
+npm run test:coverage
+```
+
+### プロジェクト構造
+
+```
+{{PROJECT_NAME}}/
+├── src/
+│   ├── components/
+│   │   ├── features/        # 機能別コンポーネント
+│   │   ├── layout/          # レイアウトコンポーネント
+│   │   └── ui/              # 再利用可能UIコンポーネント
+│   ├── hooks/               # カスタムフック
+│   ├── lib/                 # ユーティリティ関数
+│   ├── types/               # TypeScript型定義
+│   ├── __tests__/           # テストファイル
+│   ├── App.tsx              # メインアプリケーション
+│   ├── main.tsx             # エントリーポイント
+│   └── index.css            # グローバルスタイル
+├── public/                  # 静的ファイル
+├── index.html              # HTMLテンプレート
+├── vite.config.ts          # Vite設定
+├── vitest.config.ts        # テスト設定
+└── package.json            # パッケージ設定
+```
+
+### コンポーネント設計
+
+#### UIコンポーネント
+- `src/components/ui/` - 再利用可能な基本UIコンポーネント
+- プロパティ型定義とバリアント対応
+- アクセシビリティ考慮済み
+
+#### 機能コンポーネント  
+- `src/components/features/` - 特定機能に関連するコンポーネント
+- ページレベルコンポーネント
+- ビジネスロジック含有
+
+#### レイアウトコンポーネント
+- `src/components/layout/` - ヘッダー、フッター等の共通レイアウト
+- アプリケーション全体の構造定義
+
+### カスタムフック
+
+- `src/hooks/` - ロジックの再利用とテストの容易性
+- 状態管理、副作用処理、API呼び出し等
+- useCounter例: カウンター状態管理
+
+### ユーティリティ
+
+- `src/lib/utils.ts` - 共通ユーティリティ関数
+- 型安全な実装
+- テスト可能な純粋関数
+
+### テスト戦略
+
+```bash
+# 単体テスト
+npm run test
+
+# UIテスト（ブラウザ）
+npm run test:ui
+
+# カバレッジ確認
+npm run test:coverage
+```
+
+**テスト範囲**:
+- コンポーネントレンダリング
+- ユーザーインタラクション
+- カスタムフック
+- ユーティリティ関数
+
+### スタイリング
+
+- CSS-in-JS パターン採用
+- レスポンシブデザイン対応
+- ダークモード考慮
+- モダンCSS機能活用
+
+### パフォーマンス
+
+- Vite高速HMR
+- Tree shaking自動最適化
+- 適切なコード分割
+- React 18同期レンダリング
+
+## カスタマイズ
+
+### 新しいページ追加
+
+```tsx
+// src/components/features/newpage/NewPage.tsx
+export const NewPage: React.FC = () => {
+  return <div>New Page Content</div>
+}
+
+// src/App.tsx にルート追加
+<Route path="/newpage" element={<NewPage />} />
+```
+
+### 新しいUIコンポーネント
+
+```tsx
+// src/components/ui/NewComponent.tsx
+interface NewComponentProps {
+  // プロパティ定義
+}
+
+export const NewComponent: React.FC<NewComponentProps> = (props) => {
+  // 実装
+}
+```
+
+### カスタムフック
+
+```tsx
+// src/hooks/useNewHook.ts
+export const useNewHook = () => {
+  // フック実装
+  return { /* 戻り値 */ }
+}
+```
+
+## デプロイ
+
+### Vercel（推奨）
+
+```bash
+# Vercel CLIをインストール
+npm i -g vercel
+
+# デプロイ
+vercel
+```
+
+### Netlify
+
+```bash
+# ビルド
+npm run build
+
+# dist/ フォルダをNetlifyにデプロイ
+```
+
+### その他
+
+- **GitHub Pages**: GitHub Actions使用
+- **AWS S3**: S3 + CloudFront
+- **Heroku**: buildpack使用
+
+## トラブルシューティング
+
+### よくある問題
+
+1. **モジュールが見つからない**
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+2. **TypeScriptエラー**
+   ```bash
+   npm run type-check
+   ```
+
+3. **ESLintエラー**
+   ```bash
+   npm run lint
+   ```
+
+4. **テスト失敗**
+   ```bash
+   npm run test -- --reporter=verbose
+   ```
+
+### パフォーマンス問題
+
+- ブラウザ開発者ツールのProfiler使用
+- React DevTools活用
+- バンドルサイズ分析: `npm run build && npx vite-bundle-analyzer`
+
+## 技術スタック
+
+- **フレームワーク**: React 18
+- **言語**: TypeScript
+- **ビルドツール**: Vite
+- **ルーティング**: React Router DOM v6
+- **テスト**: Vitest + Testing Library
+- **リンティング**: ESLint + TypeScript Rules
+- **開発**: Hot Module Replacement (HMR)
+
+## ライセンス
+
+MIT License
+
+## 作成者
+
+{{AUTHOR}}
+
+---
+
+React + TypeScript + Viteで素晴らしいWebアプリケーションを構築してください！

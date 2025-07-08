@@ -1,0 +1,76 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
+
+export const Header: React.FC = () => {
+  return (
+    <header className="header">
+      <div className="header-container">
+        <Link to="/" className="logo">
+          {{PROJECT_NAME}}
+        </Link>
+        <nav className="nav">
+          <Link to="/" className="nav-link">Home</Link>
+          <Link to="/about" className="nav-link">About</Link>
+        </nav>
+      </div>
+    </header>
+  )
+}
+
+// CSS-in-JS styles (you can move these to a separate CSS file)
+const styles = `
+.header {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #646cff;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #646cff;
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0 1rem;
+  }
+  
+  .nav {
+    gap: 1rem;
+  }
+}
+`
+
+// Inject styles (in a real app, use CSS modules or styled-components)
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style')
+  styleSheet.textContent = styles
+  document.head.appendChild(styleSheet)
+}

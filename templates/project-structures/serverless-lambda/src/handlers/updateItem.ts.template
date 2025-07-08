@@ -1,0 +1,63 @@
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import middy from '@middy/core'
+import httpErrorHandler from '@middy/http-error-handler'
+import httpCors from '@middy/http-cors'
+import jsonBodyParser from '@middy/http-json-body-parser'
+import validator from '@middy/validator'
+import { createResponse } from '@/lib/response'
+import { logger } from '@/lib/logger'
+import { itemService } from '@/lib/itemService'
+import { updateItemSchema } from '@/lib/validation'
+import { UpdateItemInput } from '@/types'
+
+const updateItemHandler = async (
+  event: APIGatewayProxyEvent & { body: UpdateItemInput }
+): Promise<APIGatewayProxyResult> => {
+  try {
+    const itemId = event.pathParameters?.id
+    
+    if (!itemId) {
+      return createResponse(400, {
+        error: 'Item ID is required'
+      })
+    }
+
+    logger.info('Updating item', { 
+      requestId: event.requestContext.requestId,
+      itemId,
+      body: event.body
+    })
+
+    const item = await itemService.updateItem(itemId, event.body)
+
+    if (!item) {
+      return createResponse(404, {
+        error: 'Item not found'
+      })
+    }
+
+    return createResponse(200, {
+      item,
+      message: 'Item updated successfully'
+    })
+  } catch (error) {
+    logger.error('Failed to update item', { error })
+    
+    if (error.name === 'ValidationError') {
+      return createResponse(400, {
+        error: 'Invalid input data',
+        details: error.message
+      })
+    }
+    
+    return createResponse(500, {
+      error: 'Failed to update item'
+    })
+  }
+}
+
+export const handler = middy(updateItemHandler)
+  .use(jsonBodyParser())
+  .use(validator({ inputSchema: updateItemSchema }))
+  .use(httpErrorHandler())
+  .use(httpCors())

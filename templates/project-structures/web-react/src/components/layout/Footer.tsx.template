@@ -1,0 +1,53 @@
+import React from 'react'
+
+export const Footer: React.FC = () => {
+  return (
+    <footer className="footer">
+      <div className="footer-container">
+        <div className="footer-content">
+          <p>&copy; 2024 {{PROJECT_NAME}}. Built by {{AUTHOR}}.</p>
+          <p>Powered by React + TypeScript + Vite</p>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+// CSS-in-JS styles
+const styles = `
+.footer {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 2rem 0;
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-content {
+  text-align: center;
+  opacity: 0.8;
+}
+
+.footer-content p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    padding: 0 1rem;
+  }
+}
+`
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style')
+  styleSheet.textContent = styles
+  document.head.appendChild(styleSheet)
+}

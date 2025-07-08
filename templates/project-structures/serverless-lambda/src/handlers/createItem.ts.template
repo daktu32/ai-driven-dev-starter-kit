@@ -1,0 +1,48 @@
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
+import middy from '@middy/core'
+import httpErrorHandler from '@middy/http-error-handler'
+import httpCors from '@middy/http-cors'
+import jsonBodyParser from '@middy/http-json-body-parser'
+import validator from '@middy/validator'
+import { createResponse } from '@/lib/response'
+import { logger } from '@/lib/logger'
+import { itemService } from '@/lib/itemService'
+import { createItemSchema } from '@/lib/validation'
+import { CreateItemInput } from '@/types'
+
+const createItemHandler = async (
+  event: APIGatewayProxyEvent & { body: CreateItemInput }
+): Promise<APIGatewayProxyResult> => {
+  try {
+    logger.info('Creating new item', { 
+      requestId: event.requestContext.requestId,
+      body: event.body
+    })
+
+    const item = await itemService.createItem(event.body)
+
+    return createResponse(201, {
+      item,
+      message: 'Item created successfully'
+    })
+  } catch (error) {
+    logger.error('Failed to create item', { error })
+    
+    if (error.name === 'ValidationError') {
+      return createResponse(400, {
+        error: 'Invalid input data',
+        details: error.message
+      })
+    }
+    
+    return createResponse(500, {
+      error: 'Failed to create item'
+    })
+  }
+}
+
+export const handler = middy(createItemHandler)
+  .use(jsonBodyParser())
+  .use(validator({ inputSchema: createItemSchema }))
+  .use(httpErrorHandler())
+  .use(httpCors())

@@ -1,0 +1,408 @@
+# {{PROJECT_NAME}}
+
+{{PROJECT_DESCRIPTION}}
+
+## 機能
+
+- AWS Lambda + API Gateway完全対応
+- TypeScript + Node.js 18実装
+- SAM (Serverless Application Model) インフラ管理
+- DynamoDB NoSQLデータベース統合
+- Middy ミドルウェア活用
+- 包括的なテストスイート
+- ESLint + Prettier設定済み
+- 本格的なCRUD API実装
+
+## クイックスタート
+
+### 必要な環境
+
+- Node.js 18.0.0以上
+- AWS CLI設定済み
+- SAM CLI インストール済み
+- Docker (ローカル開発用)
+
+### インストール
+
+```bash
+# 依存関係をインストール
+npm install
+```
+
+### ローカル開発
+
+```bash
+# ローカルAPI起動（Docker必須）
+npm run dev
+
+# またはSAM直接実行
+sam local start-api --host 0.0.0.0 --port 3000
+```
+
+ローカルAPI: http://localhost:3000
+
+### ビルド・デプロイ
+
+```bash
+# TypeScriptビルド
+npm run build
+
+# SAMパッケージ
+npm run package
+
+# デプロイ（初回はガイド付き）
+npm run deploy
+```
+
+## 開発
+
+### 利用可能なコマンド
+
+```bash
+# TypeScriptビルド
+npm run build
+
+# ローカル開発サーバー
+npm run dev
+
+# デプロイ
+npm run deploy
+
+# テスト実行
+npm run test
+
+# テスト監視モード
+npm run test:watch
+
+# カバレッジ付きテスト
+npm run test:coverage
+
+# コード品質
+npm run lint
+npm run format
+npm run type-check
+```
+
+### プロジェクト構造
+
+```
+{{PROJECT_NAME}}/
+├── src/
+│   ├── handlers/            # Lambda関数ハンドラー
+│   │   ├── healthCheck.ts   # ヘルスチェック
+│   │   ├── getItems.ts      # アイテム一覧取得
+│   │   ├── createItem.ts    # アイテム作成
+│   │   ├── getItem.ts       # アイテム個別取得
+│   │   ├── updateItem.ts    # アイテム更新
+│   │   └── deleteItem.ts    # アイテム削除
+│   ├── lib/                 # 共通ライブラリ
+│   │   ├── response.ts      # API レスポンス
+│   │   ├── logger.ts        # 構造化ロガー
+│   │   ├── itemService.ts   # DynamoDB操作
+│   │   └── validation.ts    # 入力バリデーション
+│   ├── types/               # TypeScript型定義
+│   └── __tests__/           # テストファイル
+├── template.yaml            # SAM CloudFormationテンプレート
+├── jest.config.js          # Jest設定
+├── tsconfig.json           # TypeScript設定
+└── package.json            # NPM設定
+```
+
+### API エンドポイント
+
+#### 基本エンドポイント
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | ヘルスチェック |
+
+#### アイテム管理 (CRUD)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/items` | 全アイテム取得 |
+| POST | `/items` | アイテム作成 |
+| GET | `/items/{id}` | 特定アイテム取得 |
+| PUT | `/items/{id}` | アイテム更新 |
+| DELETE | `/items/{id}` | アイテム削除 |
+
+### リクエスト例
+
+```bash
+# ヘルスチェック
+curl https://your-api-url/health
+
+# 全アイテム取得
+curl https://your-api-url/items
+
+# アイテム作成
+curl -X POST https://your-api-url/items \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "新しいアイテム",
+    "description": "説明文",
+    "category": "electronics",
+    "price": 1000,
+    "tags": ["tech", "gadget"]
+  }'
+
+# アイテム更新
+curl -X PUT https://your-api-url/items/item-id \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "更新されたアイテム",
+    "price": 1500
+  }'
+
+# アイテム削除
+curl -X DELETE https://your-api-url/items/item-id
+```
+
+### アーキテクチャ設計
+
+#### Lambda関数設計
+
+```typescript
+// ハンドラー例
+import middy from '@middy/core'
+import httpErrorHandler from '@middy/http-error-handler'
+import httpCors from '@middy/http-cors'
+
+const handler = async (event: APIGatewayProxyEvent) => {
+  // ビジネスロジック
+  return createResponse(200, data)
+}
+
+export const handler = middy(handler)
+  .use(httpErrorHandler())
+  .use(httpCors())
+```
+
+#### DynamoDB設計
+
+- **テーブル**: Items
+- **パーティションキー**: id (String)
+- **請求モード**: オンデマンド
+- **属性**: name, description, category, price, tags, createdAt, updatedAt
+
+#### バリデーション
+
+```typescript
+// 入力バリデーション例
+const createItemSchema = {
+  type: 'object',
+  properties: {
+    name: { type: 'string', minLength: 1, maxLength: 100 },
+    description: { type: 'string', maxLength: 500 },
+    category: { type: 'string', enum: ['electronics', 'clothing', ...] },
+    price: { type: 'number', minimum: 0 }
+  },
+  required: ['name']
+}
+```
+
+### テスト戦略
+
+```bash
+# 単体テスト
+npm run test
+
+# カバレッジ確認
+npm run test:coverage
+
+# 監視モード
+npm run test:watch
+```
+
+**テスト範囲**:
+- Lambda ハンドラー
+- DynamoDB サービス
+- バリデーション
+- レスポンス生成
+- エラーハンドリング
+
+### ローカル開発
+
+#### SAM Local
+
+```bash
+# API Gateway + Lambda シミュレーション
+sam local start-api
+
+# 特定関数のテスト
+sam local invoke HealthCheckFunction
+
+# 環境変数指定
+sam local start-api --env-vars env.json
+```
+
+#### 環境変数設定
+
+```json
+// env.json
+{
+  "HealthCheckFunction": {
+    "NODE_ENV": "development",
+    "LOG_LEVEL": "debug",
+    "ITEMS_TABLE": "local-items-table"
+  }
+}
+```
+
+### デプロイメント
+
+#### 環境別デプロイ
+
+```bash
+# 開発環境
+sam deploy --parameter-overrides Environment=dev
+
+# ステージング環境  
+sam deploy --parameter-overrides Environment=staging
+
+# 本番環境
+sam deploy --parameter-overrides Environment=prod
+```
+
+#### CI/CD設定
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: aws-actions/setup-sam@v2
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: sam deploy --no-confirm-changeset
+```
+
+### モニタリング・ログ
+
+#### CloudWatch Logs
+
+```typescript
+// 構造化ログ例
+logger.info('Item created', {
+  itemId: item.id,
+  requestId: event.requestContext.requestId,
+  userId: event.requestContext.authorizer?.userId
+})
+```
+
+#### メトリクス監視
+
+- **Lambda Duration**: 実行時間
+- **Lambda Errors**: エラー率
+- **API Gateway 4xx/5xx**: HTTPエラー率
+- **DynamoDB Throttles**: スロットリング
+
+### セキュリティ
+
+#### IAM最小権限
+
+```yaml
+# template.yaml での権限例
+Policies:
+  - DynamoDBReadPolicy:
+      TableName: !Ref ItemsTable
+  - DynamoDBWritePolicy:
+      TableName: !Ref ItemsTable
+```
+
+#### 入力検証
+
+- **JSON Schema**: Ajv による厳密なバリデーション
+- **型安全性**: TypeScript による型チェック
+- **サニタイゼーション**: 悪意のある入力の除去
+
+### パフォーマンス最適化
+
+#### Lambda最適化
+
+- **メモリ設定**: 256MB (調整可能)
+- **タイムアウト**: 30秒
+- **コールドスタート**: Middy で軽減
+- **接続プール**: DynamoDB クライアント再利用
+
+#### DynamoDB最適化
+
+- **オンデマンド課金**: トラフィック変動対応
+- **単一テーブル設計**: アクセスパターン最適化
+- **適切なキー設計**: ホットパーティション回避
+
+## トラブルシューティング
+
+### よくある問題
+
+1. **SAM ビルドエラー**
+   ```bash
+   sam build --use-container
+   ```
+
+2. **DynamoDB アクセスエラー**
+   - IAM権限の確認
+   - テーブル名の環境変数確認
+
+3. **CORS エラー**
+   - template.yaml の CORS設定確認
+   - Middy middleware の設定確認
+
+4. **Lambda タイムアウト**
+   - メモリサイズの調整
+   - DynamoDB接続の最適化
+
+### デバッグ手法
+
+#### ローカルデバッグ
+
+```bash
+# 詳細ログでローカル実行
+LOG_LEVEL=debug sam local start-api
+
+# 特定関数の単体デバッグ
+sam local invoke CreateItemFunction -e events/create-item.json
+```
+
+#### CloudWatch Logs分析
+
+```typescript
+// 詳細ログ出力例
+logger.error('Operation failed', {
+  operation: 'createItem',
+  error: error.message,
+  stack: error.stack,
+  input: sanitizedInput
+})
+```
+
+## 技術スタック
+
+- **コンピューティング**: AWS Lambda (Node.js 18)
+- **API**: Amazon API Gateway
+- **データベース**: Amazon DynamoDB
+- **言語**: TypeScript
+- **フレームワーク**: Middy (Lambda middleware)
+- **インフラ**: AWS SAM (CloudFormation)
+- **テスト**: Jest + AWS SDK Mock
+- **リンティング**: ESLint + Prettier
+- **バリデーション**: Ajv (JSON Schema)
+
+## ライセンス
+
+MIT License
+
+## 作成者
+
+{{AUTHOR}}
+
+---
+
+AWS Lambda + TypeScript でスケーラブルなサーバーレスAPIを構築してください！

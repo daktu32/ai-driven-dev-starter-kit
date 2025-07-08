@@ -1,0 +1,142 @@
+import React from 'react'
+
+export const AboutPage: React.FC = () => {
+  return (
+    <div className="about-page">
+      <div className="about-container">
+        <h1>About {{PROJECT_NAME}}</h1>
+        
+        <div className="about-content">
+          <section className="about-section">
+            <h2>Overview</h2>
+            <p>{{PROJECT_DESCRIPTION}}</p>
+            <p>
+              This project was created using the AI Driven Dev Starter Kit, 
+              providing a modern React application with TypeScript, Vite, and 
+              best practices built-in.
+            </p>
+          </section>
+
+          <section className="about-section">
+            <h2>Tech Stack</h2>
+            <ul className="tech-list">
+              <li><strong>React 18</strong> - Modern React with hooks and concurrent features</li>
+              <li><strong>TypeScript</strong> - Type safety and better developer experience</li>
+              <li><strong>Vite</strong> - Lightning fast build tool and dev server</li>
+              <li><strong>React Router</strong> - Client-side routing</li>
+              <li><strong>Vitest</strong> - Fast unit testing framework</li>
+              <li><strong>ESLint</strong> - Code linting and formatting</li>
+            </ul>
+          </section>
+
+          <section className="about-section">
+            <h2>Getting Started</h2>
+            <div className="code-block">
+              <pre>
+{`# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run tests
+npm run test
+
+# Build for production
+npm run build`}
+              </pre>
+            </div>
+          </section>
+
+          <section className="about-section">
+            <h2>Author</h2>
+            <p>Created by <strong>{{AUTHOR}}</strong></p>
+            <p>Built with ❤️ using modern web technologies</p>
+          </section>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// CSS-in-JS styles
+const styles = `
+.about-page {
+  padding: 2rem 0;
+}
+
+.about-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-container h1 {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #646cff;
+}
+
+.about-content {
+  line-height: 1.6;
+}
+
+.about-section {
+  margin-bottom: 3rem;
+}
+
+.about-section h2 {
+  color: #646cff;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgba(100, 108, 255, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+.tech-list {
+  list-style: none;
+  padding: 0;
+}
+
+.tech-list li {
+  padding: 0.5rem 0;
+  border-left: 3px solid #646cff;
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+  background-color: rgba(100, 108, 255, 0.05);
+}
+
+.code-block {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.code-block pre {
+  margin: 0;
+  color: #e6e6e6;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .about-page {
+    padding: 1rem 0;
+  }
+  
+  .about-section {
+    margin-bottom: 2rem;
+  }
+  
+  .code-block {
+    font-size: 0.8rem;
+  }
+}
+`
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style')
+  styleSheet.textContent = styles
+  document.head.appendChild(styleSheet)
+}

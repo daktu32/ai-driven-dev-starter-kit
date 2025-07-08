@@ -1,0 +1,100 @@
+// Item types
+export interface Item {
+  id: string
+  name: string
+  description?: string
+  category?: string
+  price?: number
+  tags?: string[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateItemInput {
+  name: string
+  description?: string
+  category?: string
+  price?: number
+  tags?: string[]
+}
+
+export interface UpdateItemInput {
+  name?: string
+  description?: string
+  category?: string
+  price?: number
+  tags?: string[]
+}
+
+// API Response types
+export interface ApiResponse<T = any> {
+  success: boolean
+  message?: string
+  data?: T
+  error?: string
+  details?: any
+}
+
+export interface PaginatedResponse<T> extends ApiResponse<T[]> {
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
+}
+
+// Lambda function types
+export interface LambdaContext {
+  requestId: string
+  functionName: string
+  functionVersion: string
+  memoryLimitInMB: string
+  logGroupName: string
+  logStreamName: string
+}
+
+// Database types
+export interface DynamoDBConfig {
+  tableName: string
+  region: string
+  endpoint?: string
+}
+
+// Environment variables
+export interface EnvironmentVariables {
+  NODE_ENV: 'development' | 'staging' | 'production'
+  LOG_LEVEL: 'debug' | 'info' | 'warn' | 'error'
+  ITEMS_TABLE: string
+  AWS_REGION: string
+}
+
+// Error types
+export interface AppError extends Error {
+  statusCode?: number
+  details?: any
+}
+
+export class ValidationError extends Error {
+  public details: any[]
+  
+  constructor(message: string, details: any[] = []) {
+    super(message)
+    this.name = 'ValidationError'
+    this.details = details
+  }
+}
+
+export class NotFoundError extends Error {
+  constructor(message: string = 'Resource not found') {
+    super(message)
+    this.name = 'NotFoundError'
+  }
+}
+
+export class BadRequestError extends Error {
+  constructor(message: string = 'Bad request') {
+    super(message)
+    this.name = 'BadRequestError'
+  }
+}

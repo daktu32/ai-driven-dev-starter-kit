@@ -1,0 +1,145 @@
+import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb'
+import { mockClient } from 'aws-sdk-client-mock'
+import { itemService } from '../../lib/itemService'
+import { CreateItemInput, UpdateItemInput } from '../../types'
+
+const ddbMock = mockClient(DynamoDBDocumentClient)
+
+describe('ItemService', () => {
+  beforeEach(() => {
+    ddbMock.reset()
+  })
+
+  describe('getAllItems', () => {
+    it('should return all items', async () => {
+      const mockItems = [
+        { id: '1', name: 'Item 1', createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' },
+        { id: '2', name: 'Item 2', createdAt: '2024-01-01T00:00:00Z', updatedAt: '2024-01-01T00:00:00Z' }
+      ]
+
+      ddbMock.on(ScanCommand).resolves({
+        Items: mockItems
+      })
+
+      const result = await itemService.getAllItems()
+
+      expect(result).toEqual(mockItems)
+    })
+
+    it('should return empty array when no items', async () => {
+      ddbMock.on(ScanCommand).resolves({
+        Items: []
+      })
+
+      const result = await itemService.getAllItems()
+
+      expect(result).toEqual([])
+    })
+  })
+
+  describe('getItem', () => {
+    it('should return item when found', async () => {
+      const mockItem = { 
+        id: '1', 
+        name: 'Test Item', 
+        createdAt: '2024-01-01T00:00:00Z', 
+        updatedAt: '2024-01-01T00:00:00Z' 
+      }
+
+      ddbMock.on(GetCommand).resolves({
+        Item: mockItem
+      })
+
+      const result = await itemService.getItem('1')
+
+      expect(result).toEqual(mockItem)
+    })
+
+    it('should return null when item not found', async () => {
+      ddbMock.on(GetCommand).resolves({})
+
+      const result = await itemService.getItem('nonexistent')
+
+      expect(result).toBeNull()
+    })
+  })
+
+  describe('createItem', () => {
+    it('should create and return new item', async () => {
+      const input: CreateItemInput = {
+        name: 'New Item',
+        description: 'Test description'
+      }
+
+      ddbMock.on(PutCommand).resolves({})
+
+      const result = await itemService.createItem(input)
+
+      expect(result).toMatchObject({
+        id: 'test-uuid-123',
+        name: 'New Item',
+        description: 'Test description'
+      })
+      expect(result.createdAt).toBeDefined()
+      expect(result.updatedAt).toBeDefined()
+    })
+  })
+
+  describe('updateItem', () => {
+    it('should update and return item', async () => {
+      const input: UpdateItemInput = {
+        name: 'Updated Item'
+      }
+
+      const updatedItem = {
+        id: '1',
+        name: 'Updated Item',
+        description: 'Original description',
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: expect.any(String)
+      }
+
+      ddbMock.on(UpdateCommand).resolves({
+        Attributes: updatedItem
+      })
+
+      const result = await itemService.updateItem('1', input)
+
+      expect(result).toEqual(updatedItem)
+    })
+
+    it('should return null when item not found', async () => {
+      const input: UpdateItemInput = {
+        name: 'Updated Item'
+      }
+
+      ddbMock.on(UpdateCommand).rejects({
+        name: 'ConditionalCheckFailedException'
+      })
+
+      const result = await itemService.updateItem('nonexistent', input)
+
+      expect(result).toBeNull()
+    })
+  })
+
+  describe('deleteItem', () => {
+    it('should delete item and return true', async () => {
+      ddbMock.on(DeleteCommand).resolves({})
+
+      const result = await itemService.deleteItem('1')
+
+      expect(result).toBe(true)
+    })
+
+    it('should return false when item not found', async () => {
+      ddbMock.on(DeleteCommand).rejects({
+        name: 'ConditionalCheckFailedException'
+      })
+
+      const result = await itemService.deleteItem('nonexistent')
+
+      expect(result).toBe(false)
+    })
+  })
+})

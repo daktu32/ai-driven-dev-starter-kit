@@ -1,0 +1,106 @@
+import Ajv from 'ajv'
+import addFormats from 'ajv-formats'
+
+const ajv = new Ajv({ allErrors: true })
+addFormats(ajv)
+
+// Create Item Schema
+export const createItemSchema = {
+  type: 'object',
+  properties: {
+    body: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          minLength: 1,
+          maxLength: 100
+        },
+        description: {
+          type: 'string',
+          maxLength: 500
+        },
+        category: {
+          type: 'string',
+          enum: ['electronics', 'clothing', 'books', 'home', 'sports', 'other']
+        },
+        price: {
+          type: 'number',
+          minimum: 0
+        },
+        tags: {
+          type: 'array',
+          items: {
+            type: 'string'
+          },
+          maxItems: 10
+        }
+      },
+      required: ['name'],
+      additionalProperties: false
+    }
+  },
+  required: ['body']
+}
+
+// Update Item Schema
+export const updateItemSchema = {
+  type: 'object',
+  properties: {
+    body: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          minLength: 1,
+          maxLength: 100
+        },
+        description: {
+          type: 'string',
+          maxLength: 500
+        },
+        category: {
+          type: 'string',
+          enum: ['electronics', 'clothing', 'books', 'home', 'sports', 'other']
+        },
+        price: {
+          type: 'number',
+          minimum: 0
+        },
+        tags: {
+          type: 'array',
+          items: {
+            type: 'string'
+          },
+          maxItems: 10
+        }
+      },
+      additionalProperties: false,
+      minProperties: 1
+    }
+  },
+  required: ['body']
+}
+
+// Validation functions
+export const validateCreateItem = ajv.compile(createItemSchema)
+export const validateUpdateItem = ajv.compile(updateItemSchema)
+
+export function validateInput<T>(data: any, validator: Ajv.ValidateFunction): T {
+  const isValid = validator(data)
+  
+  if (!isValid) {
+    const errors = validator.errors?.map(error => ({
+      field: error.instancePath || error.schemaPath,
+      message: error.message,
+      value: error.data
+    })) || []
+    
+    const error = new Error(`Validation failed: ${errors.map(e => e.message).join(', ')}`)
+    error.name = 'ValidationError'
+    ;(error as any).details = errors
+    throw error
+  }
+  
+  return data as T
+}

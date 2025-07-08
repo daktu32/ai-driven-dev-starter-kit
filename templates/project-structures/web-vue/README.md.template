@@ -1,0 +1,372 @@
+# {{PROJECT_NAME}}
+
+{{PROJECT_DESCRIPTION}}
+
+## 機能
+
+- Vue 3 Composition API対応
+- TypeScript完全対応
+- Vite高速開発環境
+- Vue Router DOM完全対応
+- Pinia状態管理
+- Vitest単体テスト環境
+- ESLint + Prettier設定済み
+- レスポンシブデザイン
+
+## クイックスタート
+
+### 必要な環境
+
+- Node.js 18.0.0以上
+- npm 8.0.0以上
+
+### インストール
+
+```bash
+# 依存関係をインストール
+npm install
+```
+
+### 開発サーバー起動
+
+```bash
+npm run dev
+```
+
+開発サーバーが http://localhost:3000 で起動します。
+
+### ビルド
+
+```bash
+# 本番用ビルド
+npm run build
+
+# プレビュー
+npm run preview
+```
+
+## 開発
+
+### 利用可能なコマンド
+
+```bash
+# 開発サーバー（ホットリロード）
+npm run dev
+
+# 型チェック
+npm run type-check
+
+# ESLint実行
+npm run lint
+
+# コードフォーマット
+npm run format
+
+# テスト実行
+npm run test
+
+# テストUI（ブラウザ）
+npm run test:ui
+
+# カバレッジ付きテスト
+npm run test:coverage
+```
+
+### プロジェクト構造
+
+```
+{{PROJECT_NAME}}/
+├── src/
+│   ├── components/
+│   │   ├── features/        # 機能別コンポーネント
+│   │   ├── layout/          # レイアウトコンポーネント
+│   │   └── ui/              # 再利用可能UIコンポーネント
+│   ├── composables/         # Composition API用カスタムコンポーザブル
+│   ├── stores/              # Pinia状態管理
+│   ├── views/               # ページコンポーネント
+│   ├── router/              # Vue Routerルート定義
+│   ├── lib/                 # ユーティリティ関数
+│   ├── types/               # TypeScript型定義
+│   ├── assets/              # 静的アセット
+│   ├── __tests__/           # テストファイル
+│   ├── App.vue              # メインアプリケーション
+│   └── main.ts              # エントリーポイント
+├── public/                  # 静的ファイル
+├── index.html              # HTMLテンプレート
+├── vite.config.ts          # Vite設定
+├── vitest.config.ts        # テスト設定
+└── package.json            # パッケージ設定
+```
+
+### コンポーネント設計
+
+#### UIコンポーネント
+- `src/components/ui/` - 再利用可能な基本UIコンポーネント
+- Props型定義とバリアント対応
+- slot活用でカスタマイズ可能
+
+#### 機能コンポーネント  
+- `src/components/features/` - 特定機能に関連するコンポーネント
+- ビジネスロジック含有
+- Composablesとの連携
+
+#### レイアウトコンポーネント
+- `src/components/layout/` - ヘッダー、フッター等の共通レイアウト
+- アプリケーション全体の構造定義
+
+### Composition API
+
+#### Composables
+- `src/composables/` - ロジックの再利用とテストの容易性
+- 状態管理、副作用処理、API呼び出し等
+- useCounter例: カウンター状態管理とcomputed連携
+
+#### 状態管理（Pinia）
+```typescript
+// stores/counter.ts
+import { defineStore } from 'pinia'
+
+export const useCounterStore = defineStore('counter', () => {
+  const count = ref(0)
+  const doubleCount = computed(() => count.value * 2)
+  
+  function increment() {
+    count.value++
+  }
+  
+  return { count, doubleCount, increment }
+})
+```
+
+### ルーティング
+
+```typescript
+// router/index.ts
+import { createRouter, createWebHistory } from 'vue-router'
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/', component: HomeView },
+    { path: '/about', component: () => import('../views/AboutView.vue') }
+  ]
+})
+```
+
+### テスト戦略
+
+```bash
+# 単体テスト
+npm run test
+
+# UIテスト（ブラウザ）
+npm run test:ui
+
+# カバレッジ確認
+npm run test:coverage
+```
+
+**テスト範囲**:
+- Vue コンポーネントレンダリング
+- Composition API (composables)
+- ユーザーインタラクション
+- Vue Router統合
+- Pinia状態管理
+
+### スタイリング
+
+- Scoped CSS対応
+- CSS変数活用
+- レスポンシブデザイン対応
+- ダークモード考慮
+
+### パフォーマンス
+
+- Vite高速HMR
+- Vue 3最適化レンダリング
+- 適切なコード分割（Lazy Loading）
+- Tree shaking自動最適化
+
+## カスタマイズ
+
+### 新しいページ追加
+
+```vue
+<!-- src/views/NewView.vue -->
+<script setup lang="ts">
+// ページロジック
+</script>
+
+<template>
+  <div>New Page Content</div>
+</template>
+```
+
+```typescript
+// router/index.ts にルート追加
+{
+  path: '/new',
+  name: 'new',
+  component: () => import('../views/NewView.vue')
+}
+```
+
+### 新しいComposable
+
+```typescript
+// src/composables/useNewFeature.ts
+import { ref, computed } from 'vue'
+
+export function useNewFeature() {
+  const state = ref(initialState)
+  
+  const derivedState = computed(() => {
+    // 算出プロパティ
+  })
+  
+  function action() {
+    // アクション
+  }
+  
+  return { state, derivedState, action }
+}
+```
+
+### 新しいStore
+
+```typescript
+// src/stores/newStore.ts
+import { defineStore } from 'pinia'
+
+export const useNewStore = defineStore('new', () => {
+  // Setup syntax using Composition API
+  const state = ref(initialState)
+  
+  function action() {
+    // ストアアクション
+  }
+  
+  return { state, action }
+})
+```
+
+## デプロイ
+
+### Vercel（推奨）
+
+```bash
+# Vercel CLIをインストール
+npm i -g vercel
+
+# デプロイ
+vercel
+```
+
+### Netlify
+
+```bash
+# ビルド
+npm run build
+
+# dist/ フォルダをNetlifyにデプロイ
+```
+
+### その他
+
+- **GitHub Pages**: GitHub Actions使用
+- **AWS S3**: S3 + CloudFront
+- **Heroku**: buildpack使用
+
+## トラブルシューティング
+
+### よくある問題
+
+1. **モジュールが見つからない**
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+2. **TypeScriptエラー**
+   ```bash
+   npm run type-check
+   ```
+
+3. **ESLintエラー**
+   ```bash
+   npm run lint
+   ```
+
+4. **テスト失敗**
+   ```bash
+   npm run test -- --reporter=verbose
+   ```
+
+### パフォーマンス問題
+
+- Vue DevTools活用
+- Vite Bundle Analyzer使用
+- ブラウザ開発者ツールのProfiler使用
+
+## Vue 3特有の機能
+
+### Composition API
+
+```vue
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue'
+
+const count = ref(0)
+const doubled = computed(() => count.value * 2)
+
+watch(count, (newVal) => {
+  console.log(`Count changed to ${newVal}`)
+})
+</script>
+```
+
+### Teleport
+
+```vue
+<template>
+  <Teleport to="body">
+    <div class="modal">Modal content</div>
+  </Teleport>
+</template>
+```
+
+### Suspense（非同期コンポーネント）
+
+```vue
+<template>
+  <Suspense>
+    <AsyncComponent />
+    <template #fallback>
+      Loading...
+    </template>
+  </Suspense>
+</template>
+```
+
+## 技術スタック
+
+- **フレームワーク**: Vue 3
+- **言語**: TypeScript
+- **ビルドツール**: Vite
+- **ルーティング**: Vue Router 4
+- **状態管理**: Pinia
+- **テスト**: Vitest + Vue Test Utils
+- **リンティング**: ESLint + Prettier
+- **開発**: Hot Module Replacement (HMR)
+
+## ライセンス
+
+MIT License
+
+## 作成者
+
+{{AUTHOR}}
+
+---
+
+Vue 3 + TypeScript + Viteで素晴らしいWebアプリケーションを構築してください！

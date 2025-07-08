@@ -1,0 +1,184 @@
+<script setup lang="ts">
+// About page logic can be added here
+</script>
+
+<template>
+  <div class="about">
+    <div class="about-container">
+      <h1>About {{PROJECT_NAME}}</h1>
+      
+      <div class="about-content">
+        <section class="about-section">
+          <h2>Overview</h2>
+          <p>{{PROJECT_DESCRIPTION}}</p>
+          <p>
+            This project was created using the AI Driven Dev Starter Kit, 
+            providing a modern Vue.js application with TypeScript, Vite, and 
+            best practices built-in.
+          </p>
+        </section>
+
+        <section class="about-section">
+          <h2>Tech Stack</h2>
+          <ul class="tech-list">
+            <li><strong>Vue 3</strong> - Composition API and reactive programming</li>
+            <li><strong>TypeScript</strong> - Type safety and better developer experience</li>
+            <li><strong>Vite</strong> - Lightning fast build tool and dev server</li>
+            <li><strong>Vue Router</strong> - Client-side routing</li>
+            <li><strong>Pinia</strong> - State management for Vue</li>
+            <li><strong>Vitest</strong> - Fast unit testing framework</li>
+            <li><strong>ESLint</strong> - Code linting and formatting</li>
+          </ul>
+        </section>
+
+        <section class="about-section">
+          <h2>Getting Started</h2>
+          <div class="code-block">
+            <pre>
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run tests
+npm run test
+
+# Build for production
+npm run build</pre>
+          </div>
+        </section>
+
+        <section class="about-section">
+          <h2>Features</h2>
+          <div class="features-list">
+            <div class="feature-item">
+              <h4>⚡ Vite Powered</h4>
+              <p>Instant server start and lightning fast HMR</p>
+            </div>
+            <div class="feature-item">
+              <h4>🎯 Composition API</h4>
+              <p>Modern Vue 3 Composition API for better code organization</p>
+            </div>
+            <div class="feature-item">
+              <h4>🛠️ TypeScript</h4>
+              <p>Full TypeScript support with proper type checking</p>
+            </div>
+            <div class="feature-item">
+              <h4>🧪 Testing Ready</h4>
+              <p>Vitest and Vue Test Utils pre-configured</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="about-section">
+          <h2>Author</h2>
+          <p>Created by <strong>{{AUTHOR}}</strong></p>
+          <p>Built with ❤️ using Vue 3 and modern web technologies</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.about {
+  padding: 2rem 0;
+}
+
+.about-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-container h1 {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #42b883;
+}
+
+.about-content {
+  line-height: 1.6;
+}
+
+.about-section {
+  margin-bottom: 3rem;
+}
+
+.about-section h2 {
+  color: #42b883;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgba(66, 184, 131, 0.2);
+  padding-bottom: 0.5rem;
+}
+
+.tech-list {
+  list-style: none;
+  padding: 0;
+}
+
+.tech-list li {
+  padding: 0.5rem 0;
+  border-left: 3px solid #42b883;
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+  background-color: rgba(66, 184, 131, 0.05);
+}
+
+.code-block {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.code-block pre {
+  margin: 0;
+  color: #e6e6e6;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.features-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.feature-item {
+  padding: 1rem;
+  border: 1px solid rgba(66, 184, 131, 0.2);
+  border-radius: 8px;
+  background-color: rgba(66, 184, 131, 0.05);
+}
+
+.feature-item h4 {
+  margin: 0 0 0.5rem 0;
+  color: #42b883;
+}
+
+.feature-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .about {
+    padding: 1rem 0;
+  }
+  
+  .about-section {
+    margin-bottom: 2rem;
+  }
+  
+  .code-block {
+    font-size: 0.8rem;
+  }
+  
+  .features-list {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
