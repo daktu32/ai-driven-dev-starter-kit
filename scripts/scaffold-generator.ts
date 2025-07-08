@@ -205,8 +205,8 @@ class ScaffoldGenerator {
     };
 
     try {
-      // パス展開
-      if (rawOptions.targetPath) {
+      // パス展開（空でない場合のみ）
+      if (rawOptions.targetPath && rawOptions.targetPath.trim()) {
         rawOptions.targetPath = safeExpandPath(rawOptions.targetPath);
       }
       
@@ -242,8 +242,8 @@ class ScaffoldGenerator {
     };
 
     try {
-      // パス展開
-      if (rawOptions.targetPath) {
+      // パス展開（空でない場合のみ）
+      if (rawOptions.targetPath && rawOptions.targetPath.trim()) {
         rawOptions.targetPath = safeExpandPath(rawOptions.targetPath);
       }
       
