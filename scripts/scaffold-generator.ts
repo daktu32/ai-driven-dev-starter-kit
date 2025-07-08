@@ -11,6 +11,7 @@ import { ValidationError, validateScaffoldOptions, ScaffoldOptions } from './lib
 import { safeExpandPath, PathExpansionError } from './lib/pathUtils.js';
 import { ScaffoldEngine } from './lib/ScaffoldEngine.js';
 import { TemplateRegistry } from './lib/TemplateRegistry.js';
+import { execSync } from 'child_process';
 
 // ValidatedScaffoldOptionsをインポートしているため、ローカルのインターフェースは削除
 
@@ -77,6 +78,18 @@ class ScaffoldGenerator {
         return;
       }
 
+      // テンプレート管理コマンド処理
+      if (this.cliOptions['list-templates']) {
+        await this.listTemplates();
+        return;
+      }
+
+      if (this.cliOptions['add-template']) {
+        const templatePath = this.cliOptions['add-template'] as string;
+        await this.addTemplate(templatePath);
+        return;
+      }
+
       await this.promptOptions();
       await this.validateTargetPath();
       await this.generateScaffold();
@@ -94,19 +107,31 @@ class ScaffoldGenerator {
     console.log(chalk.cyan.bold('使用方法:'));
     console.log(chalk.white('  npm run scaffold'));
     console.log(chalk.white('  npm run scaffold -- --project-name=my-project --project-type=mcp-server'));
-    console.log(chalk.cyan.bold('\nオプション:'));
+    console.log(chalk.cyan.bold('\nプロジェクト生成オプション:'));
     console.log(chalk.white('  --help                    このヘルプを表示'));
     console.log(chalk.white('  --project-name=NAME       プロジェクト名 (短縮形: --name)'));
     console.log(chalk.white('  --project-type=TYPE       プロジェクトタイプ (短縮形: --type)'));
+    console.log(chalk.white('  --template=NAME           カスタムテンプレート名を指定'));
     console.log(chalk.white('  --target-path=PATH        生成先パス (短縮形: --output)'));
     console.log(chalk.white('  --skip-interactive        すべての対話をスキップ (E2Eテスト用)'));
     console.log(chalk.white('  --force                   既存ディレクトリの上書き確認をスキップ'));
     console.log(chalk.white('  --skip-optional           オプション項目の選択をスキップ'));
+    console.log(chalk.cyan.bold('\nテンプレート管理オプション:'));
+    console.log(chalk.white('  --list-templates          利用可能なテンプレート一覧を表示'));
+    console.log(chalk.white('  --add-template=PATH       カスタムテンプレートを追加'));
+    console.log(chalk.white('                            (ローカルパス、Git URL、NPMパッケージ対応)'));
     console.log(chalk.cyan.bold('\nプロジェクトタイプ:'));
     console.log(chalk.white('  cli-rust     Rustで書くCLIツール'));
     console.log(chalk.white('  web-nextjs   Next.jsでのWebアプリ'));
     console.log(chalk.white('  api-fastapi  FastAPIでのRESTful API'));
     console.log(chalk.white('  mcp-server   Model Context Protocol サーバー'));
+    console.log(chalk.cyan.bold('\nカスタムテンプレート例:'));
+    console.log(chalk.white('  # ローカルテンプレート追加'));
+    console.log(chalk.gray('  npm run scaffold -- --add-template=./my-template'));
+    console.log(chalk.white('  # GitHubテンプレート追加'));
+    console.log(chalk.gray('  npm run scaffold -- --add-template=https://github.com/user/template.git'));
+    console.log(chalk.white('  # カスタムテンプレートでプロジェクト生成'));
+    console.log(chalk.gray('  npm run scaffold -- --template=my-custom-template'));
   }
 
   private async promptOptions(): Promise<void> {
@@ -152,17 +177,15 @@ class ScaffoldGenerator {
       });
     }
 
-    if (!this.cliOptions['project-type']) {
+    if (!this.cliOptions['project-type'] && !this.cliOptions['template']) {
+      // テンプレート選択肢を動的に生成
+      const choices = await this.buildTemplateChoices();
+      
       questions.push({
         type: 'list',
         name: 'projectType',
-        message: 'プロジェクトタイプを選択してください:',
-        choices: [
-          { name: 'CLI (Rust)', value: 'cli-rust' },
-          { name: 'Web (Next.js)', value: 'web-nextjs' },
-          { name: 'API (FastAPI)', value: 'api-fastapi' },
-          { name: 'MCP Server', value: 'mcp-server' },
-        ],
+        message: 'プロジェクトタイプまたはテンプレートを選択してください:',
+        choices: choices,
       });
     }
 
@@ -198,10 +221,11 @@ class ScaffoldGenerator {
     const answers = await inquirer.prompt(questions);
 
     // CLI引数の値とプロンプトの答えをマージ
+    const selectedTemplate = this.cliOptions['template'] as string || answers.projectType;
     const rawOptions = {
       targetPath: this.cliOptions['target-path'] as string || answers.targetPath,
       projectName: this.cliOptions['project-name'] as string || answers.projectName,
-      projectType: (this.cliOptions['project-type'] as string || answers.projectType) as ScaffoldOptions['projectType'],
+      projectType: (this.cliOptions['project-type'] as string || selectedTemplate) as ScaffoldOptions['projectType'],
       includeProjectManagement: this.cliOptions['skip-optional'] ? true : answers.includeProjectManagement ?? true,
       includeArchitecture: this.cliOptions['skip-optional'] ? false : answers.includeArchitecture ?? false,
       includeTools: this.cliOptions['skip-optional'] ? true : answers.includeTools ?? true,
@@ -214,8 +238,30 @@ class ScaffoldGenerator {
         rawOptions.targetPath = safeExpandPath(rawOptions.targetPath);
       }
       
-      // 検証実行
-      validateScaffoldOptions(rawOptions);
+      // カスタムテンプレート使用時は基本的な検証のみ実行
+      if (this.cliOptions['template']) {
+        // テンプレートレジストリの初期化と検証
+        await this.templateRegistry.initialize();
+        const templateName = this.cliOptions['template'] as string;
+        const template = await this.templateRegistry.findTemplate(templateName);
+        if (!template) {
+          throw new Error(`テンプレート '${templateName}' が見つかりません`);
+        }
+        
+        // 基本的な検証のみ実行
+        if (!rawOptions.projectName || !rawOptions.targetPath) {
+          throw new ValidationError([
+            !rawOptions.projectName ? 'プロジェクト名は必須です' : '',
+            !rawOptions.targetPath ? '生成先パスは必須です' : ''
+          ].filter(Boolean));
+        }
+        
+        // プロジェクトタイプをテンプレート名に設定
+        rawOptions.projectType = templateName as any;
+      } else {
+        // 通常のプロジェクトタイプの検証
+        validateScaffoldOptions(rawOptions);
+      }
       
       this.options = rawOptions;
     } catch (error) {
@@ -235,10 +281,11 @@ class ScaffoldGenerator {
 
   private async setDefaultOptionsForNonInteractive(): Promise<void> {
     // 非対話モードでのデフォルト設定
+    const selectedTemplate = this.cliOptions['template'] as string || this.cliOptions['project-type'] as string || this.cliOptions['type'] as string || 'mcp-server';
     const rawOptions = {
       targetPath: this.cliOptions['target-path'] as string || this.cliOptions['output'] as string || './my-new-project',
       projectName: this.cliOptions['project-name'] as string || this.cliOptions['name'] as string || 'my-new-project',
-      projectType: (this.cliOptions['project-type'] as string || this.cliOptions['type'] as string || 'mcp-server') as ScaffoldOptions['projectType'],
+      projectType: selectedTemplate as ScaffoldOptions['projectType'],
       includeProjectManagement: true,
       includeArchitecture: false,
       includeTools: true,
@@ -251,8 +298,30 @@ class ScaffoldGenerator {
         rawOptions.targetPath = safeExpandPath(rawOptions.targetPath);
       }
       
-      // 検証実行
-      validateScaffoldOptions(rawOptions);
+      // カスタムテンプレート使用時は基本的な検証のみ実行
+      if (this.cliOptions['template']) {
+        // テンプレートレジストリの初期化と検証
+        await this.templateRegistry.initialize();
+        const templateName = this.cliOptions['template'] as string;
+        const template = await this.templateRegistry.findTemplate(templateName);
+        if (!template) {
+          throw new Error(`テンプレート '${templateName}' が見つかりません`);
+        }
+        
+        // 基本的な検証のみ実行
+        if (!rawOptions.projectName || !rawOptions.targetPath) {
+          throw new ValidationError([
+            !rawOptions.projectName ? 'プロジェクト名は必須です' : '',
+            !rawOptions.targetPath ? '生成先パスは必須です' : ''
+          ].filter(Boolean));
+        }
+        
+        // プロジェクトタイプをテンプレート名に設定
+        rawOptions.projectType = templateName as any;
+      } else {
+        // 通常のプロジェクトタイプの検証
+        validateScaffoldOptions(rawOptions);
+      }
       
       this.options = rawOptions;
       
@@ -307,16 +376,19 @@ class ScaffoldGenerator {
       // テンプレートレジストリを初期化
       await this.templateRegistry.initialize();
       
-      // テンプレートを検索
-      const template = await this.templateRegistry.findTemplate(this.options.projectType);
+      // テンプレートを検索（カスタムテンプレート対応）
+      const templateName = this.cliOptions['template'] as string || this.options.projectType;
+      const template = await this.templateRegistry.findTemplate(templateName);
       if (!template) {
-        throw new Error(`テンプレート '${this.options.projectType}' が見つかりません`);
+        throw new Error(`テンプレート '${templateName}' が見つかりません`);
       }
       
       // テンプレートパスを解決
       const templatePath = template.source === 'builtin' 
         ? path.join(this.sourceDir, template.path!)
         : template.path!;
+      
+      console.log(chalk.gray(`使用するテンプレート: ${template.name} (${template.source})`));
       
       // ScaffoldEngineで生成
       const scaffoldOptions: ScaffoldOptions = {
@@ -508,6 +580,357 @@ class ScaffoldGenerator {
   private async postProcess(): Promise<void> {
     // ScaffoldEngineの後処理に委譲済み
     console.log(chalk.gray(`   git commit -m "初回コミット"`));
+  }
+
+  /**
+   * テンプレート選択肢の構築
+   */
+  private async buildTemplateChoices(): Promise<Array<{ name: string; value: string }>> {
+    try {
+      await this.templateRegistry.initialize();
+      const templates = await this.templateRegistry.listTemplates();
+      
+      const choices: Array<{ name: string; value: string }> = [];
+      
+      // 公式テンプレート
+      const builtinTemplates = templates.filter(t => t.source === 'builtin');
+      if (builtinTemplates.length > 0) {
+        choices.push({ name: chalk.blue('--- 公式テンプレート ---'), value: '---' });
+        for (const template of builtinTemplates) {
+          const displayName = this.getTemplateDisplayName(template);
+          choices.push({ name: displayName, value: template.name });
+        }
+      }
+      
+      // カスタムテンプレート
+      const customTemplates = templates.filter(t => t.source !== 'builtin');
+      if (customTemplates.length > 0) {
+        choices.push({ name: chalk.magenta('--- カスタムテンプレート ---'), value: '---' });
+        for (const template of customTemplates) {
+          const displayName = this.getTemplateDisplayName(template);
+          choices.push({ name: displayName, value: template.name });
+        }
+      }
+      
+      // 区切り線を除去
+      return choices.filter(choice => choice.value !== '---');
+    } catch (error) {
+      // エラーが発生した場合は公式テンプレートのみ返す
+      console.warn(chalk.yellow('⚠️  カスタムテンプレートの読み込みに失敗しました。公式テンプレートのみ表示します。'));
+      return [
+        { name: 'CLI (Rust)', value: 'cli-rust' },
+        { name: 'Web (Next.js)', value: 'web-nextjs' },
+        { name: 'API (FastAPI)', value: 'api-fastapi' },
+        { name: 'MCP Server', value: 'mcp-server' },
+      ];
+    }
+  }
+
+  /**
+   * テンプレート表示名の生成
+   */
+  private getTemplateDisplayName(template: import('./lib/TemplateRegistry.js').TemplateMetadata): string {
+    const typeMap: Record<string, string> = {
+      'cli-rust': 'CLI (Rust)',
+      'web-nextjs': 'Web (Next.js)',
+      'api-fastapi': 'API (FastAPI)',
+      'mcp-server': 'MCP Server'
+    };
+    
+    const displayType = typeMap[template.name] || template.name;
+    const sourceIcon = template.source === 'builtin' ? '🏢' : '⚙️';
+    
+    if (template.source === 'builtin') {
+      return `${sourceIcon} ${displayType}`;
+    } else {
+      return `${sourceIcon} ${displayType} (${template.source})`;
+    }
+  }
+
+  /**
+   * テンプレート一覧表示
+   */
+  private async listTemplates(): Promise<void> {
+    try {
+      await this.templateRegistry.initialize();
+      const templates = await this.templateRegistry.listTemplates();
+      const stats = await this.templateRegistry.getStats();
+
+      console.log(chalk.cyan.bold('📋 利用可能なテンプレート一覧'));
+      console.log(chalk.gray(`合計: ${stats.total}個のテンプレート\n`));
+
+      // ソース別にグループ化
+      const builtin = templates.filter(t => t.source === 'builtin');
+      const custom = templates.filter(t => t.source !== 'builtin');
+
+      // 公式テンプレート
+      if (builtin.length > 0) {
+        console.log(chalk.blue.bold('🏢 公式テンプレート'));
+        for (const template of builtin) {
+          console.log(`  ${chalk.green(template.name)}`);
+          console.log(`    ${chalk.gray(template.description)}`);
+          console.log(`    ${chalk.yellow(`タイプ: ${template.projectType || 'N/A'}`)} ${chalk.gray(`| バージョン: ${template.version}`)}`);
+          console.log(`    ${chalk.gray(`作成者: ${template.author}`)}`);
+          if (template.tags && template.tags.length > 0) {
+            console.log(`    ${chalk.cyan(`タグ: ${template.tags.join(', ')}`)}`);
+          }
+          console.log();
+        }
+      }
+
+      // カスタムテンプレート
+      if (custom.length > 0) {
+        console.log(chalk.magenta.bold('⚙️ カスタムテンプレート'));
+        for (const template of custom) {
+          console.log(`  ${chalk.green(template.name)}`);
+          console.log(`    ${chalk.gray(template.description)}`);
+          console.log(`    ${chalk.yellow(`ソース: ${template.source}`)} ${chalk.gray(`| バージョン: ${template.version}`)}`);
+          console.log(`    ${chalk.gray(`作成者: ${template.author}`)}`);
+          if (template.path) {
+            console.log(`    ${chalk.gray(`パス: ${template.path}`)}`);
+          }
+          if (template.url) {
+            console.log(`    ${chalk.gray(`URL: ${template.url}`)}`);
+          }
+          if (template.tags && template.tags.length > 0) {
+            console.log(`    ${chalk.cyan(`タグ: ${template.tags.join(', ')}`)}`);
+          }
+          console.log();
+        }
+      }
+
+      // 統計情報
+      console.log(chalk.cyan.bold('📊 統計情報'));
+      console.log(`  ${chalk.gray(`ソース別: ${Object.entries(stats.bySource).map(([key, value]) => `${key}=${value}`).join(', ')}`)}`);
+      console.log(`  ${chalk.gray(`タイプ別: ${Object.entries(stats.byProjectType).map(([key, value]) => `${key}=${value}`).join(', ')}`)}`);
+      
+      console.log(chalk.green.bold('\n✅ テンプレート一覧表示完了'));
+    } catch (error) {
+      console.error(chalk.red.bold('❌ テンプレート一覧の取得に失敗しました:'));
+      console.error(chalk.red((error as Error).message));
+      process.exit(1);
+    }
+  }
+
+  /**
+   * カスタムテンプレートの追加
+   */
+  private async addTemplate(templatePath: string): Promise<void> {
+    try {
+      await this.templateRegistry.initialize();
+      
+      console.log(chalk.cyan.bold('📦 カスタムテンプレートを追加中...'));
+      console.log(chalk.gray(`ソース: ${templatePath}`));
+
+      // テンプレートの種類を判定
+      const templateType = this.detectTemplateType(templatePath);
+      console.log(chalk.gray(`検出されたタイプ: ${templateType}`));
+
+      // テンプレートの検証と追加
+      const metadata = await this.processTemplate(templatePath, templateType);
+      await this.templateRegistry.addTemplate(metadata);
+
+      console.log(chalk.green.bold('\n✅ カスタムテンプレートの追加が完了しました！'));
+      console.log(chalk.cyan(`テンプレート名: ${metadata.name}`));
+      console.log(chalk.gray(`説明: ${metadata.description}`));
+      console.log(chalk.gray(`バージョン: ${metadata.version}`));
+      console.log(chalk.gray(`作成者: ${metadata.author}`));
+      
+      console.log(chalk.yellow('\n💡 使用方法:'));
+      console.log(chalk.white(`  npm run scaffold -- --template=${metadata.name}`));
+      
+    } catch (error) {
+      console.error(chalk.red.bold('❌ カスタムテンプレートの追加に失敗しました:'));
+      console.error(chalk.red((error as Error).message));
+      process.exit(1);
+    }
+  }
+
+  /**
+   * テンプレートタイプの検出
+   */
+  private detectTemplateType(templatePath: string): 'local' | 'git' | 'npm' {
+    if (templatePath.startsWith('http://') || templatePath.startsWith('https://') || templatePath.endsWith('.git')) {
+      return 'git';
+    }
+    
+    if (templatePath.includes('/') || templatePath.includes('\\\\') || templatePath.startsWith('.') || templatePath.startsWith('~')) {
+      return 'local';
+    }
+    
+    return 'npm';
+  }
+
+  /**
+   * テンプレートの処理
+   */
+  private async processTemplate(templatePath: string, templateType: 'local' | 'git' | 'npm'): Promise<Omit<import('./lib/TemplateRegistry.js').TemplateMetadata, 'lastUpdated'>> {
+    switch (templateType) {
+      case 'local':
+        return this.processLocalTemplate(templatePath);
+      case 'git':
+        return this.processGitTemplate(templatePath);
+      case 'npm':
+        return this.processNpmTemplate(templatePath);
+      default:
+        throw new Error(`未対応のテンプレートタイプ: ${templateType}`);
+    }
+  }
+
+  /**
+   * ローカルテンプレートの処理
+   */
+  private async processLocalTemplate(templatePath: string): Promise<Omit<import('./lib/TemplateRegistry.js').TemplateMetadata, 'lastUpdated'>> {
+    // パスの解決
+    const resolvedPath = path.resolve(templatePath);
+    
+    // ディレクトリの存在確認
+    if (!(await fs.pathExists(resolvedPath))) {
+      throw new Error(`テンプレートディレクトリが見つかりません: ${resolvedPath}`);
+    }
+
+    // メタデータファイルの読み込み
+    const metadataPath = path.join(resolvedPath, 'template.json');
+    let metadata: any = {};
+    
+    if (await fs.pathExists(metadataPath)) {
+      const content = await fs.readFile(metadataPath, 'utf8');
+      metadata = JSON.parse(content);
+    }
+
+    // デフォルト値の設定
+    const templateName = metadata.name || path.basename(resolvedPath);
+    
+    return {
+      name: templateName,
+      version: metadata.version || '1.0.0',
+      description: metadata.description || `Local template: ${templateName}`,
+      author: metadata.author || 'Unknown',
+      source: 'local',
+      path: resolvedPath,
+      projectType: metadata.projectType,
+      tags: metadata.tags || ['custom', 'local']
+    };
+  }
+
+  /**
+   * Gitテンプレートの処理
+   */
+  private async processGitTemplate(templateUrl: string): Promise<Omit<import('./lib/TemplateRegistry.js').TemplateMetadata, 'lastUpdated'>> {
+    // リポジトリ名の抽出
+    const repoName = templateUrl.split('/').pop()?.replace('.git', '') || 'unknown-repo';
+    const tempDir = path.join(process.cwd(), '.temp', repoName);
+    
+    try {
+      // 一時ディレクトリのクリーンアップ
+      await fs.remove(tempDir);
+      await fs.ensureDir(tempDir);
+
+      // Gitクローン
+      console.log(chalk.gray(`Gitリポジトリをクローン中: ${templateUrl}`));
+      execSync(`git clone ${templateUrl} ${tempDir}`, { stdio: 'inherit' });
+
+      // メタデータファイルの読み込み
+      const metadataPath = path.join(tempDir, 'template.json');
+      let metadata: any = {};
+      
+      if (await fs.pathExists(metadataPath)) {
+        const content = await fs.readFile(metadataPath, 'utf8');
+        metadata = JSON.parse(content);
+      }
+
+      // テンプレートを永続化ディレクトリにコピー
+      const templateRegistry = new TemplateRegistry();
+      const cacheDir = templateRegistry.getCacheDir();
+      const finalPath = path.join(cacheDir, repoName);
+      
+      await fs.ensureDir(cacheDir);
+      await fs.copy(tempDir, finalPath);
+
+      // デフォルト値の設定
+      const templateName = metadata.name || repoName;
+      
+      return {
+        name: templateName,
+        version: metadata.version || '1.0.0',
+        description: metadata.description || `Git template: ${templateName}`,
+        author: metadata.author || 'Unknown',
+        source: 'git',
+        path: finalPath,
+        url: templateUrl,
+        projectType: metadata.projectType,
+        tags: metadata.tags || ['custom', 'git']
+      };
+    } finally {
+      // 一時ディレクトリのクリーンアップ
+      await fs.remove(tempDir);
+    }
+  }
+
+  /**
+   * NPMテンプレートの処理
+   */
+  private async processNpmTemplate(packageName: string): Promise<Omit<import('./lib/TemplateRegistry.js').TemplateMetadata, 'lastUpdated'>> {
+    const tempDir = path.join(process.cwd(), '.temp', packageName);
+    
+    try {
+      // 一時ディレクトリのクリーンアップ
+      await fs.remove(tempDir);
+      await fs.ensureDir(tempDir);
+
+      // NPMパッケージのインストール
+      console.log(chalk.gray(`NPMパッケージをインストール中: ${packageName}`));
+      execSync(`npm install ${packageName}`, { 
+        cwd: tempDir, 
+        stdio: 'inherit' 
+      });
+
+      // インストールされたパッケージのパス
+      const packagePath = path.join(tempDir, 'node_modules', packageName);
+      
+      // メタデータファイルの読み込み
+      const metadataPath = path.join(packagePath, 'template.json');
+      const packageJsonPath = path.join(packagePath, 'package.json');
+      
+      let metadata: any = {};
+      let packageJson: any = {};
+      
+      if (await fs.pathExists(metadataPath)) {
+        const content = await fs.readFile(metadataPath, 'utf8');
+        metadata = JSON.parse(content);
+      }
+      
+      if (await fs.pathExists(packageJsonPath)) {
+        const content = await fs.readFile(packageJsonPath, 'utf8');
+        packageJson = JSON.parse(content);
+      }
+
+      // テンプレートを永続化ディレクトリにコピー
+      const templateRegistry = new TemplateRegistry();
+      const cacheDir = templateRegistry.getCacheDir();
+      const finalPath = path.join(cacheDir, packageName);
+      
+      await fs.ensureDir(cacheDir);
+      await fs.copy(packagePath, finalPath);
+
+      // デフォルト値の設定
+      const templateName = metadata.name || packageName;
+      
+      return {
+        name: templateName,
+        version: metadata.version || packageJson.version || '1.0.0',
+        description: metadata.description || packageJson.description || `NPM template: ${templateName}`,
+        author: metadata.author || packageJson.author || 'Unknown',
+        source: 'npm',
+        path: finalPath,
+        url: `https://npmjs.com/package/${packageName}`,
+        projectType: metadata.projectType,
+        tags: metadata.tags || ['custom', 'npm']
+      };
+    } finally {
+      // 一時ディレクトリのクリーンアップ
+      await fs.remove(tempDir);
+    }
   }
 
   private async verifyGeneratedProject(targetPath: string): Promise<void> {
