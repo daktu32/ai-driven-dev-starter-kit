@@ -1,6 +1,6 @@
 export interface ProjectConfig {
   projectName: string;
-  projectType: 'cli-rust' | 'web-nextjs' | 'api-fastapi' | 'mcp-server';
+  projectType: 'cli-rust' | 'web-nextjs' | 'web-react' | 'web-vue' | 'api-fastapi' | 'serverless-lambda' | 'mcp-server';
   description: string;
   repositoryUrl: string;
   targetPath?: string;
