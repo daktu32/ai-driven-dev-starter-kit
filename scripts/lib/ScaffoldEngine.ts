@@ -13,6 +13,7 @@ import ora from 'ora';
 import { ProjectConfig } from './types.js';
 import { ValidationError, ScaffoldOptions } from './validator.js';
 import { safeExpandPath } from './pathUtils.js';
+import { ScaffoldTransaction, GenerationState, CommonSteps, TransactionStep } from './ScaffoldTransaction.js';
 
 
 export interface TemplateContext {
@@ -29,6 +30,7 @@ export interface GenerationResult {
   generatedFiles: string[];
   errors: string[];
   warnings: string[];
+  transaction?: ScaffoldTransaction;
 }
 
 /**
@@ -36,9 +38,11 @@ export interface GenerationResult {
  */
 export class ScaffoldEngine {
   private sourceDir: string;
+  private useTransaction: boolean;
 
-  constructor(sourceDir?: string) {
+  constructor(sourceDir?: string, options: { useTransaction?: boolean } = {}) {
     this.sourceDir = sourceDir || path.resolve(process.cwd());
+    this.useTransaction = options.useTransaction !== false; // デフォルトでトランザクション使用
   }
 
   /**
@@ -48,13 +52,116 @@ export class ScaffoldEngine {
     templatePath: string,
     options: ScaffoldOptions
   ): Promise<GenerationResult> {
-    const spinner = ora('プロジェクトを生成中...').start();
     const targetPath = path.resolve(options.targetPath);
     const result: GenerationResult = {
       generatedFiles: [],
       errors: [],
       warnings: []
     };
+
+    if (this.useTransaction) {
+      return this.generateProjectWithTransaction(templatePath, targetPath, options, result);
+    } else {
+      return this.generateProjectLegacy(templatePath, targetPath, options, result);
+    }
+  }
+
+  /**
+   * トランザクション機能付きの生成処理
+   */
+  private async generateProjectWithTransaction(
+    templatePath: string,
+    targetPath: string,
+    options: ScaffoldOptions,
+    result: GenerationResult
+  ): Promise<GenerationResult> {
+    const transaction = new ScaffoldTransaction(targetPath, { verbose: false });
+    const state = transaction.getState();
+    const context = this.createTemplateContext(options);
+
+    result.transaction = transaction;
+
+    // ステップ1: ディレクトリ作成
+    transaction.addStep(CommonSteps.createDirectory(targetPath, state));
+
+    // ステップ2: テンプレートファイルのコピー・処理
+    transaction.addStep({
+      name: 'テンプレートファイルのコピー・処理',
+      description: `テンプレートから ${templatePath} をコピー`,
+      execute: async () => {
+        await this.processTemplate(templatePath, targetPath, context, result, state);
+      }
+    });
+
+    // ステップ3: オプション機能の追加
+    if (options.includeProjectManagement) {
+      transaction.addStep({
+        name: 'プロジェクト管理ファイルの追加',
+        description: 'PROGRESS.md、ROADMAP.md、CHANGELOG.mdの生成',
+        execute: async () => {
+          await this.addProjectManagementFiles(targetPath, context, result, state);
+        }
+      });
+    }
+
+    if (options.includeArchitecture) {
+      transaction.addStep({
+        name: 'アーキテクチャファイルの追加',
+        description: 'docs/architecture/ 配下のファイル生成',
+        execute: async () => {
+          await this.addArchitectureFiles(targetPath, context, result, state);
+        }
+      });
+    }
+
+    if (options.includeTools) {
+      transaction.addStep({
+        name: '開発ツールファイルの追加',
+        description: 'tools/ 配下のファイル生成',
+        execute: async () => {
+          await this.addToolsFiles(targetPath, context, result, state);
+        }
+      });
+    }
+
+    if (options.customCursorRules) {
+      transaction.addStep({
+        name: 'Cursor Rules生成',
+        description: '.cursorrules ファイルの生成',
+        execute: async () => {
+          await this.generateCursorRules(targetPath, context, result, state);
+        }
+      });
+    }
+
+    // ステップ4: 生成後処理
+    transaction.addStep({
+      name: '生成後処理',
+      description: '.git、node_modules の削除',
+      execute: async () => {
+        await this.postProcess(targetPath, result);
+      }
+    });
+
+    try {
+      await transaction.execute();
+      return result;
+    } catch (error) {
+      result.errors.push(error instanceof Error ? error.message : String(error));
+      throw error;
+    }
+  }
+
+  /**
+   * 従来の生成処理（トランザクション無し）
+   */
+  private async generateProjectLegacy(
+    templatePath: string,
+    targetPath: string,
+    options: ScaffoldOptions,
+    result: GenerationResult
+  ): Promise<GenerationResult> {
+    const spinner = ora('プロジェクトを生成中...').start();
 
     try {
       // ターゲットディレクトリ作成
@@ -157,13 +264,14 @@ export class ScaffoldEngine {
     templatePath: string,
     targetPath: string,
     context: TemplateContext,
-    result: GenerationResult
+    result: GenerationResult,
+    state?: GenerationState
   ): Promise<void> {
     if (!(await fs.pathExists(templatePath))) {
       throw new Error(`テンプレートディレクトリが見つかりません: ${templatePath}`);
     }
 
-    await this.copyDirectoryRecursively(templatePath, targetPath, context, result);
+    await this.copyDirectoryRecursively(templatePath, targetPath, context, result, state);
   }
 
   /**
@@ -173,7 +281,8 @@ export class ScaffoldEngine {
     sourcePath: string,
     targetPath: string,
     context: TemplateContext,
-    result: GenerationResult
+    result: GenerationResult,
+    state?: GenerationState
   ): Promise<void> {
     try {
       const items = await readdir(sourcePath, { withFileTypes: true });
@@ -193,9 +302,20 @@ export class ScaffoldEngine {
           if (item.isFile()) {
             await this.processFile(sourceItemPath, targetItemPath, context);
             result.generatedFiles.push(path.relative(targetPath, targetItemPath));
+            
+            // トランザクション状態にファイルを追加
+            if (state) {
+              state.addGeneratedFile(targetItemPath);
+            }
           } else if (item.isDirectory()) {
             await fs.ensureDir(targetItemPath);
-            await this.copyDirectoryRecursively(sourceItemPath, targetItemPath, context, result);
+            
+            // トランザクション状態にディレクトリを追加
+            if (state) {
+              state.addGeneratedDirectory(targetItemPath);
+            }
+            
+            await this.copyDirectoryRecursively(sourceItemPath, targetItemPath, context, result, state);
           }
         } catch (error) {
           const errorMsg = `ファイル処理エラー: ${item.name} - ${error instanceof Error ? error.message : String(error)}`;
@@ -266,7 +386,8 @@ export class ScaffoldEngine {
   private async addProjectManagementFiles(
     targetPath: string,
     context: TemplateContext,
-    result: GenerationResult
+    result: GenerationResult,
+    state?: GenerationState
   ): Promise<void> {
     const pmPath = path.join(this.sourceDir, 'templates', 'project-management');
     const pmFiles = ['PROGRESS.md', 'ROADMAP.md', 'CHANGELOG.md'];
@@ -279,6 +400,11 @@ export class ScaffoldEngine {
         if (await fs.pathExists(sourcePath)) {
           await this.processFile(sourcePath, targetFilePath, context);
           result.generatedFiles.push(file);
+          
+          // トランザクション状態にファイルを追加
+          if (state) {
+            state.addGeneratedFile(targetFilePath);
+          }
         }
       } catch (error) {
         result.warnings.push(`プロジェクト管理ファイルのコピーに失敗しました: ${file}`);
@@ -292,14 +418,21 @@ export class ScaffoldEngine {
   private async addArchitectureFiles(
     targetPath: string,
     context: TemplateContext,
-    result: GenerationResult
+    result: GenerationResult,
+    state?: GenerationState
   ): Promise<void> {
     const archPath = path.join(this.sourceDir, 'templates', 'architectures');
     const targetArchPath = path.join(targetPath, 'docs', 'architecture');
 
     if (await fs.pathExists(archPath)) {
       await fs.ensureDir(targetArchPath);
-      await this.copyDirectoryRecursively(archPath, targetArchPath, context, result);
+      
+      // トランザクション状態にディレクトリを追加
+      if (state) {
+        state.addGeneratedDirectory(targetArchPath);
+      }
+      
+      await this.copyDirectoryRecursively(archPath, targetArchPath, context, result, state);
     }
   }
 
@@ -309,14 +442,21 @@ export class ScaffoldEngine {
   private async addToolsFiles(
     targetPath: string,
     context: TemplateContext,
-    result: GenerationResult
+    result: GenerationResult,
+    state?: GenerationState
   ): Promise<void> {
     const toolsPath = path.join(this.sourceDir, 'templates', 'tools');
     const targetToolsPath = path.join(targetPath, 'tools');
 
     if (await fs.pathExists(toolsPath)) {
       await fs.ensureDir(targetToolsPath);
-      await this.copyDirectoryRecursively(toolsPath, targetToolsPath, context, result);
+      
+      // トランザクション状態にディレクトリを追加
+      if (state) {
+        state.addGeneratedDirectory(targetToolsPath);
+      }
+      
+      await this.copyDirectoryRecursively(toolsPath, targetToolsPath, context, result, state);
     }
   }
 
@@ -326,7 +466,8 @@ export class ScaffoldEngine {
   private async generateCursorRules(
     targetPath: string,
     context: TemplateContext,
-    result: GenerationResult
+    result: GenerationResult,
+    state?: GenerationState
   ): Promise<void> {
     const cursorRulesContent = `# Cursor Rules - ${context.projectName}
 
@@ -360,6 +501,11 @@ export class ScaffoldEngine {
     const cursorRulesPath = path.join(targetPath, '.cursorrules');
     await fs.writeFile(cursorRulesPath, cursorRulesContent);
     result.generatedFiles.push('.cursorrules');
+    
+    // トランザクション状態にファイルを追加
+    if (state) {
+      state.addGeneratedFile(cursorRulesPath);
+    }
   }
 
   /**
