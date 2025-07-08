@@ -615,7 +615,7 @@ ${this.getProjectTypeSpecificRules()}
       'mcp-server': ['package.json', 'tsconfig.json', 'src/index.ts'],
       'cli-rust': ['Cargo.toml', 'src/main.rs'],
       'web-nextjs': ['package.json', 'tsconfig.json'],
-      'api-fastapi': ['requirements.txt', 'main.py']
+      'api-fastapi': ['requirements.txt', 'src/main.py']
     };
     
     const requiredFiles = projectTypeFiles[this.options.projectType] || [];

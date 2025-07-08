@@ -1,0 +1,50 @@
+import React from 'react'
+
+export default function HomePage() {
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="max-w-4xl mx-auto text-center">
+        <div className="bg-white rounded-lg shadow-xl p-8 mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Welcome to {{PROJECT_NAME}}
+          </h1>
+          <p className="text-lg text-gray-600 mb-6">
+            {{PROJECT_DESCRIPTION}}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+              Get Started
+            </button>
+            <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg transition duration-200">
+              Learn More
+            </button>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="text-blue-600 text-2xl mb-4">🚀</div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Fast Development</h3>
+            <p className="text-gray-600">Built with Next.js 14 for optimal performance and developer experience.</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="text-green-600 text-2xl mb-4">⚡</div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">TypeScript Ready</h3>
+            <p className="text-gray-600">Fully configured with TypeScript for type-safe development.</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="text-purple-600 text-2xl mb-4">🎨</div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Styled Components</h3>
+            <p className="text-gray-600">Tailwind CSS pre-configured for rapid UI development.</p>
+          </div>
+        </div>
+        
+        <div className="mt-8 text-gray-500">
+          <p>Built by {{AUTHOR}} | Start building amazing things!</p>
+        </div>
+      </div>
+    </main>
+  )
+}
