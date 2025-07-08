@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { glob } from 'glob';
+import { execSync } from 'child_process';
 
 export interface VerificationResult {
   valid: boolean;
@@ -9,6 +10,14 @@ export interface VerificationResult {
   checkedFiles: number;
   missingFiles: string[];
   templateVariablesFound: string[];
+  buildResult?: BuildResult;
+}
+
+export interface BuildResult {
+  success: boolean;
+  duration: number;
+  output: string;
+  error?: string;
 }
 
 export interface FileRequirement {
@@ -49,6 +58,14 @@ export class ProjectVerifier {
 
     // 4. テンプレート変数の残存チェック
     await this.verifyTemplateVariables(result);
+
+    // 5. ビルド可能性の検証
+    if (result.errors.length === 0) {
+      result.buildResult = await this.verifyBuildCapability();
+      if (!result.buildResult.success) {
+        result.errors.push(`ビルドに失敗しました: ${result.buildResult.error}`);
+      }
+    }
 
     // 結果の判定
     result.valid = result.errors.length === 0;
@@ -333,5 +350,152 @@ export class ProjectVerifier {
     };
 
     return [...commonFiles, ...(projectSpecificFiles[this.projectType] || [])];
+  }
+
+  /**
+   * ビルド可能性の検証
+   */
+  private async verifyBuildCapability(): Promise<BuildResult> {
+    const startTime = Date.now();
+    
+    try {
+      console.log('🔨 ビルド可能性検証開始...');
+      
+      let buildCommand = '';
+      let output = '';
+
+      switch (this.projectType) {
+        case 'mcp-server':
+        case 'web-nextjs':
+          // npm install && npm run build
+          try {
+            console.log('📦 npm install実行中...');
+            execSync('npm install', { 
+              cwd: this.targetPath, 
+              stdio: 'pipe',
+              timeout: 120000 // 2分
+            });
+            
+            console.log('🔨 npm run build実行中...');
+            output = execSync('npm run build', { 
+              cwd: this.targetPath, 
+              stdio: 'pipe',
+              timeout: 60000, // 1分
+              encoding: 'utf-8'
+            });
+            buildCommand = 'npm run build';
+          } catch (error) {
+            const errorOutput = error instanceof Error ? error.message : String(error);
+            return {
+              success: false,
+              duration: Date.now() - startTime,
+              output: errorOutput,
+              error: `npm build failed: ${errorOutput}`
+            };
+          }
+          break;
+
+        case 'cli-rust':
+          // cargo build
+          try {
+            console.log('🦀 cargo build実行中...');
+            output = execSync('cargo build', { 
+              cwd: this.targetPath, 
+              stdio: 'pipe',
+              timeout: 180000, // 3分
+              encoding: 'utf-8'
+            });
+            buildCommand = 'cargo build';
+          } catch (error) {
+            const errorOutput = error instanceof Error ? error.message : String(error);
+            return {
+              success: false,
+              duration: Date.now() - startTime,
+              output: errorOutput,
+              error: `cargo build failed: ${errorOutput}`
+            };
+          }
+          break;
+
+        case 'api-fastapi':
+          // Python構文チェック
+          try {
+            console.log('🐍 Python構文チェック実行中...');
+            output = execSync('python -m py_compile main.py', { 
+              cwd: this.targetPath, 
+              stdio: 'pipe',
+              timeout: 30000, // 30秒
+              encoding: 'utf-8'
+            });
+            buildCommand = 'python -m py_compile';
+          } catch (error) {
+            const errorOutput = error instanceof Error ? error.message : String(error);
+            return {
+              success: false,
+              duration: Date.now() - startTime,
+              output: errorOutput,
+              error: `Python syntax check failed: ${errorOutput}`
+            };
+          }
+          break;
+
+        default:
+          return {
+            success: true,
+            duration: Date.now() - startTime,
+            output: 'No build verification needed for this project type',
+            error: undefined
+          };
+      }
+
+      const duration = Date.now() - startTime;
+      console.log(`✅ ビルド成功: ${buildCommand} (${duration}ms)`);
+
+      return {
+        success: true,
+        duration,
+        output,
+        error: undefined
+      };
+
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      
+      console.log(`❌ ビルド失敗: ${errorMessage} (${duration}ms)`);
+      
+      return {
+        success: false,
+        duration,
+        output: '',
+        error: errorMessage
+      };
+    }
+  }
+
+  /**
+   * 生成されたプロジェクトの完全性を検証（外部用メソッド）
+   */
+  static async verifyGenerated(projectType: string, targetPath: string, options?: {
+    skipBuild?: boolean;
+  }): Promise<VerificationResult> {
+    const verifier = new ProjectVerifier(projectType, targetPath);
+    
+    if (options?.skipBuild) {
+      // ビルド検証をスキップする場合は一時的にメソッドを無効化
+      const originalMethod = verifier.verifyBuildCapability;
+      verifier.verifyBuildCapability = async () => ({
+        success: true,
+        duration: 0,
+        output: 'Build verification skipped',
+        error: undefined
+      });
+      
+      const result = await verifier.verify();
+      verifier.verifyBuildCapability = originalMethod;
+      return result;
+    }
+    
+    return verifier.verify();
   }
 }

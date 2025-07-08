@@ -1,0 +1,211 @@
+name: Project Verification Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  verification-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    strategy:
+      matrix:
+        node-version: [18, 20]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Setup Rust (for Rust project tests)
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Setup Python (for FastAPI project tests)
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project
+      run: npm run build
+
+    - name: Run verification tests
+      run: npm run test:verification
+      env:
+        CI: true
+
+    - name: Run project types tests
+      run: npm run test:project-types
+      env:
+        CI: true
+
+    - name: Run error cases tests
+      run: npm run test:error-cases
+      env:
+        CI: true
+
+    - name: Generate test coverage
+      run: npm run test:jest:coverage
+      env:
+        CI: true
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./test/coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+
+    - name: Archive test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-node-${{ matrix.node-version }}
+        path: |
+          test/coverage/
+          test/reports/
+        retention-days: 7
+
+  build-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: verification-tests
+
+    strategy:
+      matrix:
+        project-type: [mcp-server, cli-rust, web-nextjs, api-fastapi]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Setup Rust (for cli-rust)
+      if: matrix.project-type == 'cli-rust'
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Setup Python (for api-fastapi)
+      if: matrix.project-type == 'api-fastapi'
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project
+      run: npm run build
+
+    - name: Generate test project
+      run: |
+        mkdir -p test-ci-output
+        node dist/scripts/scaffold-generator.js \
+          --name "ci-test-${{ matrix.project-type }}" \
+          --type "${{ matrix.project-type }}" \
+          --output "./test-ci-output/ci-test-${{ matrix.project-type }}" \
+          --skip-interactive \
+          --force
+
+    - name: Verify generated project
+      run: |
+        cd "test-ci-output/ci-test-${{ matrix.project-type }}"
+        
+        # プロジェクトタイプ別の検証
+        case "${{ matrix.project-type }}" in
+          "mcp-server"|"web-nextjs")
+            npm install
+            npm run build
+            ;;
+          "cli-rust")
+            cargo build
+            ;;
+          "api-fastapi")
+            python -m py_compile main.py
+            ;;
+        esac
+
+    - name: Run ProjectVerifier
+      run: |
+        node -e "
+          const { ProjectVerifier } = require('./dist/scripts/lib/projectVerifier.js');
+          async function verify() {
+            const verifier = new ProjectVerifier(
+              '${{ matrix.project-type }}', 
+              './test-ci-output/ci-test-${{ matrix.project-type }}'
+            );
+            const result = await verifier.verify();
+            console.log('Verification result:', result);
+            if (!result.valid) {
+              console.error('Verification failed:', result.errors);
+              process.exit(1);
+            }
+          }
+          verify().catch(console.error);
+        "
+
+    - name: Archive generated projects
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: generated-project-${{ matrix.project-type }}
+        path: test-ci-output/
+        retention-days: 3
+
+  security-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run security audit
+      run: npm audit --audit-level=moderate
+
+    - name: Run dependency scan
+      run: |
+        npx license-checker --summary
+        npx license-checker --failOn 'GPL;AGPL' || echo "GPL/AGPL licenses detected"
+
+  quality-gates:
+    runs-on: ubuntu-latest
+    needs: [verification-tests, build-verification]
+    if: always()
+
+    steps:
+    - name: Check job results
+      run: |
+        echo "Verification tests: ${{ needs.verification-tests.result }}"
+        echo "Build verification: ${{ needs.build-verification.result }}"
+        
+        if [[ "${{ needs.verification-tests.result }}" != "success" ]] || [[ "${{ needs.build-verification.result }}" != "success" ]]; then
+          echo "Quality gates failed"
+          exit 1
+        fi
+        
+        echo "All quality gates passed"
