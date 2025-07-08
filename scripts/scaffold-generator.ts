@@ -419,7 +419,7 @@ class ScaffoldGenerator {
       }
     } catch (error) {
       if (error instanceof Error && 'code' in error) {
-        const fsError = error as NodeJS.ErrnoException;
+        const fsError = error as { code?: string };
         if (fsError.code === 'ENOENT') {
           throw new Error(`ソースディレクトリが見つかりません: ${sourcePath}`);
         }

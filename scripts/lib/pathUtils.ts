@@ -79,7 +79,7 @@ export function isSafePath(filePath: string): boolean {
   
   try {
     // 元のパスパターンもチェック（Windowsスタイルパス）
-    if (/^[a-zA-Z]:[\\\/]?$/.test(filePath) || /^[a-zA-Z]:[\\\/]Windows[\\\/]/i.test(filePath)) {
+    if (/^[a-zA-Z]:[/\\]?$/.test(filePath) || /^[a-zA-Z]:[/\\]Windows[/\\]/i.test(filePath)) {
       return false;
     }
     
