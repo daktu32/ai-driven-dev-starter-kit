@@ -9,25 +9,20 @@ import ora from 'ora';
 import { glob } from 'glob';
 import { DocumentTemplateProcessor } from './lib/documentTemplateProcessor.js';
 import { ProjectConfig } from './lib/types.js';
+import { ValidationError, validateScaffoldOptions, isValidProjectType, ScaffoldOptions as ValidatedScaffoldOptions } from './lib/validator.js';
+import { expandPath, safeExpandPath, PathExpansionError } from './lib/pathUtils.js';
 
-interface ScaffoldOptions {
-  targetPath: string;
-  projectName: string;
-  projectType: 'cli-rust' | 'web-nextjs' | 'api-fastapi' | 'mcp-server';
-  includeProjectManagement: boolean;
-  includeArchitecture: boolean;
-  includeTools: boolean;
-  customCursorRules: boolean;
-}
+// ValidatedScaffoldOptionsをインポートしているため、ローカルのインターフェースは削除
 
 class ScaffoldGenerator {
   private sourceDir: string;
-  private options!: ScaffoldOptions;
+  private options!: ValidatedScaffoldOptions;
   private cliOptions: { [key: string]: string | boolean } = {};
 
   constructor() {
     this.sourceDir = path.resolve(process.cwd());
     this.parseCLIArgs();
+    this.setupGracefulShutdown();
   }
 
   private parseCLIArgs(): void {
@@ -41,6 +36,30 @@ class ScaffoldGenerator {
         }
       }
     }
+  }
+
+  private setupGracefulShutdown(): void {
+    const cleanup = () => {
+      console.log(chalk.yellow('\n👋 終了しています...'));
+      process.exit(0);
+    };
+    
+    process.on('SIGINT', cleanup);
+    process.on('SIGTERM', cleanup);
+    process.on('uncaughtException', (error) => {
+      console.error(chalk.red.bold('\n❌ 予期しないエラーが発生しました:'));
+      console.error(chalk.red(error.message));
+      if (error.stack) {
+        console.error(chalk.gray(error.stack));
+      }
+      process.exit(1);
+    });
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error(chalk.red.bold('\n❌ 未処理のPromise拒否が発生しました:'));
+      console.error(chalk.red(String(reason)));
+      console.error(chalk.gray(`Promise: ${promise}`));
+      process.exit(1);
+    });
   }
 
   async run(): Promise<void> {
@@ -175,43 +194,74 @@ class ScaffoldGenerator {
     const answers = await inquirer.prompt(questions);
 
     // CLI引数の値とプロンプトの答えをマージ
-    this.options = {
+    const rawOptions = {
       targetPath: this.cliOptions['target-path'] as string || answers.targetPath,
       projectName: this.cliOptions['project-name'] as string || answers.projectName,
-      projectType: this.cliOptions['project-type'] as ScaffoldOptions['projectType'] || answers.projectType,
+      projectType: (this.cliOptions['project-type'] as string || answers.projectType) as ValidatedScaffoldOptions['projectType'],
       includeProjectManagement: this.cliOptions['skip-optional'] ? true : answers.includeProjectManagement ?? true,
       includeArchitecture: this.cliOptions['skip-optional'] ? false : answers.includeArchitecture ?? false,
       includeTools: this.cliOptions['skip-optional'] ? true : answers.includeTools ?? true,
       customCursorRules: this.cliOptions['skip-optional'] ? true : answers.customCursorRules ?? true,
     };
+
+    try {
+      // パス展開
+      if (rawOptions.targetPath) {
+        rawOptions.targetPath = safeExpandPath(rawOptions.targetPath);
+      }
+      
+      // 検証実行
+      validateScaffoldOptions(rawOptions);
+      
+      this.options = rawOptions;
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        console.error(chalk.red.bold('\n❌ 入力データの検証エラー:'));
+        for (const err of error.errors) {
+          console.error(chalk.red(`  • ${err}`));
+        }
+        throw new Error('入力データが無効です。上記のエラーを修正してください。');
+      }
+      if (error instanceof PathExpansionError) {
+        throw new Error(`パス展開エラー: ${error.message}`);
+      }
+      throw error;
+    }
   }
 
   private async setDefaultOptionsForNonInteractive(): Promise<void> {
     // 非対話モードでのデフォルト設定
-    this.options = {
+    const rawOptions = {
       targetPath: this.cliOptions['target-path'] as string || this.cliOptions['output'] as string || './my-new-project',
       projectName: this.cliOptions['project-name'] as string || this.cliOptions['name'] as string || 'my-new-project',
-      projectType: this.cliOptions['project-type'] as ScaffoldOptions['projectType'] || this.cliOptions['type'] as ScaffoldOptions['projectType'] || 'mcp-server',
+      projectType: (this.cliOptions['project-type'] as string || this.cliOptions['type'] as string || 'mcp-server') as ValidatedScaffoldOptions['projectType'],
       includeProjectManagement: true,
       includeArchitecture: false,
       includeTools: true,
       customCursorRules: true,
     };
 
-    // 必須パラメータのバリデーション
-    if (!this.options.projectName) {
-      throw new Error('非対話モードでは --name または --project-name オプションが必須です');
+    try {
+      // パス展開
+      if (rawOptions.targetPath) {
+        rawOptions.targetPath = safeExpandPath(rawOptions.targetPath);
+      }
+      
+      // 検証実行
+      validateScaffoldOptions(rawOptions);
+      
+      this.options = rawOptions;
+      
+      console.log(chalk.gray(`非対話モード: ${this.options.projectType} プロジェクト "${this.options.projectName}" を "${this.options.targetPath}" に生成します`));
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        throw new Error(`非対話モードの設定エラー:\n${error.errors.map(err => `  - ${err}`).join('\n')}`);
+      }
+      if (error instanceof PathExpansionError) {
+        throw new Error(`パス展開エラー: ${error.message}`);
+      }
+      throw error;
     }
-    if (!this.options.projectType) {
-      throw new Error('非対話モードでは --type または --project-type オプションが必須です');
-    }
-    
-    const validTypes = ['cli-rust', 'web-nextjs', 'api-fastapi', 'mcp-server'];
-    if (!validTypes.includes(this.options.projectType)) {
-      throw new Error(`無効なプロジェクトタイプ: ${this.options.projectType}. 有効な値: ${validTypes.join(', ')}`);
-    }
-
-    console.log(chalk.gray(`非対話モード: ${this.options.projectType} プロジェクト "${this.options.projectName}" を "${this.options.targetPath}" に生成します`));
   }
 
   private async validateTargetPath(): Promise<void> {
@@ -311,43 +361,73 @@ class ScaffoldGenerator {
   }
 
   private async copyDirectoryRecursively(sourcePath: string, targetPath: string): Promise<void> {
-    const items = await readdir(sourcePath, { withFileTypes: true });
+    try {
+      const items = await readdir(sourcePath, { withFileTypes: true });
 
-    for (const item of items) {
-      const sourceItemPath = path.join(sourcePath, item.name);
-      let targetFileName = item.name;
-      
-      // .templateファイルは拡張子を除去
-      if (item.name.endsWith('.template')) {
-        targetFileName = item.name.replace('.template', '');
-      }
-      
-      
-      const targetItemPath = path.join(targetPath, targetFileName);
+      for (const item of items) {
+        const sourceItemPath = path.join(sourcePath, item.name);
+        let targetFileName = item.name;
+        
+        // .templateファイルは拡張子を除去
+        if (item.name.endsWith('.template')) {
+          targetFileName = item.name.replace('.template', '');
+        }
+        
+        const targetItemPath = path.join(targetPath, targetFileName);
 
-      if (item.isFile()) {
-        // ファイルをコピーし、プロジェクト名などを置換
-        let content = await fs.readFile(sourceItemPath, 'utf8');
-        const className = this.options.projectName
-          .replace(/-/g, '')
-          .replace(/[^a-zA-Z0-9]/g, '')
-          .replace(/^[0-9]/, '')
-          .replace(/^./, (c) => c.toUpperCase());
-        
-        const currentDate = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
-        
-        content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
-        content = content.replace(/\{\{PROJECT_CLASS_NAME\}\}/g, className);
-        content = content.replace(/\{\{PROJECT_DESCRIPTION\}\}/g, `${this.options.projectName} - Generated by Claude Code Dev Starter Kit`);
-        content = content.replace(/\{\{AUTHOR\}\}/g, 'Your Name');
-        content = content.replace(/\{\{DATE\}\}/g, currentDate);
-        
-        await fs.ensureDir(path.dirname(targetItemPath));
-        await fs.writeFile(targetItemPath, content);
-      } else if (item.isDirectory()) {
-        await fs.ensureDir(targetItemPath);
-        await this.copyDirectoryRecursively(sourceItemPath, targetItemPath);
+        try {
+          if (item.isFile()) {
+            // ファイルをコピーし、プロジェクト名などを置換
+            let content: string;
+            try {
+              content = await fs.readFile(sourceItemPath, 'utf8');
+            } catch (error) {
+              throw new Error(`ファイル読み込みエラー: ${sourceItemPath}\n${error instanceof Error ? error.message : String(error)}`);
+            }
+
+            const className = this.options.projectName
+              .replace(/-/g, '')
+              .replace(/[^a-zA-Z0-9]/g, '')
+              .replace(/^[0-9]/, '')
+              .replace(/^./, (c) => c.toUpperCase());
+            
+            const currentDate = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
+            
+            content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
+            content = content.replace(/\{\{PROJECT_CLASS_NAME\}\}/g, className);
+            content = content.replace(/\{\{PROJECT_DESCRIPTION\}\}/g, `${this.options.projectName} - Generated by Claude Code Dev Starter Kit`);
+            content = content.replace(/\{\{AUTHOR\}\}/g, 'Your Name');
+            content = content.replace(/\{\{DATE\}\}/g, currentDate);
+            
+            try {
+              await fs.ensureDir(path.dirname(targetItemPath));
+              await fs.writeFile(targetItemPath, content);
+            } catch (error) {
+              throw new Error(`ファイル書き込みエラー: ${targetItemPath}\n${error instanceof Error ? error.message : String(error)}`);
+            }
+          } else if (item.isDirectory()) {
+            try {
+              await fs.ensureDir(targetItemPath);
+              await this.copyDirectoryRecursively(sourceItemPath, targetItemPath);
+            } catch (error) {
+              throw new Error(`ディレクトリ処理エラー: ${sourceItemPath} -> ${targetItemPath}\n${error instanceof Error ? error.message : String(error)}`);
+            }
+          }
+        } catch (error) {
+          throw new Error(`アイテム処理エラー: ${item.name}\n${error instanceof Error ? error.message : String(error)}`);
+        }
       }
+    } catch (error) {
+      if (error instanceof Error && 'code' in error) {
+        const fsError = error as NodeJS.ErrnoException;
+        if (fsError.code === 'ENOENT') {
+          throw new Error(`ソースディレクトリが見つかりません: ${sourcePath}`);
+        }
+        if (fsError.code === 'EACCES') {
+          throw new Error(`ディレクトリへのアクセス権限がありません: ${sourcePath}`);
+        }
+      }
+      throw new Error(`ディレクトリ読み込みエラー: ${sourcePath}\n${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -359,15 +439,31 @@ class ScaffoldGenerator {
       const sourcePath = path.join(pmPath, file);
       const targetFilePath = path.join(targetPath, file);
 
-      if (await fs.pathExists(sourcePath)) {
-        // テンプレート処理のためcopyDirectoryRecursivelyを使用
-        let content = await fs.readFile(sourcePath, 'utf8');
-        const currentDate = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
-        
-        content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
-        content = content.replace(/\{\{DATE\}\}/g, currentDate);
-        
-        await fs.writeFile(targetFilePath, content);
+      try {
+        if (await fs.pathExists(sourcePath)) {
+          // テンプレート処理のためcopyDirectoryRecursivelyを使用
+          let content: string;
+          try {
+            content = await fs.readFile(sourcePath, 'utf8');
+          } catch (error) {
+            throw new Error(`プロジェクト管理ファイル読み込みエラー: ${sourcePath}\n${error instanceof Error ? error.message : String(error)}`);
+          }
+
+          const currentDate = new Date().toISOString().split('T')[0] || new Date().toISOString().substring(0, 10);
+          
+          content = content.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
+          content = content.replace(/\{\{DATE\}\}/g, currentDate);
+          
+          try {
+            await fs.writeFile(targetFilePath, content);
+          } catch (error) {
+            throw new Error(`プロジェクト管理ファイル書き込みエラー: ${targetFilePath}\n${error instanceof Error ? error.message : String(error)}`);
+          }
+        }
+      } catch (error) {
+        console.warn(chalk.yellow(`⚠ プロジェクト管理ファイルのコピーに失敗しました: ${file}`));
+        console.warn(chalk.gray(error instanceof Error ? error.message : String(error)));
+        // プロジェクト管理ファイルのエラーは致命的ではないため、処理を続行
       }
     }
   }

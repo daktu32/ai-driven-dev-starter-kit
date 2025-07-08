@@ -2,6 +2,13 @@
 
 ## 最新の完了タスク (2025-07-08)
 
+### ✅ 完了 - Validatorクラスから関数ベースへの移行
+- **リファクタリング**: project-setup.tsでValidatorクラス使用箇所を関数呼び出しに変更
+- **新関数実装**: validateProjectName, sanitizeProjectName, validateDescription, sanitizeDescription, validateRepositoryUrl, generateSlugFromName
+- **インポート修正**: validator.tsから必要な関数を個別インポート
+- **コンパイル確認**: TypeScriptコンパイル成功、型安全性確保
+- **クリーンアップ**: 古いvalidator.d.tsファイル削除
+
 ### ✅ 完了 - Issue #20: 生成結果の完全性検証とE2Eテスト実装
 - **ProjectVerifier拡張**: BuildResult追加、ビルド可能性検証機能実装
 - **E2Eテストスイート**: verification-e2e, project-types-verification, error-cases実装

@@ -8,7 +8,7 @@ import * as path from 'path';
 import { PromptSelector } from './lib/promptSelector.js';
 import { TemplateProcessor } from './lib/templateProcessor.js';
 import { FileManager } from './lib/fileManager.js';
-import { Validator } from './lib/validator.js';
+import { ValidationError, validateProjectConfig, validateProjectName, sanitizeProjectName, validateDescription, sanitizeDescription, validateRepositoryUrl, generateSlugFromName } from './lib/validator.js';
 import { ProjectConfig, SetupOptions, TechStackConfig, PromptType, TeamConfig } from './lib/types.js';
 
 class ProjectSetup {
@@ -103,23 +103,23 @@ class ProjectSetup {
         type: 'input',
         name: 'projectName',
         message: 'プロジェクト名を入力してください:',
-        validate: Validator.validateProjectName,
-        filter: (input: string) => Validator.sanitizeProjectName(input),
+        validate: validateProjectName,
+        filter: (input: string) => sanitizeProjectName(input),
       },
       {
         type: 'input',
         name: 'description',
         message: 'プロジェクトの説明を入力してください:',
-        validate: Validator.validateDescription,
-        filter: (input: string) => Validator.sanitizeDescription(input),
+        validate: validateDescription,
+        filter: (input: string) => sanitizeDescription(input),
       },
       {
         type: 'input',
         name: 'repositoryUrl',
         message: 'GitHubリポジトリのURLを入力してください:',
-        validate: Validator.validateRepositoryUrl,
+        validate: validateRepositoryUrl,
         default: (answers: { projectName: string }) =>
-          `https://github.com/your-username/${Validator.generateSlugFromName(answers.projectName)}`,
+          `https://github.com/your-username/${generateSlugFromName(answers.projectName)}`,
       },
     ];
 
