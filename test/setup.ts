@@ -5,7 +5,7 @@
  */
 
 import fs from 'fs-extra';
-import { jest } from '@jest/globals';
+import { jest, beforeEach, afterEach } from '@jest/globals';
 
 // モック設定
 jest.mock('inquirer');

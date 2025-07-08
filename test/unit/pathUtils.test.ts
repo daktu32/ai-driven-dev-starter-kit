@@ -108,7 +108,16 @@ describe('isSafePath', () => {
     ];
     
     unsafePaths.forEach(path => {
-      expect(isSafePath(path)).toBe(false);
+      const result = isSafePath(path);
+      if (result !== false) {
+        try {
+          const expanded = expandPath(path);
+          console.log(`Expected ${path} to be unsafe, but got safe. Expanded to: ${expanded}`);
+        } catch (e) {
+          console.log(`Expected ${path} to be unsafe, but got safe. Expansion failed: ${e}`);
+        }
+      }
+      expect(result).toBe(false);
     });
   });
   

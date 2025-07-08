@@ -73,21 +73,21 @@ export function expandPath(inputPath: string): string {
  * 安全なパスかどうかをチェックする
  */
 export function isSafePath(filePath: string): boolean {
+  if (!filePath || typeof filePath !== 'string') {
+    return false;
+  }
+  
   try {
+    // 元のパスパターンもチェック（Windowsスタイルパス）
+    if (/^[a-zA-Z]:[\\\/]?$/.test(filePath) || /^[a-zA-Z]:[\\\/]Windows[\\\/]/i.test(filePath)) {
+      return false;
+    }
+    
     const expandedPath = expandPath(filePath);
     
-    // 危険なパターンのチェック
-    const dangerousPatterns = [
-      /\.\./g,  // 親ディレクトリへの遷移（パス正規化後も残る場合）
-      /^\/$/,   // ルートディレクトリ
-      /^[a-zA-Z]:\\?$/i,  // Windowsのルート
-      /\/\.{1,2}(?:\/|$)/,  // 隠しディレクトリへの直接アクセス
-    ];
-
-    for (const pattern of dangerousPatterns) {
-      if (pattern.test(expandedPath)) {
-        return false;
-      }
+    // ルートディレクトリのチェック
+    if (expandedPath === '/') {
+      return false;
     }
 
     // システムディレクトリのチェック (Unix系)
@@ -102,17 +102,19 @@ export function isSafePath(filePath: string): boolean {
       }
     }
 
-    // Windowsシステムディレクトリのチェック
-    const windowsSystemDirs = [
-      /^[a-zA-Z]:\\Windows\\/i,
-      /^[a-zA-Z]:\\Program Files\\/i,
-      /^[a-zA-Z]:\\System32\\/i,
-    ];
+    // パストラバーサル攻撃のチェック（正規化後もチェック）
+    if (expandedPath.includes('..')) {
+      return false;
+    }
 
-    for (const pattern of windowsSystemDirs) {
-      if (pattern.test(expandedPath)) {
-        return false;
-      }
+    // 危険なパターンのチェック（特に '../../../etc' のような相対パス）
+    if (filePath.includes('../../') || filePath.includes('..\\..\\')) {
+      return false;
+    }
+
+    // Windowsパスが含まれている場合（展開後のパス名に）
+    if (expandedPath.includes('C:\\') || expandedPath.includes('C:/')) {
+      return false;
     }
 
     return true;
@@ -125,11 +127,11 @@ export function isSafePath(filePath: string): boolean {
  * パスを安全に展開する（安全性チェック付き）
  */
 export function safeExpandPath(inputPath: string): string {
-  const expandedPath = expandPath(inputPath);
-  
-  if (!isSafePath(expandedPath)) {
+  if (!isSafePath(inputPath)) {
     throw new PathExpansionError('安全でないパスが指定されています', inputPath);
   }
+  
+  const expandedPath = expandPath(inputPath);
   
   return expandedPath;
 }
@@ -142,11 +144,16 @@ export function safejoin(...paths: string[]): string {
     throw new PathExpansionError('結合するパスが指定されていません', '');
   }
   
-  // 各パスを展開
-  const expandedPaths = paths.map(p => expandPath(p));
+  // 最初のパスを基準とし、残りを相対パスとして結合
+  const firstPath = paths[0];
+  if (!firstPath) {
+    throw new PathExpansionError('最初のパスが無効です', '');
+  }
+  const basePath = expandPath(firstPath);
+  const relativePaths = paths.slice(1);
   
-  // パスを結合
-  const joinedPath = resolve(...expandedPaths);
+  // パスを結合（最初のパスから相対的に結合）
+  const joinedPath = resolve(basePath, ...relativePaths);
   
   // 安全性チェック
   if (!isSafePath(joinedPath)) {

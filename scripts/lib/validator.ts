@@ -50,8 +50,8 @@ export function validateProjectConfig(config: Partial<ProjectConfig>): asserts c
       errors.push('プロジェクト名は空文字にできません');
     } else if (trimmedName.length > 100) {
       errors.push('プロジェクト名は100文字以内で入力してください');
-    } else if (!/^[a-zA-Z0-9][a-zA-Z0-9\-_]*$/.test(trimmedName)) {
-      errors.push('プロジェクト名は英数字、ハイフン、アンダースコアのみ使用可能で、数字から始まることはできません');
+    } else if (!/^[a-zA-Z][a-zA-Z0-9\-_]*$/.test(trimmedName)) {
+      errors.push('プロジェクト名は英字で始まり、英数字、ハイフン、アンダースコアのみ使用可能です');
     }
   }
   
@@ -142,8 +142,8 @@ export function validateScaffoldOptions(options: Partial<ScaffoldOptions>): asse
     const trimmedName = options.projectName.trim();
     if (trimmedName.length === 0) {
       errors.push('プロジェクト名は空文字にできません');
-    } else if (!/^[a-zA-Z0-9][a-zA-Z0-9\-_]*$/.test(trimmedName)) {
-      errors.push('プロジェクト名は英数字、ハイフン、アンダースコアのみ使用可能で、数字から始まることはできません');
+    } else if (!/^[a-zA-Z][a-zA-Z0-9\-_]*$/.test(trimmedName)) {
+      errors.push('プロジェクト名は英字で始まり、英数字、ハイフン、アンダースコアのみ使用可能です');
     }
   }
   
@@ -190,8 +190,8 @@ export function validateProjectName(input: string): boolean | string {
     return 'プロジェクト名は100文字以内で入力してください';
   }
   
-  if (!/^[a-zA-Z0-9][a-zA-Z0-9\-_]*$/.test(trimmedName)) {
-    return 'プロジェクト名は英数字、ハイフン、アンダースコアのみ使用可能で、数字から始まることはできません';
+  if (!/^[a-zA-Z][a-zA-Z0-9\-_]*$/.test(trimmedName)) {
+    return 'プロジェクト名は英字で始まり、英数字、ハイフン、アンダースコアのみ使用可能です';
   }
   
   return true;
