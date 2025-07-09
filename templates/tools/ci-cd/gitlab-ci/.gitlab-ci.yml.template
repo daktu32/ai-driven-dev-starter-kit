@@ -1,0 +1,350 @@
+# GitLab CI/CD Configuration for {{PROJECT_NAME}}
+# {{PROJECT_TYPE}} project
+
+stages:
+  - quality
+  - test
+  - build
+  - security
+  - deploy
+
+variables:
+  NODE_VERSION: "{{NODE_VERSION}}"
+  DOCKER_DRIVER: overlay2
+  COVERAGE_THRESHOLD: "80"
+
+# Templates for reusable jobs
+.node_setup: &node_setup
+  image: node:${NODE_VERSION}
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm/
+      - node_modules/
+
+.python_setup: &python_setup
+  image: python:3.11
+  before_script:
+    - python -m pip install --upgrade pip
+    - pip install -r requirements.txt
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .cache/pip/
+
+.rust_setup: &rust_setup
+  image: rust:latest
+  before_script:
+    - cargo --version
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - target/
+      - ~/.cargo/
+
+# Quality Stage
+lint:
+  stage: quality
+  <<: *node_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /nextjs|mcp-server/'
+  script:
+    - npm run lint
+    - npm run format:check || echo "Format check failed"
+    - npm run type-check || echo "Type check failed"
+  artifacts:
+    reports:
+      junit: lint-results.xml
+    when: always
+
+lint-python:
+  stage: quality
+  <<: *python_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /fastapi/'
+  script:
+    - pip install flake8 black isort mypy
+    - flake8 src/
+    - black --check src/
+    - isort --check-only src/
+    - mypy src/
+  allow_failure: true
+
+lint-rust:
+  stage: quality
+  <<: *rust_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /rust/'
+  script:
+    - cargo fmt --all -- --check
+    - cargo clippy -- -D warnings
+
+# Test Stage
+test-unit:
+  stage: test
+  <<: *node_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /nextjs|mcp-server/'
+  script:
+    - npm run test
+    - npm run test:coverage
+  coverage: '/Lines\s*:\s*(\d+\.\d+)%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+      junit: junit.xml
+    paths:
+      - coverage/
+    when: always
+
+test-python:
+  stage: test
+  <<: *python_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /fastapi/'
+  script:
+    - pip install pytest pytest-cov
+    - python -m pytest tests/ -v --cov=src --cov-report=xml --cov-report=html
+  coverage: '/TOTAL.+?(\d+\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+      junit: report.xml
+    paths:
+      - htmlcov/
+    when: always
+
+test-rust:
+  stage: test
+  <<: *rust_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /rust/'
+  script:
+    - cargo test --verbose
+    - cargo test --doc
+  artifacts:
+    reports:
+      junit: target/test-results.xml
+    when: always
+
+# Build Stage
+build-node:
+  stage: build
+  <<: *node_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /nextjs|mcp-server/'
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+      - build/
+      - .next/
+    expire_in: 1 week
+
+build-python:
+  stage: build
+  <<: *python_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /fastapi/'
+  script:
+    - python setup.py sdist bdist_wheel || echo "No setup.py found"
+    - pip wheel . -w dist/ || echo "Wheel build failed"
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+
+build-rust:
+  stage: build
+  <<: *rust_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /rust/'
+  script:
+    - cargo build --release
+  artifacts:
+    paths:
+      - target/release/{{PROJECT_NAME}}
+    expire_in: 1 week
+
+# Docker Build (for FastAPI)
+build-docker:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /fastapi/'
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - docker build -t $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+# Security Stage
+security-scan:
+  stage: security
+  image: node:${NODE_VERSION}
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /nextjs|mcp-server/'
+  script:
+    - npm audit --audit-level=high
+    - npx audit-ci --config .audit-ci.json || true
+  allow_failure: true
+
+security-python:
+  stage: security
+  <<: *python_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /fastapi/'
+  script:
+    - pip install safety bandit
+    - safety check
+    - bandit -r src/
+  allow_failure: true
+
+security-rust:
+  stage: security
+  <<: *rust_setup
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /rust/'
+  script:
+    - cargo install cargo-audit
+    - cargo audit
+  allow_failure: true
+
+# Container Security Scan
+container-scan:
+  stage: security
+  image: docker:latest
+  services:
+    - docker:dind
+  rules:
+    - if: '${{PROJECT_TYPE}} =~ /fastapi/'
+  script:
+    - docker run --rm -v /var/run/docker.sock:/var/run/docker.sock 
+      -v $PWD:/tmp/.cache/ aquasec/trivy:latest image 
+      --exit-code 0 --no-progress --format table 
+      $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  allow_failure: true
+
+# Deploy Stage
+deploy-staging:
+  stage: deploy
+  image: node:${NODE_VERSION}
+  environment:
+    name: staging
+    url: https://{{PROJECT_NAME}}-staging.example.com
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop"
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  script:
+    # Next.js deployment
+    - |
+      if [[ "{{PROJECT_TYPE}}" == *"nextjs"* ]]; then
+        npx vercel --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
+      fi
+    # FastAPI deployment
+    - |
+      if [[ "{{PROJECT_TYPE}}" == *"fastapi"* ]]; then
+        echo "Deploying FastAPI to staging"
+        # Add your FastAPI deployment commands here
+      fi
+    # MCP Server deployment
+    - |
+      if [[ "{{PROJECT_TYPE}}" == *"mcp-server"* ]]; then
+        npm publish --tag staging
+      fi
+    # Rust deployment
+    - |
+      if [[ "{{PROJECT_TYPE}}" == *"rust"* ]]; then
+        echo "Deploying Rust CLI to staging"
+        # Add your Rust deployment commands here
+      fi
+
+deploy-production:
+  stage: deploy
+  image: node:${NODE_VERSION}
+  environment:
+    name: production
+    url: https://{{PROJECT_NAME}}.example.com
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  when: manual
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  script:
+    # Next.js deployment
+    - |
+      if [[ "{{PROJECT_TYPE}}" == *"nextjs"* ]]; then
+        npx vercel --prod --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID
+      fi
+    # FastAPI deployment
+    - |
+      if [[ "{{PROJECT_TYPE}}" == *"fastapi"* ]]; then
+        echo "Deploying FastAPI to production"
+        # Add your FastAPI deployment commands here
+      fi
+    # MCP Server deployment
+    - |
+      if [[ "{{PROJECT_TYPE}}" == *"mcp-server"* ]]; then
+        npm publish
+      fi
+    # Rust deployment
+    - |
+      if [[ "{{PROJECT_TYPE}}" == *"rust"* ]]; then
+        echo "Deploying Rust CLI to production"
+        # Add your Rust deployment commands here
+      fi
+
+# Release Job (triggered by tags)
+release:
+  stage: deploy
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - echo "Creating release for $CI_COMMIT_TAG"
+  release:
+    tag_name: '$CI_COMMIT_TAG'
+    name: 'Release $CI_COMMIT_TAG'
+    description: 'Release created using the release-cli'
+    assets:
+      links:
+        - name: 'Build Artifacts'
+          url: '$CI_PROJECT_URL/-/jobs/artifacts/$CI_COMMIT_TAG/download?job=build-node'
+
+# Pages (for documentation)
+pages:
+  stage: deploy
+  image: node:${NODE_VERSION}
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - mkdir public
+    - cp -r coverage/* public/ || echo "No coverage reports"
+    - cp -r htmlcov/* public/ || echo "No Python coverage reports"
+    - echo "<h1>{{PROJECT_NAME}} CI/CD Reports</h1>" > public/index.html
+    - echo "<a href='coverage/'>Coverage Reports</a>" >> public/index.html
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

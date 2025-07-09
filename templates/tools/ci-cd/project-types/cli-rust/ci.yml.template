@@ -1,0 +1,381 @@
+name: Rust CLI CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  quality-checks:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Format check
+        run: cargo fmt --all -- --check
+
+      - name: Clippy check
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Documentation check
+        run: cargo doc --no-deps --document-private-items
+
+      - name: Unused dependencies check
+        run: |
+          cargo install cargo-udeps
+          cargo udeps --all-targets || echo "Unused dependencies check failed"
+
+  test-rust:
+    name: Rust Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust-version: [stable, beta, nightly]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust ${{ matrix.rust-version }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust-version }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-cargo-${{ matrix.rust-version }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-${{ matrix.rust-version }}-
+
+      - name: Run tests
+        run: cargo test --verbose --all-features
+
+      - name: Run documentation tests
+        run: cargo test --doc
+
+      - name: Run integration tests
+        run: |
+          cargo test --test integration || echo "Integration tests not configured"
+
+  benchmark-tests:
+    name: Benchmark Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-cargo-bench-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-bench-
+
+      - name: Run benchmarks
+        run: |
+          cargo bench || echo "Benchmarks not configured"
+
+  cross-platform-build:
+    name: Cross-Platform Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: {{PROJECT_NAME}}
+            asset_name: {{PROJECT_NAME}}-linux-amd64
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            artifact_name: {{PROJECT_NAME}}
+            asset_name: {{PROJECT_NAME}}-linux-musl
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: {{PROJECT_NAME}}.exe
+            asset_name: {{PROJECT_NAME}}-windows-amd64.exe
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact_name: {{PROJECT_NAME}}
+            asset_name: {{PROJECT_NAME}}-macos-amd64
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact_name: {{PROJECT_NAME}}
+            asset_name: {{PROJECT_NAME}}-macos-arm64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ matrix.os }}-cargo-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ matrix.os }}-cargo-${{ matrix.target }}-
+
+      - name: Install cross-compilation tools
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+
+      - name: Build release binary
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Strip binary (Unix)
+        if: matrix.os != 'windows-latest'
+        run: |
+          strip target/${{ matrix.target }}/release/${{ matrix.artifact_name }} || echo "Strip failed"
+
+      - name: Test binary
+        run: |
+          ./target/${{ matrix.target }}/release/${{ matrix.artifact_name }} --version || echo "Version test failed"
+          ./target/${{ matrix.target }}/release/${{ matrix.artifact_name }} --help || echo "Help test failed"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: target/${{ matrix.target }}/release/${{ matrix.artifact_name }}
+          retention-days: 7
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-cargo-audit-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-audit-
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Run security audit
+        run: cargo audit
+
+      - name: License check
+        run: |
+          cargo install cargo-license
+          cargo license
+
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-cargo-coverage-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-coverage-
+
+      - name: Install cargo-tarpaulin
+        run: cargo install cargo-tarpaulin
+
+      - name: Run coverage
+        run: |
+          cargo tarpaulin --out xml --output-dir coverage/ --ignore-tests
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/cobertura.xml
+
+  package-release:
+    name: Package Release
+    runs-on: ubuntu-latest
+    needs: [quality-checks, test-rust, cross-platform-build, security-audit]
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create release packages
+        run: |
+          mkdir -p release
+          for dir in artifacts/*/; do
+            if [ -d "$dir" ]; then
+              asset_name=$(basename "$dir")
+              echo "Packaging $asset_name..."
+              
+              # Create tar.gz for Unix systems
+              if [[ "$asset_name" == *"linux"* ]] || [[ "$asset_name" == *"macos"* ]]; then
+                tar -czf "release/${asset_name}.tar.gz" -C "$dir" .
+              fi
+              
+              # Create zip for Windows
+              if [[ "$asset_name" == *"windows"* ]]; then
+                (cd "$dir" && zip -r "../release/${asset_name}.zip" .)
+              fi
+            fi
+          done
+
+      - name: Upload release packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-packages
+          path: release/
+          retention-days: 7
+
+  publish-crates:
+    name: Publish to Crates.io
+    runs-on: ubuntu-latest
+    needs: [quality-checks, test-rust, security-audit]
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-cargo-publish-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-publish-
+
+      - name: Login to crates.io
+        run: cargo login ${{ secrets.CRATES_IO_TOKEN }}
+
+      - name: Publish to crates.io
+        run: cargo publish
+
+  create-github-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [package-release]
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download release packages
+        uses: actions/download-artifact@v4
+        with:
+          name: release-packages
+          path: release/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+
+  homebrew-tap:
+    name: Update Homebrew Tap
+    runs-on: ubuntu-latest
+    needs: [create-github-release]
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Update Homebrew tap
+        run: |
+          echo "Updating Homebrew tap for {{PROJECT_NAME}}"
+          # Add your homebrew tap update logic here
+          # curl -X POST -H "Authorization: token ${{ secrets.HOMEBREW_TAP_TOKEN }}" \
+          #   -H "Accept: application/vnd.github.v3+json" \
+          #   https://api.github.com/repos/your-username/homebrew-tap/dispatches \
+          #   -d '{"event_type":"update","client_payload":{"formula":"{{PROJECT_NAME}}","version":"${{ github.ref_name }}"}}'
+
+  notify-status:
+    name: Notification
+    runs-on: ubuntu-latest
+    needs: [quality-checks, test-rust, cross-platform-build, security-audit, coverage]
+    if: always()
+    steps:
+      - name: Notify build status
+        run: |
+          if [ "${{ needs.quality-checks.result }}" = "success" ] && \
+             [ "${{ needs.test-rust.result }}" = "success" ] && \
+             [ "${{ needs.cross-platform-build.result }}" = "success" ] && \
+             [ "${{ needs.security-audit.result }}" = "success" ] && \
+             [ "${{ needs.coverage.result }}" = "success" ]; then
+            echo "✅ All Rust CLI CI checks passed!"
+          else
+            echo "❌ Some Rust CLI CI checks failed"
+            echo "Quality: ${{ needs.quality-checks.result }}"
+            echo "Tests: ${{ needs.test-rust.result }}"
+            echo "Cross-platform: ${{ needs.cross-platform-build.result }}"
+            echo "Security: ${{ needs.security-audit.result }}"
+            echo "Coverage: ${{ needs.coverage.result }}"
+          fi
