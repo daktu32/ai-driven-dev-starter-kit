@@ -1,0 +1,389 @@
+name: FastAPI CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PYTHON_VERSION: '3.11'
+  DOCKER_REGISTRY: 'ghcr.io'
+  IMAGE_NAME: '{{PROJECT_NAME}}'
+
+jobs:
+  quality-checks:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Format check (Black)
+        run: black --check src/
+
+      - name: Import sorting check (isort)
+        run: isort --check-only src/
+
+      - name: Linting (Flake8)
+        run: flake8 src/
+
+      - name: Type checking (mypy)
+        run: mypy src/
+
+      - name: Security check (Bandit)
+        run: bandit -r src/
+
+      - name: Dependency check (Safety)
+        run: safety check
+
+  test-api:
+    name: API Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10, 3.11]
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run unit tests
+        run: |
+          python -m pytest tests/unit/ -v --cov=src --cov-report=xml --cov-report=html
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
+          REDIS_URL: redis://localhost:6379
+
+      - name: Run integration tests
+        run: |
+          python -m pytest tests/integration/ -v
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
+          REDIS_URL: redis://localhost:6379
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+
+  api-integration-tests:
+    name: API Integration Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Start FastAPI server
+        run: |
+          uvicorn src.main:app --host 0.0.0.0 --port 8000 &
+          sleep 10
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/testdb
+          REDIS_URL: redis://localhost:6379
+
+      - name: Test API endpoints
+        run: |
+          # Health check
+          curl -f http://localhost:8000/health || echo "Health endpoint not available"
+          
+          # API documentation
+          curl -f http://localhost:8000/docs || echo "Docs endpoint not available"
+          
+          # OpenAPI spec
+          curl -f http://localhost:8000/openapi.json || echo "OpenAPI spec not available"
+
+      - name: Run API tests with Newman
+        run: |
+          npm install -g newman
+          newman run tests/api/postman_collection.json -e tests/api/test_environment.json || echo "Newman tests not configured"
+
+      - name: Load testing
+        run: |
+          pip install locust
+          locust --headless -u 10 -r 2 -t 30s --host http://localhost:8000 -f tests/load/locustfile.py || echo "Load tests not configured"
+
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: [quality-checks, test-api]
+    outputs:
+      image-digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-metadata
+          path: |
+            ${{ steps.meta.outputs.json }}
+          retention-days: 7
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: [build-docker]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Container security check
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:latest image \
+            --exit-code 0 --severity HIGH,CRITICAL \
+            ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build-docker, security-scan]
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.staging-url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to staging environment
+        id: deploy
+        run: |
+          # Example deployment to cloud provider
+          echo "Deploying to staging environment..."
+          
+          # Deploy to Kubernetes (example)
+          # kubectl set image deployment/{{PROJECT_NAME}} {{PROJECT_NAME}}=${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          
+          # Deploy to Docker Swarm (example)
+          # docker service update --image ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }} {{PROJECT_NAME}}_api
+          
+          # Deploy to cloud provider (example)
+          # aws ecs update-service --cluster staging --service {{PROJECT_NAME}} --task-definition {{PROJECT_NAME}}:latest
+          
+          echo "staging-url=https://{{PROJECT_NAME}}-staging.example.com" >> $GITHUB_OUTPUT
+
+      - name: Run staging smoke tests
+        run: |
+          # Wait for deployment
+          sleep 30
+          
+          # Health check
+          curl -f ${{ steps.deploy.outputs.staging-url }}/health || echo "Health check failed"
+          
+          # Basic API test
+          curl -f ${{ steps.deploy.outputs.staging-url }}/docs || echo "API docs not available"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-docker, security-scan]
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.production-url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to production environment
+        id: deploy
+        run: |
+          # Example deployment to cloud provider
+          echo "Deploying to production environment..."
+          
+          # Deploy to Kubernetes (example)
+          # kubectl set image deployment/{{PROJECT_NAME}} {{PROJECT_NAME}}=${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          
+          # Deploy to Docker Swarm (example)
+          # docker service update --image ${{ env.DOCKER_REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ github.sha }} {{PROJECT_NAME}}_api
+          
+          # Deploy to cloud provider (example)
+          # aws ecs update-service --cluster production --service {{PROJECT_NAME}} --task-definition {{PROJECT_NAME}}:latest
+          
+          echo "production-url=https://{{PROJECT_NAME}}.example.com" >> $GITHUB_OUTPUT
+
+      - name: Run production smoke tests
+        run: |
+          # Wait for deployment
+          sleep 30
+          
+          # Health check
+          curl -f ${{ steps.deploy.outputs.production-url }}/health || echo "Health check failed"
+          
+          # Basic API test
+          curl -f ${{ steps.deploy.outputs.production-url }}/docs || echo "API docs not available"
+
+      - name: Post-deployment monitoring
+        run: |
+          # Setup monitoring alerts
+          echo "Setting up monitoring for production deployment..."
+          
+          # Send deployment notification
+          # curl -X POST -H 'Content-type: application/json' \
+          #   --data '{"text":"🚀 {{PROJECT_NAME}} API deployed to production"}' \
+          #   ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  notify-status:
+    name: Notification
+    runs-on: ubuntu-latest
+    needs: [quality-checks, test-api, api-integration-tests, build-docker, security-scan]
+    if: always()
+    steps:
+      - name: Notify build status
+        run: |
+          if [ "${{ needs.quality-checks.result }}" = "success" ] && \
+             [ "${{ needs.test-api.result }}" = "success" ] && \
+             [ "${{ needs.api-integration-tests.result }}" = "success" ] && \
+             [ "${{ needs.build-docker.result }}" = "success" ] && \
+             [ "${{ needs.security-scan.result }}" = "success" ]; then
+            echo "✅ All FastAPI CI checks passed!"
+          else
+            echo "❌ Some FastAPI CI checks failed"
+            echo "Quality: ${{ needs.quality-checks.result }}"
+            echo "Tests: ${{ needs.test-api.result }}"
+            echo "Integration: ${{ needs.api-integration-tests.result }}"
+            echo "Build: ${{ needs.build-docker.result }}"
+            echo "Security: ${{ needs.security-scan.result }}"
+          fi

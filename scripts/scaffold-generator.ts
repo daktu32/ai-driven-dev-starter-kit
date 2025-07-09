@@ -18,6 +18,12 @@ interface ScaffoldOptions {
   includeArchitecture: boolean;
   includeTools: boolean;
   customCursorRules: boolean;
+  includeCICD: boolean;
+  cicdProvider: 'github-actions' | 'gitlab-ci' | 'both';
+  // 品質ゲート設定
+  coverageThreshold: number;
+  enableSecurityScan: boolean;
+  enablePerformanceTest: boolean;
 }
 
 class ScaffoldGenerator {
@@ -79,6 +85,11 @@ class ScaffoldGenerator {
     console.log(chalk.white('  --skip-interactive        すべての対話をスキップ (E2Eテスト用)'));
     console.log(chalk.white('  --force                   既存ディレクトリの上書き確認をスキップ'));
     console.log(chalk.white('  --skip-optional           オプション項目の選択をスキップ'));
+    console.log(chalk.white('  --include-cicd            CI/CDテンプレートを含める'));
+    console.log(chalk.white('  --cicd-provider=TYPE      CI/CDプロバイダー (github-actions, gitlab-ci, both)'));
+    console.log(chalk.white('  --coverage-threshold=NUM  テストカバレッジ閾値 (デフォルト: 80)'));
+    console.log(chalk.white('  --enable-security-scan    セキュリティスキャンを有効化'));
+    console.log(chalk.white('  --enable-performance-test パフォーマンステストを有効化'));
     console.log(chalk.cyan.bold('\nプロジェクトタイプ:'));
     console.log(chalk.white('  cli-rust     Rustで書くCLIツール'));
     console.log(chalk.white('  web-nextjs   Next.jsでのWebアプリ'));
@@ -168,8 +179,70 @@ class ScaffoldGenerator {
           name: 'customCursorRules',
           message: 'プロジェクト固有の .cursorrules を生成しますか？',
           default: true,
+        },
+        {
+          type: 'confirm',
+          name: 'includeCICD',
+          message: 'CI/CDテンプレートを含めますか？',
+          default: true,
         }
       );
+    }
+
+    // CI/CDが含まれる場合のプロバイダー選択
+    if (this.cliOptions['include-cicd'] || (!this.cliOptions['skip-optional'] && !this.cliOptions['cicd-provider'])) {
+      const cicdAnswer = await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'cicdProvider',
+          message: 'CI/CDプロバイダーを選択してください:',
+          choices: [
+            { name: 'GitHub Actions', value: 'github-actions' },
+            { name: 'GitLab CI', value: 'gitlab-ci' },
+            { name: 'Both (GitHub Actions + GitLab CI)', value: 'both' }
+          ],
+          default: 'github-actions',
+          when: (answers) => answers.includeCICD || this.cliOptions['include-cicd']
+        }
+      ]);
+      
+      if (cicdAnswer.cicdProvider) {
+        this.cliOptions['cicd-provider'] = cicdAnswer.cicdProvider;
+      }
+    }
+
+    // 品質ゲート設定プロンプト
+    if (!this.cliOptions['skip-optional']) {
+      const qualityGateAnswer = await inquirer.prompt([
+        {
+          type: 'number',
+          name: 'coverageThreshold',
+          message: 'テストカバレッジ閾値を入力してください (0-100):',
+          default: 80,
+          validate: (input: number) => {
+            if (input < 0 || input > 100) {
+              return 'カバレッジ閾値は0から100の間で入力してください';
+            }
+            return true;
+          }
+        },
+        {
+          type: 'confirm',
+          name: 'enableSecurityScan',
+          message: 'セキュリティスキャンを有効化しますか？',
+          default: true
+        },
+        {
+          type: 'confirm',
+          name: 'enablePerformanceTest',
+          message: 'パフォーマンステストを有効化しますか？',
+          default: false
+        }
+      ]);
+      
+      this.cliOptions['coverage-threshold'] = qualityGateAnswer.coverageThreshold?.toString() || '80';
+      this.cliOptions['enable-security-scan'] = qualityGateAnswer.enableSecurityScan;
+      this.cliOptions['enable-performance-test'] = qualityGateAnswer.enablePerformanceTest;
     }
 
     const answers = await inquirer.prompt(questions);
@@ -183,6 +256,12 @@ class ScaffoldGenerator {
       includeArchitecture: this.cliOptions['skip-optional'] ? false : answers.includeArchitecture ?? false,
       includeTools: this.cliOptions['skip-optional'] ? true : answers.includeTools ?? true,
       customCursorRules: this.cliOptions['skip-optional'] ? true : answers.customCursorRules ?? true,
+      includeCICD: this.cliOptions['include-cicd'] || (this.cliOptions['skip-optional'] ? true : answers.includeCICD ?? true),
+      cicdProvider: this.cliOptions['cicd-provider'] as ScaffoldOptions['cicdProvider'] || 'github-actions',
+      // 品質ゲート設定
+      coverageThreshold: parseInt(this.cliOptions['coverage-threshold'] as string) || 80,
+      enableSecurityScan: Boolean(this.cliOptions['enable-security-scan']),
+      enablePerformanceTest: Boolean(this.cliOptions['enable-performance-test']),
     };
   }
 
@@ -196,6 +275,12 @@ class ScaffoldGenerator {
       includeArchitecture: false,
       includeTools: true,
       customCursorRules: true,
+      includeCICD: Boolean(this.cliOptions['include-cicd']),
+      cicdProvider: this.cliOptions['cicd-provider'] as ScaffoldOptions['cicdProvider'] || 'github-actions',
+      // 品質ゲート設定のデフォルト値
+      coverageThreshold: parseInt(this.cliOptions['coverage-threshold'] as string) || 80,
+      enableSecurityScan: Boolean(this.cliOptions['enable-security-scan']),
+      enablePerformanceTest: Boolean(this.cliOptions['enable-performance-test']),
     };
 
     // 必須パラメータのバリデーション
@@ -278,6 +363,11 @@ class ScaffoldGenerator {
       // .cursorrules を生成
       if (this.options.customCursorRules) {
         await this.generateCursorRules(targetPath);
+      }
+
+      // CI/CDテンプレートを生成
+      if (this.options.includeCICD) {
+        await this.generateCICDTemplates(targetPath);
       }
 
       // package.json を更新
@@ -678,6 +768,122 @@ ${this.getProjectTypeSpecificRules()}
     
     console.log(chalk.cyan.bold('\n🎉 PRDベース開発の準備が完了しました！'));
     console.log(chalk.yellow('💡 PRD.mdを完成させてからClaude Codeで開発を開始してください'));
+  }
+
+  private async generateCICDTemplates(targetPath: string): Promise<void> {
+    const cicdDir = path.join(this.sourceDir, 'templates', 'tools', 'ci-cd');
+    const projectType = this.options.projectType;
+    
+    try {
+      // GitHub Actions
+      if (this.options.cicdProvider === 'github-actions' || this.options.cicdProvider === 'both') {
+        const workflowsDir = path.join(targetPath, '.github', 'workflows');
+        await fs.ensureDir(workflowsDir);
+        
+        // 基本的なCI/CDワークフローファイル
+        const baseWorkflows = [
+          'ci.yml.template',
+          'release.yml.template',
+          'security.yml.template',
+          'deploy.yml.template'
+        ];
+        
+        for (const workflow of baseWorkflows) {
+          const sourcePath = path.join(cicdDir, 'github-actions', workflow);
+          const targetFile = path.join(workflowsDir, workflow.replace('.template', ''));
+          
+          if (await fs.pathExists(sourcePath)) {
+            await this.copyAndProcessTemplate(sourcePath, targetFile);
+          }
+        }
+        
+        // プロジェクトタイプ固有のCI/CDワークフロー
+        const projectSpecificPath = path.join(cicdDir, 'project-types', projectType, 'ci.yml.template');
+        if (await fs.pathExists(projectSpecificPath)) {
+          const targetFile = path.join(workflowsDir, `${projectType}-ci.yml`);
+          await this.copyAndProcessTemplate(projectSpecificPath, targetFile);
+        }
+      }
+      
+      // GitLab CI
+      if (this.options.cicdProvider === 'gitlab-ci' || this.options.cicdProvider === 'both') {
+        const gitlabCIPath = path.join(cicdDir, 'gitlab-ci', '.gitlab-ci.yml.template');
+        if (await fs.pathExists(gitlabCIPath)) {
+          const targetFile = path.join(targetPath, '.gitlab-ci.yml');
+          await this.copyAndProcessTemplate(gitlabCIPath, targetFile);
+        }
+      }
+      
+      console.log(chalk.green(`✓ CI/CDテンプレートを生成しました (${this.options.cicdProvider})`));
+      
+    } catch (error) {
+      console.error(chalk.red('CI/CDテンプレートの生成に失敗しました:'), error);
+      throw error;
+    }
+  }
+
+  private async copyAndProcessTemplate(sourcePath: string, targetPath: string): Promise<void> {
+    try {
+      // テンプレートファイルを読み込み
+      const templateContent = await fs.readFile(sourcePath, 'utf8');
+      
+      // 変数を置換
+      const processedContent = this.replaceTemplateVariables(templateContent);
+      
+      // 対象ファイルに書き込み
+      await fs.ensureFile(targetPath);
+      await fs.writeFile(targetPath, processedContent);
+      
+      console.log(chalk.gray(`  生成: ${path.relative(this.options.targetPath, targetPath)}`));
+      
+    } catch (error) {
+      console.error(chalk.red(`テンプレート処理失敗: ${sourcePath}`), error);
+      throw error;
+    }
+  }
+
+  private replaceTemplateVariables(content: string): string {
+    let result = content;
+    
+    // 基本的な変数置換
+    result = result.replace(/\{\{PROJECT_NAME\}\}/g, this.options.projectName);
+    result = result.replace(/\{\{PROJECT_TYPE\}\}/g, this.options.projectType);
+    result = result.replace(/\{\{NODE_VERSION\}\}/g, this.getNodeVersion());
+    result = result.replace(/\{\{DOCKER_REGISTRY\}\}/g, this.getDockerRegistry());
+    
+    // 品質ゲート設定の変数置換
+    result = result.replace(/\{\{COVERAGE_THRESHOLD\}\}/g, this.options.coverageThreshold.toString());
+    result = result.replace(/\{\{ENABLE_SECURITY_SCAN\}\}/g, this.options.enableSecurityScan.toString());
+    result = result.replace(/\{\{ENABLE_PERFORMANCE_TEST\}\}/g, this.options.enablePerformanceTest.toString());
+    
+    // プロジェクトタイプ固有の変数置換
+    switch (this.options.projectType) {
+      case 'mcp-server':
+        result = result.replace(/\{\{REGISTRY\}\}/g, 'npm');
+        break;
+      case 'web-nextjs':
+        result = result.replace(/\{\{DEPLOYMENT_TARGET\}\}/g, 'vercel');
+        break;
+      case 'api-fastapi':
+        result = result.replace(/\{\{PYTHON_VERSION\}\}/g, '3.11');
+        break;
+      case 'cli-rust':
+        result = result.replace(/\{\{RUST_VERSION\}\}/g, 'stable');
+        break;
+    }
+    
+    return result;
+  }
+
+  private getNodeVersion(): string {
+    // プロジェクトのpackage.jsonからNode.jsバージョンを取得
+    // フォールバックとして'20'を使用
+    return '20';
+  }
+
+  private getDockerRegistry(): string {
+    // デフォルトのDockerレジストリを返す
+    return 'ghcr.io';
   }
 
   private async cleanupTemplateFiles(targetPath: string): Promise<void> {

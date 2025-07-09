@@ -1,0 +1,278 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+env:
+  NODE_VERSION: '{{NODE_VERSION}}'
+
+jobs:
+  validate-release:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      is_prerelease: ${{ steps.version.outputs.is_prerelease }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION=${GITHUB_REF#refs/tags/}
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+          if [[ $VERSION =~ -[a-zA-Z] ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "Release version: $VERSION"
+          echo "Is prerelease: ${{ steps.version.outputs.is_prerelease }}"
+
+      - name: Validate version format
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if [[ ! $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
+            echo "❌ Invalid version format: $VERSION"
+            echo "Expected format: v1.0.0 or v1.0.0-beta"
+            exit 1
+          fi
+          echo "✅ Version format is valid"
+
+  build-release:
+    name: Build Release Assets
+    runs-on: ubuntu-latest
+    needs: validate-release
+    strategy:
+      matrix:
+        include:
+          # Node.js projects
+          - platform: linux
+            os: ubuntu-latest
+            if: ${{ !contains('{{PROJECT_TYPE}}', 'rust') }}
+          # Rust projects
+          - platform: linux
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            if: ${{ contains('{{PROJECT_TYPE}}', 'rust') }}
+          - platform: windows
+            os: windows-latest
+            target: x86_64-pc-windows-gnu
+            if: ${{ contains('{{PROJECT_TYPE}}', 'rust') }}
+          - platform: macos
+            os: macos-latest
+            target: x86_64-apple-darwin
+            if: ${{ contains('{{PROJECT_TYPE}}', 'rust') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Node.js build
+      - name: Setup Node.js
+        if: ${{ !contains('{{PROJECT_TYPE}}', 'rust') }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies (Node.js)
+        if: ${{ !contains('{{PROJECT_TYPE}}', 'rust') }}
+        run: npm ci
+
+      - name: Build project (Node.js)
+        if: ${{ !contains('{{PROJECT_TYPE}}', 'rust') }}
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Package artifacts (Node.js)
+        if: ${{ !contains('{{PROJECT_TYPE}}', 'rust') }}
+        run: |
+          tar -czf {{PROJECT_NAME}}-${{ needs.validate-release.outputs.version }}-${{ matrix.platform }}.tar.gz \
+            -C dist . || \
+          tar -czf {{PROJECT_NAME}}-${{ needs.validate-release.outputs.version }}-${{ matrix.platform }}.tar.gz \
+            -C build . || \
+          tar -czf {{PROJECT_NAME}}-${{ needs.validate-release.outputs.version }}-${{ matrix.platform }}.tar.gz \
+            package.json dist/ build/ .next/ 2>/dev/null || true
+
+      # Rust build
+      - name: Setup Rust
+        if: ${{ contains('{{PROJECT_TYPE}}', 'rust') }}
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Cache cargo registry
+        if: ${{ contains('{{PROJECT_TYPE}}', 'rust') }}
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build release (Rust)
+        if: ${{ contains('{{PROJECT_TYPE}}', 'rust') }}
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Package binary (Rust)
+        if: ${{ contains('{{PROJECT_TYPE}}', 'rust') }}
+        run: |
+          cd target/${{ matrix.target }}/release/
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            7z a ../../../{{PROJECT_NAME}}-${{ needs.validate-release.outputs.version }}-${{ matrix.platform }}.zip {{PROJECT_NAME}}.exe
+          else
+            tar -czf ../../../{{PROJECT_NAME}}-${{ needs.validate-release.outputs.version }}-${{ matrix.platform }}.tar.gz {{PROJECT_NAME}}
+          fi
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: |
+            *.tar.gz
+            *.zip
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [validate-release, build-release]
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Generate changelog from git log
+          VERSION="${{ needs.validate-release.outputs.version }}"
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
+          
+          if [ -n "$PREV_TAG" ]; then
+            echo "## Changes since $PREV_TAG" > CHANGELOG.md
+            git log --pretty=format:"- %s (%h)" $PREV_TAG..HEAD >> CHANGELOG.md
+          else
+            echo "## Initial Release" > CHANGELOG.md
+            echo "First release of {{PROJECT_NAME}}" >> CHANGELOG.md
+          fi
+          
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          cat CHANGELOG.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.validate-release.outputs.version }}
+          name: ${{ needs.validate-release.outputs.version }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          prerelease: ${{ needs.validate-release.outputs.is_prerelease }}
+          files: |
+            release-assets/**/*
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-npm:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release]
+    if: ${{ contains('{{PROJECT_TYPE}}', 'mcp-server') || contains('{{PROJECT_TYPE}}', 'nextjs') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Update package.json version
+        run: |
+          VERSION="${{ needs.validate-release.outputs.version }}"
+          npm version ${VERSION#v} --no-git-tag-version
+
+      - name: Publish to NPM
+        run: |
+          if [ "${{ needs.validate-release.outputs.is_prerelease }}" = "true" ]; then
+            npm publish --tag beta
+          else
+            npm publish
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-docker:
+    name: Publish Docker Image
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release]
+    if: ${{ contains('{{PROJECT_TYPE}}', 'fastapi') }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            {{DOCKER_REGISTRY}}/{{PROJECT_NAME}}:${{ needs.validate-release.outputs.version }}
+            {{DOCKER_REGISTRY}}/{{PROJECT_NAME}}:latest
+          platforms: linux/amd64,linux/arm64
+
+  notify-release:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release]
+    if: always()
+    steps:
+      - name: Release notification
+        run: |
+          echo "🎉 Release ${{ needs.validate-release.outputs.version }} completed!"
+          echo "Release URL: https://github.com/${{ github.repository }}/releases/tag/${{ needs.validate-release.outputs.version }}"
+          
+          # Add Slack/Discord notification here if needed
+          # Example:
+          # curl -X POST -H 'Content-type: application/json' \
+          #   --data '{"text":"🎉 {{PROJECT_NAME}} ${{ needs.validate-release.outputs.version }} released!"}' \
+          #   ${{ secrets.SLACK_WEBHOOK_URL }}

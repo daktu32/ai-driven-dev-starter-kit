@@ -1,0 +1,393 @@
+name: Next.js Web App CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '{{NODE_VERSION}}'
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  quality-checks:
+    name: Code Quality & Type Safety
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint check
+        run: npm run lint
+
+      - name: TypeScript check
+        run: npm run type-check
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Next.js build check
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Bundle analyzer
+        run: |
+          npm run analyze || echo "Bundle analyzer not configured"
+
+  test-web:
+    name: Web App Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Run component tests
+        run: |
+          npm run test:components || echo "Component tests not configured"
+
+      - name: Test coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Start application
+        run: |
+          npm run start &
+          npx wait-on http://localhost:3000
+
+      - name: Run E2E tests
+        run: npx playwright test
+
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  lighthouse-audit:
+    name: Lighthouse Performance Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Start application
+        run: |
+          npm run start &
+          npx wait-on http://localhost:3000
+
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli
+          lhci autorun --upload.target=temporary-public-storage
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload Lighthouse results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-results
+          path: |
+            .lighthouseci/
+          retention-days: 7
+
+  build-optimized:
+    name: Build & Optimize
+    runs-on: ubuntu-latest
+    needs: [quality-checks, test-web]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Export static files (if configured)
+        run: |
+          npm run export || echo "Static export not configured"
+
+      - name: Optimize images
+        run: |
+          npm run optimize:images || echo "Image optimization not configured"
+
+      - name: Generate sitemap
+        run: |
+          npm run sitemap || echo "Sitemap generation not configured"
+
+      - name: Check bundle size
+        run: |
+          npm run bundle-size || echo "Bundle size check not configured"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: |
+            .next/
+            out/
+            public/
+          retention-days: 7
+
+  security-audit:
+    name: Security & Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+
+      - name: Check for known vulnerabilities
+        run: |
+          npx audit-ci --config .audit-ci.json || true
+
+      - name: License compliance check
+        run: |
+          npm install -g license-checker
+          license-checker --summary
+          license-checker --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC' --excludePrivatePackages
+
+      - name: Security headers check
+        run: |
+          npm run security:headers || echo "Security headers check not configured"
+
+  deploy-preview:
+    name: Deploy Preview (Vercel)
+    runs-on: ubuntu-latest
+    needs: [build-optimized]
+    if: github.event_name == 'pull_request'
+    environment:
+      name: preview
+      url: ${{ steps.deploy.outputs.preview-url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+
+      - name: Deploy to Vercel Preview
+        id: deploy
+        run: |
+          vercel --token=${{ secrets.VERCEL_TOKEN }}
+          PREVIEW_URL=$(vercel --token=${{ secrets.VERCEL_TOKEN }} --confirm)
+          echo "preview-url=$PREVIEW_URL" >> $GITHUB_OUTPUT
+
+      - name: Run preview tests
+        run: |
+          npx wait-on ${{ steps.deploy.outputs.preview-url }}
+          curl -f ${{ steps.deploy.outputs.preview-url }} > /dev/null
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build-optimized, security-audit, e2e-tests]
+    if: github.ref == 'refs/heads/develop'
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.staging-url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+
+      - name: Deploy to Vercel Staging
+        id: deploy
+        run: |
+          vercel --token=${{ secrets.VERCEL_TOKEN }}
+          STAGING_URL=$(vercel --token=${{ secrets.VERCEL_TOKEN }} --confirm)
+          echo "staging-url=$STAGING_URL" >> $GITHUB_OUTPUT
+
+      - name: Run staging smoke tests
+        run: |
+          npx wait-on ${{ steps.deploy.outputs.staging-url }}
+          curl -f ${{ steps.deploy.outputs.staging-url }} > /dev/null
+          curl -f ${{ steps.deploy.outputs.staging-url }}/api/health > /dev/null || echo "Health check endpoint not available"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-optimized, security-audit, e2e-tests, lighthouse-audit]
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.production-url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+
+      - name: Deploy to Vercel Production
+        id: deploy
+        run: |
+          vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+          PRODUCTION_URL=$(vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --confirm)
+          echo "production-url=$PRODUCTION_URL" >> $GITHUB_OUTPUT
+
+      - name: Run production smoke tests
+        run: |
+          npx wait-on ${{ steps.deploy.outputs.production-url }}
+          curl -f ${{ steps.deploy.outputs.production-url }} > /dev/null
+          curl -f ${{ steps.deploy.outputs.production-url }}/api/health > /dev/null || echo "Health check endpoint not available"
+
+      - name: Post-deployment Lighthouse audit
+        run: |
+          lhci autorun --upload.target=temporary-public-storage --collect.url=${{ steps.deploy.outputs.production-url }}
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  notify-status:
+    name: Notification
+    runs-on: ubuntu-latest
+    needs: [quality-checks, test-web, e2e-tests, lighthouse-audit, build-optimized, security-audit]
+    if: always()
+    steps:
+      - name: Notify build status
+        run: |
+          if [ "${{ needs.quality-checks.result }}" = "success" ] && \
+             [ "${{ needs.test-web.result }}" = "success" ] && \
+             [ "${{ needs.e2e-tests.result }}" = "success" ] && \
+             [ "${{ needs.lighthouse-audit.result }}" = "success" ] && \
+             [ "${{ needs.build-optimized.result }}" = "success" ] && \
+             [ "${{ needs.security-audit.result }}" = "success" ]; then
+            echo "✅ All Next.js Web App CI checks passed!"
+          else
+            echo "❌ Some Next.js Web App CI checks failed"
+            echo "Quality: ${{ needs.quality-checks.result }}"
+            echo "Tests: ${{ needs.test-web.result }}"
+            echo "E2E: ${{ needs.e2e-tests.result }}"
+            echo "Lighthouse: ${{ needs.lighthouse-audit.result }}"
+            echo "Build: ${{ needs.build-optimized.result }}"
+            echo "Security: ${{ needs.security-audit.result }}"
+          fi

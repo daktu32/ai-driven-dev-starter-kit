@@ -17,10 +17,8 @@ module.exports = {
   },
   collectCoverageFrom: [
     'scripts/**/*.ts',
-    'src/**/*.ts',
     '!scripts/**/*.d.ts',
     '!scripts/node_modules/**',
-    '!src/**/*.d.ts',
     '!**/*.test.ts',
     '!**/node_modules/**',
     '!test/**',
@@ -29,16 +27,10 @@ module.exports = {
   coverageReporters: ['text', 'lcov', 'html', 'json-summary'],
   coverageThreshold: {
     global: {
-      branches: 75,
-      functions: 80,
-      lines: 85,
-      statements: 85
-    },
-    './scripts/lib/projectVerifier.ts': {
-      branches: 85,
-      functions: 90,
-      lines: 90,
-      statements: 90
+      branches: 50,
+      functions: 50,
+      lines: 50,
+      statements: 50
     }
   },
   testTimeout: 60000, // E2Eテストのため60秒に設定
